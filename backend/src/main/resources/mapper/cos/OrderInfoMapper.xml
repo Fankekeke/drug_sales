@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.cos.mapper.OrderInfoMapper">
+
+    <!-- 分页获取订单信息 -->
+    <select id="selectOrderPage" resultType="java.util.LinkedHashMap">
+        select
+        oi.id,
+        oi.code,
+        oi.pharmacy_id,
+        oi.total_cost,
+        oi.user_id,
+        oi.create_date,
+        oi.logistics_id,
+        oi.order_status,
+        ui.name,
+        ui.phone,
+        ui.address AS userAddress,
+        phi.name AS pharmacyName,
+        phi.address
+        from
+        order_info oi
+        left join pharmacy_info phi on
+        (phi.id = oi.pharmacy_id)
+        left join user_info ui on
+        (ui.id = oi.user_id)
+        where
+        1 = 1
+        <if test="orderInfo.code != null and orderInfo.code != ''">
+            AND oi.code LIKE CONCAT('%',#{orderInfo.code},'%')
+        </if>
+        <if test="orderInfo.userName != null and orderInfo.userName != ''">
+            AND ui.name LIKE CONCAT('%',#{orderInfo.userName},'%')
+        </if>
+        <if test="orderInfo.pharmacyName != null and orderInfo.pharmacyName != ''">
+            AND phi.name LIKE CONCAT('%',#{orderInfo.pharmacyName},'%')
+        </if>
+        order by
+        oi.create_date desc
+    </select>
+</mapper>
