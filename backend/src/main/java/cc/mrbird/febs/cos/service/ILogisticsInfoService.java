@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @author FanK
@@ -21,4 +22,12 @@ public interface ILogisticsInfoService extends IService<LogisticsInfo> {
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> selectLogisticsPage(Page<LogisticsInfo> page, LogisticsInfo logisticsInfo);
+
+    /**
+     * 根据订单编号获取物流信息
+     *
+     * @param orderId 订单ID
+     * @return 结果
+     */
+    List<LogisticsInfo> selectLogisticsByOrder(Integer orderId);
 }

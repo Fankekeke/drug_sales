@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @author FanK
@@ -21,4 +22,12 @@ public interface PharmacyInventoryMapper extends BaseMapper<PharmacyInventory> {
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> selectPharmacyInventoryPage(Page<PharmacyInventory> page, @Param("pharmacyInventory") PharmacyInventory pharmacyInventory);
+
+    /**
+     * 根据药房ID获取库存信息
+     *
+     * @param pharmacyId 药房ID
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectInventoryByPharmacy(@Param("pharmacyId") Integer pharmacyId);
 }

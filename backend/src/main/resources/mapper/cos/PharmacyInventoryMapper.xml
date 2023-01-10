@@ -31,4 +31,26 @@
             AND di.brand LIKE CONCAT('%',#{pharmacyInventory.brand},'%')
         </if>
     </select>
+
+    <!-- 根据药房ID获取库存信息 -->
+    <select id="selectInventoryByPharmacy" resultType="java.util.LinkedHashMap">
+        select
+        pin.id,
+        pin.pharmacy_id,
+        pin.drug_id,
+        pin.reserve,
+        pin.shelf_status,
+        pi2.name as pharmacyName,
+        pi2.code as pharmacyCode,
+        di.name as drugName,
+        di.brand,
+        di.category,
+        di.images
+        from
+        pharmacy_inventory pin
+        left join pharmacy_info pi2 on (pi2.id = pin.pharmacy_id)
+        left join drug_info di on (di.id = pin.drug_id)
+        where 1 = 1
+        and pin.pharmacy_id = #{ pharmacyId }
+    </select>
 </mapper>

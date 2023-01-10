@@ -40,4 +40,32 @@
             AND ui.name LIKE CONCAT('%',#{orderDetail.userName},'%')
         </if>
     </select>
+
+    <!-- 根据订单ID获取购买详细物品 -->
+    <select id="selectDetailByOrder" resultType="java.util.LinkedHashMap">
+        select
+        od.id,
+        od.drug_id,
+        od.quantity,
+        od.unit_price,
+        od.all_price,
+        od.order_id,
+        di.name AS drugName,
+        di.brand,
+        oi.code,
+        ui.name,
+        ui.phone,
+        ui.address AS userAddress
+        from
+        order_detail od
+        left join drug_info di on
+        (di.id = od.drug_id)
+        left join order_info oi on
+        (oi.id = od.order_id)
+        left join user_info ui on
+        (ui.id = oi.user_id)
+        where
+        1 = 1
+        AND od.order_id = #{orderId}
+    </select>
 </mapper>

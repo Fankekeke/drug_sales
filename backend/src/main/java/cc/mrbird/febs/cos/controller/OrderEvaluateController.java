@@ -4,6 +4,7 @@ package cc.mrbird.febs.cos.controller;
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.OrderEvaluate;
 import cc.mrbird.febs.cos.service.IOrderEvaluateService;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,24 @@ public class OrderEvaluateController {
     /**
      * 分页获取订单评价信息
      *
-     * @param page     分页对象
+     * @param page          分页对象
      * @param orderEvaluate 订单评价信息
      * @return 结果
      */
     @GetMapping("/page")
     public R page(Page<OrderEvaluate> page, OrderEvaluate orderEvaluate) {
         return R.ok(orderEvaluateService.selectEvaluatePage(page, orderEvaluate));
+    }
+
+    /**
+     * 根据订单ID获取评价信息
+     *
+     * @param orderId 订单ID
+     * @return 结果
+     */
+    @GetMapping("/order/{orderId}")
+    public R selectEvaluateByOrder(@PathVariable("orderId") Integer orderId) {
+        return R.ok(orderEvaluateService.getOne(Wrappers.<OrderEvaluate>lambdaQuery().eq(OrderEvaluate::getOrderId, orderId)));
     }
 
     /**

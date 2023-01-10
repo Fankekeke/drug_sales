@@ -26,13 +26,25 @@ public class InventoryStatisticsController {
     /**
      * 分页获取库存统计信息
      *
-     * @param page     分页对象
+     * @param page                分页对象
      * @param inventoryStatistics 库存统计信息
      * @return 结果
      */
     @GetMapping("/page")
     public R page(Page<InventoryStatistics> page, InventoryStatistics inventoryStatistics) {
         return R.ok(inventoryStatisticsService.selectInventoryPage(page, inventoryStatistics));
+    }
+
+    /**
+     * 获取药品出入库详情
+     *
+     * @param pharmacyId 药房ID
+     * @param drugId     药品ID
+     * @return 结果
+     */
+    @GetMapping("/statistics")
+    public R selectInventoryStatistics(@RequestParam("pharmacyId") Integer pharmacyId, @RequestParam("drugId") Integer drugId) {
+        return R.ok(inventoryStatisticsService.selectInventoryStatistics(pharmacyId, drugId));
     }
 
     /**

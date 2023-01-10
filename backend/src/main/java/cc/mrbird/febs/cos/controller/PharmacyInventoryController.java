@@ -24,13 +24,46 @@ public class PharmacyInventoryController {
     /**
      * 分页获取药店库存信息
      *
-     * @param page     分页对象
+     * @param page              分页对象
      * @param pharmacyInventory 药店库存信息
      * @return 结果
      */
     @GetMapping("/page")
     public R page(Page<PharmacyInventory> page, PharmacyInventory pharmacyInventory) {
         return R.ok(pharmacyInventoryService.selectPharmacyInventoryPage(page, pharmacyInventory));
+    }
+
+    /**
+     * 根据药房ID获取库存信息
+     *
+     * @param pharmacyId 药房ID
+     * @return 结果
+     */
+    @GetMapping("/detail/pharmacy/{pharmacyId}")
+    public R selectInventoryByPharmacy(@PathVariable("pharmacyId") Integer pharmacyId) {
+        return R.ok(pharmacyInventoryService.selectInventoryByPharmacy(pharmacyId));
+    }
+
+    /**
+     * 设置库存
+     *
+     * @param pharmacyInventory 药店库存信息
+     * @return 结果
+     */
+    @PostMapping("/put/reserve")
+    public R putInventory(PharmacyInventory pharmacyInventory) {
+        return R.ok(pharmacyInventoryService.putInventory(pharmacyInventory));
+    }
+
+    /**
+     * 设置库存
+     *
+     * @param pharmacyInventory 药店库存信息
+     * @return 结果
+     */
+    @PostMapping("/out/reserve")
+    public R outInventory(PharmacyInventory pharmacyInventory) {
+        return R.ok(pharmacyInventoryService.outInventory(pharmacyInventory));
     }
 
     /**

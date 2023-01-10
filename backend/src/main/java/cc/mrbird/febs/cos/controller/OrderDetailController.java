@@ -26,13 +26,24 @@ public class OrderDetailController {
     /**
      * 分页获取订单详情信息
      *
-     * @param page     分页对象
+     * @param page        分页对象
      * @param orderDetail 订单详情信息
      * @return 结果
      */
     @GetMapping("/page")
     public R page(Page<OrderDetail> page, OrderDetail orderDetail) {
         return R.ok(orderDetailService.selectOrderDeatilPage(page, orderDetail));
+    }
+
+    /**
+     * 根据订单ID获取购买详细物品
+     *
+     * @param orderId 订单ID
+     * @return 结果
+     */
+    @GetMapping("/detail/{orderId}")
+    public R selectDetailByOrder(@PathVariable("orderId") Integer orderId) {
+        return R.ok(orderDetailService.selectDetailByOrder(orderId));
     }
 
     /**

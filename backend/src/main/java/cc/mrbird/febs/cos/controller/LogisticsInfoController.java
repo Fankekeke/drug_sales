@@ -26,13 +26,24 @@ public class LogisticsInfoController {
     /**
      * 分页获取配送物流信息
      *
-     * @param page     分页对象
+     * @param page          分页对象
      * @param logisticsInfo 配送物流信息
      * @return 结果
      */
     @GetMapping("/page")
     public R page(Page<LogisticsInfo> page, LogisticsInfo logisticsInfo) {
         return R.ok(logisticsInfoService.selectLogisticsPage(page, logisticsInfo));
+    }
+
+    /**
+     * 根据订单编号获取物流信息
+     *
+     * @param orderId 订单ID
+     * @return 结果
+     */
+    @GetMapping("/order/{orderId}")
+    public R selectLogisticsByOrder(@PathVariable("orderId") Integer orderId) {
+        return R.ok(logisticsInfoService.selectLogisticsByOrder(orderId));
     }
 
     /**

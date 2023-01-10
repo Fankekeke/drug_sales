@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @author FanK
@@ -26,5 +27,16 @@ public class OrderDetailServiceImpl extends ServiceImpl<OrderDetailMapper, Order
     @Override
     public IPage<LinkedHashMap<String, Object>> selectOrderDeatilPage(Page<OrderDetail> page, OrderDetail orderDetail) {
         return baseMapper.selectOrderDeatilPage(page, orderDetail);
+    }
+
+    /**
+     * 根据订单ID获取购买详细物品
+     *
+     * @param orderId 订单ID
+     * @return 结果
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> selectDetailByOrder(Integer orderId) {
+        return baseMapper.selectDetailByOrder(orderId);
     }
 }
