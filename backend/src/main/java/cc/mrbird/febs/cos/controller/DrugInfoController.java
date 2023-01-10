@@ -32,7 +32,7 @@ public class DrugInfoController {
      */
     @GetMapping("/page")
     public R page(Page<DrugInfo> page, DrugInfo drugInfo) {
-        return R.ok();
+        return R.ok(drugInfoService.selectDrugPage(page, drugInfo));
     }
 
     /**

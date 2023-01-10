@@ -32,7 +32,7 @@ public class OrderDetailController {
      */
     @GetMapping("/page")
     public R page(Page<OrderDetail> page, OrderDetail orderDetail) {
-        return R.ok();
+        return R.ok(orderDetailService.selectOrderDeatilPage(page, orderDetail));
     }
 
     /**

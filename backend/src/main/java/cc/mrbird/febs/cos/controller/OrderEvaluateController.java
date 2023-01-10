@@ -30,7 +30,7 @@ public class OrderEvaluateController {
      */
     @GetMapping("/page")
     public R page(Page<OrderEvaluate> page, OrderEvaluate orderEvaluate) {
-        return R.ok();
+        return R.ok(orderEvaluateService.selectEvaluatePage(page, orderEvaluate));
     }
 
     /**

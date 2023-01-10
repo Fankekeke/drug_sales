@@ -1,7 +1,7 @@
 package cc.mrbird.febs.cos.service.impl;
 
 import cc.mrbird.febs.cos.entity.StaffInfo;
-import cc.mrbird.febs.cos.mapper.StaffInfoMapper;
+import cc.mrbird.febs.cos.dao.StaffInfoMapper;
 import cc.mrbird.febs.cos.service.IStaffInfoService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

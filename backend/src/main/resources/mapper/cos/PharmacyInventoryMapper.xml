@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cc.mrbird.febs.cos.mapper.PharmacyInventoryMapper">
+<mapper namespace="cc.mrbird.febs.cos.dao.PharmacyInventoryMapper">
 
     <!-- 分页获取药店库存信息 -->
     <select id="selectPharmacyInventoryPage" resultType="java.util.LinkedHashMap">

@@ -1,9 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cc.mrbird.febs.cos.mapper.DrugInfoMapper">
+<mapper namespace="cc.mrbird.febs.cos.dao.DrugInfoMapper">
 
     <!-- 分页获取药品信息 -->
     <select id="selectDrugPage" resultType="java.util.LinkedHashMap">
-
+        select
+        id,
+        code,
+        name,
+        brand,
+        category,
+        classification,
+        common_name,
+        dosage_form,
+        `usage`,
+        applicable_symptoms,
+        applicable_disease,
+        packing_list,
+        dosage_use,
+        validity_period,
+        approval_number,
+        manufacturer,
+        unit_price,
+        create_date,
+        images
+        from
+        drug_info
+        where
+        1 = 1
+        <if test="drugInfo.code != null and drugInfo.code != ''">
+            AND code LIKE CONCAT('%',#{drugInfo.code},'%')
+        </if>
+        <if test="drugInfo.name != null and drugInfo.name != ''">
+            AND name LIKE CONCAT('%',#{drugInfo.name},'%')
+        </if>
+        <if test="drugInfo.brand != null and drugInfo.brand != ''">
+            AND brand LIKE CONCAT('%',#{drugInfo.brand},'%')
+        </if>
+        <if test="drugInfo.category != null">
+            AND category = #{drugInfo.category}
+        </if>
+        order by
+        create_date desc
     </select>
 </mapper>

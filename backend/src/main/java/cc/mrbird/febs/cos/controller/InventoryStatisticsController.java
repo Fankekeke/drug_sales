@@ -32,7 +32,7 @@ public class InventoryStatisticsController {
      */
     @GetMapping("/page")
     public R page(Page<InventoryStatistics> page, InventoryStatistics inventoryStatistics) {
-        return R.ok();
+        return R.ok(inventoryStatisticsService.selectInventoryPage(page, inventoryStatistics));
     }
 
     /**

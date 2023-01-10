@@ -1,7 +1,7 @@
 package cc.mrbird.febs.cos.service.impl;
 
 import cc.mrbird.febs.cos.entity.OrderDetail;
-import cc.mrbird.febs.cos.mapper.OrderDetailMapper;
+import cc.mrbird.febs.cos.dao.OrderDetailMapper;
 import cc.mrbird.febs.cos.service.IOrderDetailService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

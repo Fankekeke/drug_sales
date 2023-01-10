@@ -1,4 +1,4 @@
-package cc.mrbird.febs.cos.mapper;
+package cc.mrbird.febs.cos.dao;
 
 import cc.mrbird.febs.cos.entity.OrderInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;

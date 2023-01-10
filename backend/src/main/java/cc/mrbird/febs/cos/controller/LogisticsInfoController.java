@@ -32,7 +32,7 @@ public class LogisticsInfoController {
      */
     @GetMapping("/page")
     public R page(Page<LogisticsInfo> page, LogisticsInfo logisticsInfo) {
-        return R.ok();
+        return R.ok(logisticsInfoService.selectLogisticsPage(page, logisticsInfo));
     }
 
     /**

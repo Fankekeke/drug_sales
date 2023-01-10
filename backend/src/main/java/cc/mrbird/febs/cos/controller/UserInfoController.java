@@ -30,7 +30,7 @@ public class UserInfoController {
      */
     @GetMapping("/page")
     public R page(Page<UserInfo> page, UserInfo userInfo) {
-        return R.ok();
+        return R.ok(userInfoService.selectUserPage(page, userInfo));
     }
 
     /**

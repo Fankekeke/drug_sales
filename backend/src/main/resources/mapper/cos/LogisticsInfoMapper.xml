@@ -1,9 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cc.mrbird.febs.cos.mapper.LogisticsInfoMapper">
+<mapper namespace="cc.mrbird.febs.cos.dao.LogisticsInfoMapper">
 
     <!-- 分页获取配送物流信息 -->
     <select id="selectLogisticsPage" resultType="java.util.LinkedHashMap">
-
+        select
+        li.id,
+        li.order_id,
+        li.remark,
+        li.create_date,
+        oi.code ,
+        oi.total_cost,
+        ui.name,
+        ui.phone,
+        ui.address AS userAddress
+        from
+        order_info oi
+        left join user_info ui on
+        (ui.id = oi.user_id)
+        left join logistics_info li on
+        (oi.id = li.order_id)
+        and li.current_logistics = 1
+        where
+        1 = 1
+        <if test="logisticsInfo.orderCode != null and logisticsInfo.orderCode != ''">
+            AND oi.code LIKE CONCAT('%',#{logisticsInfo.orderCode},'%')
+        </if>
+        <if test="logisticsInfo.userName != null and logisticsInfo.userName != ''">
+            AND ui.name LIKE CONCAT('%',#{logisticsInfo.userName},'%')
+        </if>
+        order by
+        oi.create_date desc
     </select>
 </mapper>

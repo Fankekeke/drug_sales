@@ -1,7 +1,7 @@
 package cc.mrbird.febs.cos.service.impl;
 
 import cc.mrbird.febs.cos.entity.DrugInfo;
-import cc.mrbird.febs.cos.mapper.DrugInfoMapper;
+import cc.mrbird.febs.cos.dao.DrugInfoMapper;
 import cc.mrbird.febs.cos.service.IDrugInfoService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

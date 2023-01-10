@@ -1,7 +1,7 @@
 package cc.mrbird.febs.cos.service.impl;
 
 import cc.mrbird.febs.cos.entity.InventoryStatistics;
-import cc.mrbird.febs.cos.mapper.InventoryStatisticsMapper;
+import cc.mrbird.febs.cos.dao.InventoryStatisticsMapper;
 import cc.mrbird.febs.cos.service.IInventoryStatisticsService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

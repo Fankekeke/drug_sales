@@ -1,9 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cc.mrbird.febs.cos.mapper.InventoryStatisticsMapper">
+<mapper namespace="cc.mrbird.febs.cos.dao.InventoryStatisticsMapper">
 
     <!-- 分页获取库存统计信息 -->
     <select id="selectInventoryPage" resultType="java.util.LinkedHashMap">
-
+        select
+        ls.id,
+        ls.pharmacy_id,
+        ls.drug_id,
+        ls.quantity,
+        ls.storage_type,
+        ls.create_date,
+        ls.custodian,
+        phi.name AS pharmacyName,
+        phi.address,
+        di.name AS drugName,
+        di.brand,
+        di.images
+        from
+        inventory_statistics ls
+        left join pharmacy_info phi on
+        (phi.id = ls.pharmacy_id)
+        left join drug_info di on
+        (di.id = ls.drug_id)
+        where
+        1 = 1
+        <if test="inventoryStatistics.drugName != null and inventoryStatistics.drugName != ''">
+            AND di.name LIKE CONCAT('%',#{inventoryStatistics.drugName},'%')
+        </if>
+        <if test="inventoryStatistics.pharmacyName != null and inventoryStatistics.pharmacyName != ''">
+            AND phi.name LIKE CONCAT('%',#{inventoryStatistics.pharmacyName},'%')
+        </if>
+        order by
+        ls.create_date desc
     </select>
 </mapper>
