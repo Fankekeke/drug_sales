@@ -24,13 +24,23 @@ public class PharmacyInfoController {
     /**
      * 分页获取药店信息
      *
-     * @param page     分页对象
+     * @param page         分页对象
      * @param pharmacyInfo 药店信息
      * @return 结果
      */
     @GetMapping("/page")
     public R page(Page<PharmacyInfo> page, PharmacyInfo pharmacyInfo) {
         return R.ok(pharmacyInfoService.selectPharmacyPage(page, pharmacyInfo));
+    }
+
+    /**
+     * 获取药店订单销售情况
+     *
+     * @return 结果
+     */
+    @GetMapping("/orderNum")
+    public R selectOrderNumByPharmacy() {
+        return R.ok();
     }
 
     /**
