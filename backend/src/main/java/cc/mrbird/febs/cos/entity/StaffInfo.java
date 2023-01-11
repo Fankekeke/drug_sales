@@ -63,6 +63,11 @@ public class StaffInfo implements Serializable {
     private String createDate;
 
     /**
+     * 药店ID
+     */
+    private Integer pharmacyId;
+
+    /**
      * 所属账户
      */
     private Long userId;

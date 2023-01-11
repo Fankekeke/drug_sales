@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @author FanK
@@ -21,4 +22,11 @@ public interface IPharmacyInfoService extends IService<PharmacyInfo> {
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> selectPharmacyPage(Page<PharmacyInfo> page, PharmacyInfo pharmacyInfo);
+
+    /**
+     * 获取药店订单销售情况
+     *
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectOrderNumByPharmacy();
 }

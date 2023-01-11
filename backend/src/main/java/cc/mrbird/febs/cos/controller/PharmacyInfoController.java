@@ -34,13 +34,13 @@ public class PharmacyInfoController {
     }
 
     /**
-     * 获取药店订单销售情况
+     * 获取药店情况
      *
      * @return 结果
      */
-    @GetMapping("/orderNum")
+    @GetMapping("/statistics")
     public R selectOrderNumByPharmacy() {
-        return R.ok();
+        return R.ok(pharmacyInfoService.selectOrderNumByPharmacy());
     }
 
     /**
