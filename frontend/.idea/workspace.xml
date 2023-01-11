@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="2b51975f-5e37-45a1-bd9d-0f3c12f944d0" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/controller/BulletinInfoController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/controller/FileController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/dao/BulletinInfoMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/AlipayBean.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/BulletinInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/service/IBulletinInfoService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/service/impl/BulletinInfoServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/resources/config/alipay.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/resources/mapper/cos/BulletinInfoMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/service/impl/PharmacyInfoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/service/impl/PharmacyInfoServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/system/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/system/service/impl/UserServiceImpl.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Vue Single File Component" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="2" />
+  </component>
+  <component name="ProjectId" id="2JXuB6ugXIToR6BZNj9zOKFB2EA" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="yarn" />
+    <property name="ts.external.directory.path" value="D:\办公软件\WebStorm 2020.2.3\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Project\售后管理系统\after_sale_cos\frontend\src\utils" />
+      <recent name="E:\Project\售后管理系统\after_sale_cos\frontend\src\views\service\repair" />
+      <recent name="E:\Project\售后管理系统\after_sale_cos\frontend\src\views\service\order" />
+      <recent name="E:\Project\售后管理系统\after_sale_cos\frontend\src\views\staff\repair" />
+      <recent name="E:\Project\售后管理系统\after_sale_cos\frontend\src\views\manage" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2b51975f-5e37-45a1-bd9d-0f3c12f944d0" name="Default Changelist" comment="" />
+      <created>1672236611035</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1672236611035</updated>
+      <workItem from="1672236612079" duration="1639000" />
+      <workItem from="1672317179696" duration="2158000" />
+      <workItem from="1672399074261" duration="990000" />
+      <workItem from="1672449627600" duration="3653000" />
+      <workItem from="1672476747550" duration="11151000" />
+      <workItem from="1672542096867" duration="10643000" />
+      <workItem from="1672582389405" duration="4709000" />
+      <workItem from="1672626466267" duration="11816000" />
+      <workItem from="1672655542227" duration="593000" />
+      <workItem from="1672745649914" duration="4492000" />
+      <workItem from="1672833495372" duration="3676000" />
+      <workItem from="1672919701501" duration="4212000" />
+      <workItem from="1673004705255" duration="4223000" />
+      <workItem from="1673064854673" duration="10757000" />
+      <workItem from="1673095540789" duration="3844000" />
+      <workItem from="1673182507062" duration="6476000" />
+      <workItem from="1673263989490" duration="5753000" />
+      <workItem from="1673351808573" duration="1693000" />
+      <workItem from="1673441915022" duration="465000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="498" height="446" key="SwitcherDM" timestamp="1672545273542">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state width="498" height="446" key="SwitcherDM/0.0.1920.1050@0.0.1920.1050" timestamp="1672545273542" />
+    <state x="881" y="345" width="798" height="798" key="find.popup" timestamp="1673442372251">
+      <screen x="0" y="0" width="2560" height="1410" />
+    </state>
+    <state x="661" y="257" width="598" height="594" key="find.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1673012123720" />
+    <state x="881" y="345" width="798" height="798" key="find.popup/2560.-162.1080.1890/0.0.2560.1410@0.0.2560.1410" timestamp="1673442372251" />
+    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup" timestamp="1672586604267">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1672586604267" />
+  </component>
+</project>
