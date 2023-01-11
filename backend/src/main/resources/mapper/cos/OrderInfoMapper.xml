@@ -58,5 +58,8 @@
         from
         order_info oi
         where
+        DATE_FORMAT( oi.create_date, '%Y%m' ) = DATE_FORMAT(
+        CURDATE(),
+        '%Y%m')
     </select>
 </mapper>
