@@ -34,6 +34,16 @@ public class PharmacyInfoController {
     }
 
     /**
+     * 查询本月订单数量排行
+     *
+     * @return 结果
+     */
+    @GetMapping("/order/rank")
+    public R selectOrderRank() {
+        return R.ok();
+    }
+
+    /**
      * 获取药店情况
      *
      * @return 结果

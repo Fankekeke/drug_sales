@@ -38,4 +38,25 @@
         order by
         oi.create_date desc
     </select>
+
+    <!-- 获取本月订单信息 -->
+    <select id="selectOrderByMonth" resultType="cc.mrbird.febs.cos.entity.OrderInfo">
+        elect
+        oi.id,
+        oi.code,
+        oi.pharmacy_id,
+        oi.total_cost,
+        oi.user_id,
+        oi.create_date,
+        oi.logistics_id,
+        oi.order_status,
+        ui.name,
+        ui.phone,
+        ui.address AS userAddress,
+        phi.name AS pharmacyName,
+        phi.address
+        from
+        order_info oi
+        where
+    </select>
 </mapper>

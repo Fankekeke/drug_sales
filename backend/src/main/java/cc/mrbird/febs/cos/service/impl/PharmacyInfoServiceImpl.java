@@ -1,5 +1,6 @@
 package cc.mrbird.febs.cos.service.impl;
 
+import cc.mrbird.febs.cos.dao.OrderInfoMapper;
 import cc.mrbird.febs.cos.entity.InventoryStatistics;
 import cc.mrbird.febs.cos.entity.OrderInfo;
 import cc.mrbird.febs.cos.entity.PharmacyInfo;
@@ -36,6 +37,8 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
     private final IOrderInfoService orderInfoService;
 
     private final IInventoryStatisticsService inventoryStatisticsService;
+
+    private final OrderInfoMapper orderInfoMapper;
 
     /**
      * 分页获取药店信息
@@ -95,5 +98,19 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
             result.add(item);
         });
         return result;
+    }
+
+    /**
+     * 查询本月订单数量排行
+     *
+     * @return 结果
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> selectOrderRank() {
+        // 所有药店信息
+        List<PharmacyInfo> pharmacyInfoList = pharmacyInfoService.list(Wrappers.<PharmacyInfo>lambdaQuery().eq(PharmacyInfo::getBusinessStatus, 1));
+        // 本月订单数据
+        List<OrderInfo> orderInfoList = orderInfoMapper.selectOrderByMonth();
+        return null;
     }
 }

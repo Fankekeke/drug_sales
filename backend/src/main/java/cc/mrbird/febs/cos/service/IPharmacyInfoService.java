@@ -29,4 +29,11 @@ public interface IPharmacyInfoService extends IService<PharmacyInfo> {
      * @return 结果
      */
     List<LinkedHashMap<String, Object>> selectOrderNumByPharmacy();
+
+    /**
+     * 查询本月订单数量排行
+     *
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectOrderRank();
 }
