@@ -208,7 +208,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         UserInfo userInfo = new UserInfo();
         userInfo.setName(name);
         userInfo.setCode("U-" + System.currentTimeMillis());
-        userInfo.setStatus(1);
         userInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
 
         User user = new User();

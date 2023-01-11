@@ -32,8 +32,6 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
 
     private final IStaffInfoService staffInfoService;
 
-    private final IPharmacyInfoService pharmacyInfoService;
-
     private final IOrderInfoService orderInfoService;
 
     private final IInventoryStatisticsService inventoryStatisticsService;
@@ -62,7 +60,7 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
         // 所有员工信息
         List<StaffInfo> staffInfoList = staffInfoService.list(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getStatus,1 ));
         // 所有药店信息
-        List<PharmacyInfo> pharmacyInfoList = pharmacyInfoService.list(Wrappers.<PharmacyInfo>lambdaQuery().eq(PharmacyInfo::getBusinessStatus, 1));
+        List<PharmacyInfo> pharmacyInfoList = this.list(Wrappers.<PharmacyInfo>lambdaQuery().eq(PharmacyInfo::getBusinessStatus, 1));
         // 所有订单信息
         List<OrderInfo> orderInfoList = orderInfoService.list();
         // 所有入库信息
@@ -108,7 +106,7 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
     @Override
     public List<LinkedHashMap<String, Object>> selectOrderRank() {
         // 所有药店信息
-        List<PharmacyInfo> pharmacyInfoList = pharmacyInfoService.list(Wrappers.<PharmacyInfo>lambdaQuery().eq(PharmacyInfo::getBusinessStatus, 1));
+        List<PharmacyInfo> pharmacyInfoList = this.list(Wrappers.<PharmacyInfo>lambdaQuery().eq(PharmacyInfo::getBusinessStatus, 1));
         // 本月订单数据
         List<OrderInfo> orderInfoList = orderInfoMapper.selectOrderByMonth();
         return null;
