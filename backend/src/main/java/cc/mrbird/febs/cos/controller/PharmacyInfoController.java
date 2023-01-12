@@ -38,9 +38,9 @@ public class PharmacyInfoController {
      *
      * @return 结果
      */
-    @GetMapping("/order/rank")
-    public R selectOrderRank() {
-        return R.ok();
+    @GetMapping("/order/rank/{type}")
+    public R selectOrderRank(@PathVariable("type") Integer type) {
+        return R.ok(pharmacyInfoService.selectOrderRank(type));
     }
 
     /**

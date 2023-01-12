@@ -1,11 +1,8 @@
 package cc.mrbird.febs.cos.service.impl;
 
 import cc.mrbird.febs.cos.dao.OrderInfoMapper;
-import cc.mrbird.febs.cos.entity.InventoryStatistics;
-import cc.mrbird.febs.cos.entity.OrderInfo;
-import cc.mrbird.febs.cos.entity.PharmacyInfo;
+import cc.mrbird.febs.cos.entity.*;
 import cc.mrbird.febs.cos.dao.PharmacyInfoMapper;
-import cc.mrbird.febs.cos.entity.StaffInfo;
 import cc.mrbird.febs.cos.service.IInventoryStatisticsService;
 import cc.mrbird.febs.cos.service.IOrderInfoService;
 import cc.mrbird.febs.cos.service.IPharmacyInfoService;
@@ -101,14 +98,35 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
     /**
      * 查询本月订单数量排行
      *
+     * @param type 1.按订单数 2.按交易金额
      * @return 结果
      */
     @Override
-    public List<LinkedHashMap<String, Object>> selectOrderRank() {
+    public List<PharmacyOrderRank> selectOrderRank(Integer type) {
         // 所有药店信息
         List<PharmacyInfo> pharmacyInfoList = this.list(Wrappers.<PharmacyInfo>lambdaQuery().eq(PharmacyInfo::getBusinessStatus, 1));
         // 本月订单数据
         List<OrderInfo> orderInfoList = orderInfoMapper.selectOrderByMonth();
-        return null;
+        if (CollectionUtil.isEmpty(orderInfoList) || CollectionUtil.isEmpty(pharmacyInfoList)) {
+            return Collections.emptyList();
+        }
+        Map<Integer, List<OrderInfo>> orderMap = orderInfoList.stream().collect(Collectors.groupingBy(OrderInfo::getPharmacyId));
+        List<PharmacyOrderRank> result = new ArrayList<>();
+        pharmacyInfoList.forEach(e -> {
+            PharmacyOrderRank pharmacyOrderRank = new PharmacyOrderRank(e.getId(), e.getName(), 0, BigDecimal.ZERO);
+            List<OrderInfo> orderInfoItemList = orderMap.get(e.getId());
+            if (CollectionUtil.isNotEmpty(orderInfoItemList)) {
+                pharmacyOrderRank.setOrderNum(orderInfoItemList.size());
+                BigDecimal totalPrice = orderInfoItemList.stream().map(OrderInfo::getTotalCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+                pharmacyOrderRank.setTotalPrice(totalPrice);
+            }
+            result.add(pharmacyOrderRank);
+        });
+        // 排序
+        if (type == 0) {
+            return result.stream().sorted(Comparator.comparing(PharmacyOrderRank::getOrderNum)).collect(Collectors.toList());
+        } else {
+            return result.stream().sorted(Comparator.comparing(PharmacyOrderRank::getTotalPrice)).collect(Collectors.toList());
+        }
     }
 }

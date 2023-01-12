@@ -1,6 +1,7 @@
 package cc.mrbird.febs.cos.service;
 
 import cc.mrbird.febs.cos.entity.PharmacyInfo;
+import cc.mrbird.febs.cos.entity.PharmacyOrderRank;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -17,7 +18,7 @@ public interface IPharmacyInfoService extends IService<PharmacyInfo> {
     /**
      * 分页获取药店信息
      *
-     * @param page     分页对象
+     * @param page         分页对象
      * @param pharmacyInfo 药店信息
      * @return 结果
      */
@@ -33,7 +34,8 @@ public interface IPharmacyInfoService extends IService<PharmacyInfo> {
     /**
      * 查询本月订单数量排行
      *
+     * @param type 1.按订单数 2.按交易金额
      * @return 结果
      */
-    List<LinkedHashMap<String, Object>> selectOrderRank();
+    List<PharmacyOrderRank> selectOrderRank(Integer type);
 }
