@@ -29,4 +29,25 @@ public interface OrderInfoMapper extends BaseMapper<OrderInfo> {
      * @return 结果
      */
     List<OrderInfo> selectOrderByMonth();
+
+    /**
+     * 十天内订单数量统计
+     *
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectOrderNumWithinDays();
+
+    /**
+     * 十天内订单收益统计
+     *
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectOrderPriceWithinDays();
+
+    /**
+     * 订单销售药品类别统计
+     *
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectOrderDrugType();
 }

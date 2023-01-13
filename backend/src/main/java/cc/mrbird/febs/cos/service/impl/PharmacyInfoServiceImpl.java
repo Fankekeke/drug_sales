@@ -129,4 +129,21 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
             return result.stream().sorted(Comparator.comparing(PharmacyOrderRank::getTotalPrice)).collect(Collectors.toList());
         }
     }
+
+    /**
+     * 主页数据
+     *
+     * @return 结果
+     */
+    @Override
+    public LinkedHashMap<String, Object> homeData() {
+        // 总订单数量
+
+        // 总收益
+
+        // 店铺数量
+
+        // 员工数量
+        return null;
+    }
 }

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.cos.dao.PaymentRecordMapper">
+
+    <!-- 分页获取缴费记录信息 -->
+    <select id="selectPaymentRecordPage" resultType="java.util.LinkedHashMap">
+        SELECT
+        pr.id,
+        pr.user_id,
+        pr.money,
+        pr.order_code,
+        pr.create_date,
+        ui.NAME AS userName,
+        ui.phone,
+        oi.order_name,
+        oi.server_type
+        FROM
+        payment_record pr
+        LEFT JOIN user_info ui ON ( ui.id = pr.user_id )
+        LEFT JOIN order_info oi ON ( oi.order_code = pr.order_code )
+        WHERE
+        1 = 1
+        <if test="paymentRecord.orderCode != null and paymentRecord.orderCode != ''">
+            AND pr.order_code LIKE CONCAT('%',#{paymentRecord.orderCode},'%')
+        </if>
+        <if test="paymentRecord.userName != null and paymentRecord.userName != ''">
+            AND ui.NAME LIKE CONCAT('%',#{paymentRecord.userName},'%')
+        </if>
+        <if test="paymentRecord.orderName != null and paymentRecord.orderName != ''">
+            AND pr.order_name LIKE CONCAT('%',#{paymentRecord.orderName},'%')
+        </if>
+        <if test="paymentRecord.serverType != null">
+            AND oi.server_type  = #{paymentRecord.serverType}
+        </if>
+        <if test="paymentRecord.userId != null">
+            AND ui.user_id = #{paymentRecord.userId}
+        </if>
+        ORDER BY
+        pr.create_date DESC
+    </select>
+
+    <!-- 获取缴费总收益 -->
+    <select id="selectAmountPrice" resultType="java.math.BigDecimal">
+        SELECT
+        IFNULL(SUM(pr.money), 0)
+        FROM
+        payment_record pr
+    </select>
+
+    <!-- 查询十天内缴费统计 -->
+    <select id="selectPaymentRecord" resultType="java.util.LinkedHashMap">
+        SELECT
+        DATE_FORMAT( spo.days, '%m-%d' ) AS days,
+        IFNULL(SUM(pr.money), 0) AS amount
+        FROM
+        (
+        SELECT
+            DATE_SUB( curdate(), INTERVAL + 0 DAY ) days UNION
+        SELECT
+            DATE_SUB( curdate(), INTERVAL + 1 DAY ) UNION
+        SELECT
+            DATE_SUB( curdate(), INTERVAL + 2 DAY ) UNION
+        SELECT
+            DATE_SUB( curdate(), INTERVAL + 3 DAY ) UNION
+        SELECT
+            DATE_SUB( curdate(), INTERVAL + 4 DAY ) UNION
+        SELECT
+            DATE_SUB( curdate(), INTERVAL + 5 DAY ) UNION
+        SELECT
+            DATE_SUB( curdate(), INTERVAL + 6 DAY ) UNION
+        SELECT
+            DATE_SUB( curdate(), INTERVAL + 7 DAY ) UNION
+        SELECT
+            DATE_SUB( curdate(), INTERVAL + 8 DAY ) UNION
+        SELECT
+            DATE_SUB( curdate(), INTERVAL + 9 DAY )) spo
+        LEFT JOIN payment_record pr ON (
+            DATE_FORMAT( pr.create_date, '%Y-%m-%d' ) = DATE_FORMAT( spo.days, '%Y-%m-%d' ))
+        GROUP BY
+        days
+        ORDER BY
+        days ASC
+    </select>
+</mapper>

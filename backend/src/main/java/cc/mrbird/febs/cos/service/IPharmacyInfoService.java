@@ -38,4 +38,12 @@ public interface IPharmacyInfoService extends IService<PharmacyInfo> {
      * @return 结果
      */
     List<PharmacyOrderRank> selectOrderRank(Integer type);
+
+    /**
+     * 主页数据
+     *
+     * @return 结果
+     */
+    LinkedHashMap<String, Object> homeData();
+
 }
