@@ -3,10 +3,7 @@ package cc.mrbird.febs.cos.service.impl;
 import cc.mrbird.febs.cos.dao.OrderInfoMapper;
 import cc.mrbird.febs.cos.entity.*;
 import cc.mrbird.febs.cos.dao.PharmacyInfoMapper;
-import cc.mrbird.febs.cos.service.IInventoryStatisticsService;
-import cc.mrbird.febs.cos.service.IOrderInfoService;
-import cc.mrbird.febs.cos.service.IPharmacyInfoService;
-import cc.mrbird.febs.cos.service.IStaffInfoService;
+import cc.mrbird.febs.cos.service.*;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -32,6 +29,8 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
     private final IOrderInfoService orderInfoService;
 
     private final IInventoryStatisticsService inventoryStatisticsService;
+
+    private final IPharmacyInventoryService pharmacyInventoryService;
 
     private final OrderInfoMapper orderInfoMapper;
 
@@ -128,6 +127,20 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
         } else {
             return result.stream().sorted(Comparator.comparing(PharmacyOrderRank::getTotalPrice)).collect(Collectors.toList());
         }
+    }
+
+    /**
+     * 查询药店库存信息
+     *
+     * @param pharmacyId 药店ID
+     * @return 结果
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> selectStockByPharmacy(Integer pharmacyId) {
+        // 药房库存信息
+        List<PharmacyInventory> pharmacyInventoryList = pharmacyInventoryService.list(Wrappers.<PharmacyInventory>lambdaQuery().eq(PharmacyInventory::getPharmacyId, pharmacyId));
+
+        return null;
     }
 
     /**
