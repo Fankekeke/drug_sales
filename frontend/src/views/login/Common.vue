@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="content">
+    <div class="content" style="margin: 0 auto">
       <div class="top">
         <div class="header">
           <span class="title">药品销售管理系统</span>
@@ -48,7 +48,7 @@ export default {
     flex-direction: column;
     height: 100vh;
     overflow: auto;
-    background: white url(../../../static/img/house.jpg) no-repeat center ;
+    background: rgb(234, 234, 234) url(../../../static/img/house.jpg) no-repeat center ;
     .content {
       padding: 32px 0;
       flex: 1;

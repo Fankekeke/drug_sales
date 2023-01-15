@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="BranchesTreeState">
     <expand>
       <path>
@@ -20,17 +23,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2b51975f-5e37-45a1-bd9d-0f3c12f944d0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/controller/BulletinInfoController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/controller/FileController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/dao/BulletinInfoMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/AlipayBean.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/BulletinInfo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/service/IBulletinInfoService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/service/impl/BulletinInfoServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/resources/config/alipay.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/resources/mapper/cos/BulletinInfoMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/service/impl/PharmacyInfoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/service/impl/PharmacyInfoServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/system/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/system/service/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/common/config/MyWebMvcConfigurerAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/common/config/MyWebMvcConfigurerAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/controller/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/controller/FileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/HomePage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/HomePage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/login/Common.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/login/Common.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/login/Login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/login/Login.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/login/Regist.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/login/Regist.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn-error.log" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,23 +50,30 @@
   <component name="GitToolBoxStore">
     <option name="projectConfigVersion" value="2" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectId" id="2JXuB6ugXIToR6BZNj9zOKFB2EA" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.path.for.package.eslint" value="project" />
-    <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="nodejs_package_manager_path" value="yarn" />
-    <property name="ts.external.directory.path" value="D:\办公软件\WebStorm 2020.2.3\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
-    <property name="vue.rearranger.settings.migration" value="true" />
-  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;G:/Project/售后管理系统/after_sale_cos/frontend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\Project\售后管理系统\after_sale_cos\frontend\src\utils" />
@@ -103,6 +110,25 @@
       <workItem from="1673263989490" duration="5753000" />
       <workItem from="1673351808573" duration="1693000" />
       <workItem from="1673441915022" duration="465000" />
+      <workItem from="1673535436583" duration="2710000" />
+      <workItem from="1673611038543" duration="941000" />
+      <workItem from="1673612032744" duration="1684000" />
+      <workItem from="1673614568925" duration="229000" />
+      <workItem from="1673614808810" duration="386000" />
+      <workItem from="1673615209250" duration="706000" />
+      <workItem from="1673617652868" duration="2333000" />
+      <workItem from="1673625501836" duration="862000" />
+      <workItem from="1673662477596" duration="1824000" />
+      <workItem from="1673676496965" duration="1118000" />
+      <workItem from="1673678329511" duration="165000" />
+      <workItem from="1673678509944" duration="481000" />
+      <workItem from="1673679079122" duration="1148000" />
+      <workItem from="1673680705486" duration="1046000" />
+      <workItem from="1673682491439" duration="1952000" />
+      <workItem from="1673755586579" duration="340000" />
+      <workItem from="1673755937443" duration="161000" />
+      <workItem from="1673756106572" duration="2856000" />
+      <workItem from="1673778878741" duration="858000" />
     </task>
     <servers />
   </component>
@@ -119,21 +145,5 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state width="498" height="446" key="SwitcherDM" timestamp="1672545273542">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state width="498" height="446" key="SwitcherDM/0.0.1920.1050@0.0.1920.1050" timestamp="1672545273542" />
-    <state x="881" y="345" width="798" height="798" key="find.popup" timestamp="1673442372251">
-      <screen x="0" y="0" width="2560" height="1410" />
-    </state>
-    <state x="661" y="257" width="598" height="594" key="find.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1673012123720" />
-    <state x="881" y="345" width="798" height="798" key="find.popup/2560.-162.1080.1890/0.0.2560.1410@0.0.2560.1410" timestamp="1673442372251" />
-    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup" timestamp="1672586604267">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1672586604267" />
   </component>
 </project>
