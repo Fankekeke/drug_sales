@@ -111,7 +111,7 @@ export default {
   },
   methods: {
     getProduct () {
-      this.$get('/cos/product-info/list').then((r) => {
+      this.$get('/cos/drug-info/list').then((r) => {
         this.plainOptions = r.data.data
       })
     },

@@ -32,11 +32,11 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
 
     private final IPharmacyInventoryService pharmacyInventoryService;
 
-    private final IPharmacyInfoService pharmacyInfoService;
-
     private final IDrugInfoService drugInfoService;
 
     private final OrderInfoMapper orderInfoMapper;
+
+    private final PharmacyInfoMapper pharmacyInfoMapper;
 
     /**
      * 分页获取药店信息
@@ -144,7 +144,7 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
         // 药房库存信息
         List<PharmacyInventory> pharmacyInventoryList = pharmacyInventoryService.list(Wrappers.<PharmacyInventory>lambdaQuery().eq(PharmacyInventory::getPharmacyId, pharmacyId));
         // 药店信息
-        List<PharmacyInfo> pharmacyInfoList = pharmacyInfoService.list(Wrappers.<PharmacyInfo>lambdaQuery().eq(PharmacyInfo::getBusinessStatus, 1));
+        List<PharmacyInfo> pharmacyInfoList = this.list(Wrappers.<PharmacyInfo>lambdaQuery().eq(PharmacyInfo::getBusinessStatus, 1));
         // 药品信息
         List<DrugInfo> drugInfoList = drugInfoService.list();
         if (CollectionUtil.isEmpty(pharmacyInventoryList) || CollectionUtil.isEmpty(pharmacyInfoList) || CollectionUtil.isEmpty(drugInfoList)) {
@@ -170,8 +170,21 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
             if (CollectionUtil.isEmpty(inventoryList)) {
                 item.put("inventory", Collections.emptyList());
             }
+            List<Map<String, Object>> drugList = new ArrayList<>();
+            inventoryList.forEach(inventory -> {
+                Map<String, Object> inventoryItem = new HashMap<String, Object>(16) {
+                    {
+                        put("name", drugMap.get(inventory.getDrugId()));
+                        put("count", inventory.getReserve());
+                        put("status", inventory.getShelfStatus());
+                    }
+                };
+                drugList.add(inventoryItem);
+            });
+            item.put("inventory", drugList);
+            result.add(item);
         });
-        return null;
+        return result;
     }
 
     /**
@@ -181,13 +194,27 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
      */
     @Override
     public LinkedHashMap<String, Object> homeData() {
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
         // 总订单数量
-
+        result.put("orderCode", orderInfoService.count());
         // 总收益
-
+        result.put("orderPrice", orderInfoMapper.selectOrderPrice());
         // 店铺数量
-
+        result.put("pharmacyNum", pharmacyInfoMapper.selectCount(Wrappers.<PharmacyInfo>lambdaQuery().eq(PharmacyInfo::getBusinessStatus, 1)));
         // 员工数量
-        return null;
+        result.put("staffNum", staffInfoService.count(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getStatus, 1)));
+        // 本月订单数量
+        List<OrderInfo> orderList = orderInfoMapper.selectOrderByMonth();
+        result.put("monthOrderNum", CollectionUtil.isEmpty(orderList) ? 0 : orderList.size());
+        BigDecimal orderPrice = orderList.stream().map(OrderInfo::getTotalCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+        // 获取本月收益
+        result.put("monthOrderPrice", orderPrice);
+        // 近十天内订单统计
+        result.put("orderNumWithinDays", orderInfoMapper.selectOrderNumWithinDays());
+        // 近十天内收益统计
+        result.put("orderPriceWithinDays", orderInfoMapper.selectOrderPriceWithinDays());
+        // 订单销售药品类别统计
+        result.put("orderDrugType", orderInfoMapper.selectOrderDrugType());
+        return result;
     }
 }

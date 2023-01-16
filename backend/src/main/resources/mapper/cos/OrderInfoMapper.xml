@@ -39,6 +39,11 @@
         oi.create_date desc
     </select>
 
+    <!-- 查询总收益 -->
+    <select id="selectOrderPrice" resultType="java.math.BigDecimal">
+        SELECT IFNULL(SUM(oi.total_cost), 0) FROM order_info oi
+    </select>
+
     <!-- 订单销售药品类别统计 -->
     <select id="selectOrderDrugType" resultType="java.util.LinkedHashMap">
         SELECT * FROM order_info oi

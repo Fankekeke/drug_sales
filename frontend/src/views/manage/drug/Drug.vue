@@ -7,7 +7,7 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="产品名称"
+                label="药品名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.name"/>
@@ -15,7 +15,7 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="产品编号"
+                label="药品编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.code"/>
@@ -23,7 +23,15 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="产品类型"
+                label="品牌"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.brand"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="所属分类"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-select v-model="queryParams.type" allowClear>
@@ -71,39 +79,39 @@
         </template>
       </a-table>
     </div>
-    <product-add
-      v-if="productAdd.visiable"
-      @close="handleproductAddClose"
-      @success="handleproductAddSuccess"
-      :productAddVisiable="productAdd.visiable">
-    </product-add>
-    <product-edit
-      ref="productEdit"
-      @close="handleproductEditClose"
-      @success="handleproductEditSuccess"
-      :productEditVisiable="productEdit.visiable">
-    </product-edit>
+    <drug-add
+      v-if="drugAdd.visiable"
+      @close="handledrugAddClose"
+      @success="handledrugAddSuccess"
+      :drugAddVisiable="drugAdd.visiable">
+    </drug-add>
+    <drug-edit
+      ref="drugEdit"
+      @close="handledrugEditClose"
+      @success="handledrugEditSuccess"
+      :drugEditVisiable="drugEdit.visiable">
+    </drug-edit>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import productAdd from './ProductAdd'
-import productEdit from './ProductEdit'
+import drugAdd from './drugAdd'
+import drugEdit from './drugEdit'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
-  name: 'product',
-  components: {productAdd, productEdit, RangeDate},
+  name: 'drug',
+  components: {drugAdd, drugEdit, RangeDate},
   data () {
     return {
       advanced: false,
-      productAdd: {
+      drugAdd: {
         visiable: false
       },
-      productEdit: {
+      drugEdit: {
         visiable: false
       },
       queryParams: {},
@@ -130,13 +138,13 @@ export default {
     }),
     columns () {
       return [{
-        title: '产品编号',
+        title: '药品编号',
         dataIndex: 'code'
       }, {
-        title: '产品名称',
+        title: '药品名称',
         dataIndex: 'name'
       }, {
-        title: '产品类型',
+        title: '药品类型',
         dataIndex: 'type',
         customRender: (text, row, index) => {
           switch (text) {
@@ -151,7 +159,7 @@ export default {
           }
         }
       }, {
-        title: '产品图片',
+        title: '药品图片',
         dataIndex: 'images',
         customRender: (text, record, index) => {
           if (!record.images) return <a-avatar shape="square" icon="user" />
@@ -200,26 +208,26 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.productAdd.visiable = true
+      this.drugAdd.visiable = true
     },
-    handleproductAddClose () {
-      this.productAdd.visiable = false
+    handledrugAddClose () {
+      this.drugAdd.visiable = false
     },
-    handleproductAddSuccess () {
-      this.productAdd.visiable = false
-      this.$message.success('新增产品成功')
+    handledrugAddSuccess () {
+      this.drugAdd.visiable = false
+      this.$message.success('新增药品成功')
       this.search()
     },
     edit (record) {
-      this.$refs.productEdit.setFormValues(record)
-      this.productEdit.visiable = true
+      this.$refs.drugEdit.setFormValues(record)
+      this.drugEdit.visiable = true
     },
-    handleproductEditClose () {
-      this.productEdit.visiable = false
+    handledrugEditClose () {
+      this.drugEdit.visiable = false
     },
-    handleproductEditSuccess () {
-      this.productEdit.visiable = false
-      this.$message.success('修改产品成功')
+    handledrugEditSuccess () {
+      this.drugEdit.visiable = false
+      this.$message.success('修改药品成功')
       this.search()
     },
     handleDeptChange (value) {
@@ -237,7 +245,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/product-info/' + ids).then(() => {
+          that.$delete('/cos/drug-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -310,7 +318,7 @@ export default {
       if (params.type === undefined) {
         delete params.type
       }
-      this.$get('/cos/product-info/page', {
+      this.$get('/cos/drug-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="新增产品" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="新增药品" @cancel="onClose" :width="800">
     <template slot="footer">
       <a-button key="back" @click="onClose">
         取消
@@ -11,7 +11,7 @@
     <a-form :form="form" layout="vertical">
       <a-row :gutter="20">
         <a-col :span="12">
-          <a-form-item label='产品名称' v-bind="formItemLayout">
+          <a-form-item label='药品名称' v-bind="formItemLayout">
             <a-input v-decorator="[
             'name',
             { rules: [{ required: true, message: '请输入名称!' }] }
@@ -27,10 +27,10 @@
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='产品类型' v-bind="formItemLayout">
+          <a-form-item label='药品类型' v-bind="formItemLayout">
             <a-select v-decorator="[
               'type',
-              { rules: [{ required: true, message: '请输入产品类型!' }] }
+              { rules: [{ required: true, message: '请输入药品类型!' }] }
               ]">
               <a-select-option value="1">标准件</a-select-option>
               <a-select-option value="2">工序外包</a-select-option>
@@ -39,7 +39,7 @@
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='产品图片' v-bind="formItemLayout">
+          <a-form-item label='药品图片' v-bind="formItemLayout">
             <a-upload
               name="avatar"
               action="http://127.0.0.1:9527/file/fileUpload/"
@@ -80,9 +80,9 @@ const formItemLayout = {
   wrapperCol: { span: 24 }
 }
 export default {
-  name: 'productAdd',
+  name: 'drugAdd',
   props: {
-    productAddVisiable: {
+    drugAddVisiable: {
       default: false
     }
   },
@@ -92,7 +92,7 @@ export default {
     }),
     show: {
       get: function () {
-        return this.productAddVisiable
+        return this.drugAddVisiable
       },
       set: function () {
       }
@@ -140,7 +140,7 @@ export default {
         values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
-          this.$post('/cos/product-info', {
+          this.$post('/cos/drug-info', {
             ...values
           }).then((r) => {
             this.reset()
