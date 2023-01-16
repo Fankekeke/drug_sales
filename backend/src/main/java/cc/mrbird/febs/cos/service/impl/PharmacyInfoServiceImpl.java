@@ -32,6 +32,10 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
 
     private final IPharmacyInventoryService pharmacyInventoryService;
 
+    private final IPharmacyInfoService pharmacyInfoService;
+
+    private final IDrugInfoService drugInfoService;
+
     private final OrderInfoMapper orderInfoMapper;
 
     /**
@@ -139,7 +143,34 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
     public List<LinkedHashMap<String, Object>> selectStockByPharmacy(Integer pharmacyId) {
         // 药房库存信息
         List<PharmacyInventory> pharmacyInventoryList = pharmacyInventoryService.list(Wrappers.<PharmacyInventory>lambdaQuery().eq(PharmacyInventory::getPharmacyId, pharmacyId));
+        // 药店信息
+        List<PharmacyInfo> pharmacyInfoList = pharmacyInfoService.list(Wrappers.<PharmacyInfo>lambdaQuery().eq(PharmacyInfo::getBusinessStatus, 1));
+        // 药品信息
+        List<DrugInfo> drugInfoList = drugInfoService.list();
+        if (CollectionUtil.isEmpty(pharmacyInventoryList) || CollectionUtil.isEmpty(pharmacyInfoList) || CollectionUtil.isEmpty(drugInfoList)) {
+            return Collections.emptyList();
+        }
 
+        List<LinkedHashMap<String, Object>> result = new ArrayList<>();
+
+        // 库房信息根据药店ID转MAP
+        Map<Integer, List<PharmacyInventory>> pharmacyInventoryMap = pharmacyInventoryList.stream().collect(Collectors.groupingBy(PharmacyInventory::getPharmacyId));
+        // 药店信息转MAP
+        Map<Integer, String> pharmacyMap = pharmacyInfoList.stream().collect(Collectors.toMap(PharmacyInfo::getId, PharmacyInfo::getName));
+        // 药品信息转MAP
+        Map<Integer, String> drugMap = drugInfoList.stream().collect(Collectors.toMap(DrugInfo::getId, DrugInfo::getName));
+
+        pharmacyInfoList.forEach(e -> {
+            LinkedHashMap<String, Object> item = new LinkedHashMap<String, Object>() {
+                {
+                    put("pharmacyName", pharmacyMap.get(e.getId()));
+                }
+            };
+            List<PharmacyInventory> inventoryList = pharmacyInventoryMap.get(e.getId());
+            if (CollectionUtil.isEmpty(inventoryList)) {
+                item.put("inventory", Collections.emptyList());
+            }
+        });
         return null;
     }
 
