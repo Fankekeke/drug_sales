@@ -30,4 +30,12 @@ public interface ILogisticsInfoService extends IService<LogisticsInfo> {
      * @return 结果
      */
     List<LogisticsInfo> selectLogisticsByOrder(Integer orderId);
+
+    /**
+     * 新增配送物流信息
+     *
+     * @param logisticsInfo 配送物流信息
+     * @return 结果
+     */
+    boolean saveLogistics(LogisticsInfo logisticsInfo);
 }

@@ -3,12 +3,14 @@ package cc.mrbird.febs.cos.service.impl;
 import cc.mrbird.febs.cos.entity.LogisticsInfo;
 import cc.mrbird.febs.cos.dao.LogisticsInfoMapper;
 import cc.mrbird.febs.cos.service.ILogisticsInfoService;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -39,5 +41,20 @@ public class LogisticsInfoServiceImpl extends ServiceImpl<LogisticsInfoMapper, L
     @Override
     public List<LogisticsInfo> selectLogisticsByOrder(Integer orderId) {
         return this.list(Wrappers.<LogisticsInfo>lambdaQuery().eq(LogisticsInfo::getOrderId, orderId));
+    }
+
+    /**
+     * 新增配送物流信息
+     *
+     * @param logisticsInfo 配送物流信息
+     * @return 结果
+     */
+    @Override
+    public boolean saveLogistics(LogisticsInfo logisticsInfo) {
+        // 设置之前的物流为0
+        this.update(Wrappers.<LogisticsInfo>lambdaUpdate().set(LogisticsInfo::getCurrentLogistics, 0).eq(LogisticsInfo::getOrderId, logisticsInfo.getOrderId()));
+        logisticsInfo.setCurrentLogistics(1);
+        logisticsInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        return this.save(logisticsInfo);
     }
 }

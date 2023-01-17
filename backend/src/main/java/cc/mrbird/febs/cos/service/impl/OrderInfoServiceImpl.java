@@ -39,6 +39,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     private final IInventoryStatisticsService inventoryStatisticsService;
 
+    private final ILogisticsInfoService logisticsInfoService;
+
     /**
      * 分页获取订单信息
      *
@@ -121,6 +123,13 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             inventoryStatistics.setCreateDate(DateUtil.formatDateTime(new Date()));
             statisticsList.add(inventoryStatistics);
         });
+        // 订单物流信息初始化
+        LogisticsInfo logisticsInfo = new LogisticsInfo();
+        logisticsInfo.setOrderId(orderInfo.getId());
+        logisticsInfo.setRemark("订单正在揽收");
+        logisticsInfo.setCurrentLogistics(1);
+        logisticsInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        logisticsInfoService.save(logisticsInfo);
         // 修改库存信息
         pharmacyInventoryService.updateBatchById(inventoryList);
         // 添加库房统计

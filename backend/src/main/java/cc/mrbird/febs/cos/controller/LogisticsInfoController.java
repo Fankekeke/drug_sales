@@ -46,6 +46,7 @@ public class LogisticsInfoController {
         return R.ok(logisticsInfoService.selectLogisticsByOrder(orderId));
     }
 
+
     /**
      * 获取详情信息
      *
