@@ -10,41 +10,15 @@
                 label="药品名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.name"/>
+                <a-input v-model="queryParams.drugName"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="药品编号"
+                label="药房名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.code"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="品牌"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.brand"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="所属分类"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-select v-model="queryParams.category" allowClear>
-                  <a-select-option value="1">中药材</a-select-option>
-                  <a-select-option value="2">中药饮片</a-select-option>
-                  <a-select-option value="3">中西成药</a-select-option>
-                  <a-select-option value="4">化学原料药</a-select-option>
-                  <a-select-option value="5">抗生素</a-select-option>
-                  <a-select-option value="6">生化药品</a-select-option>
-                  <a-select-option value="7">放射性药品</a-select-option>
-                  <a-select-option value="8">血清</a-select-option>
-                  <a-select-option value="9">诊断药品</a-select-option>
-                </a-select>
+                <a-input v-model="queryParams.pharmacyName"/>
               </a-form-item>
             </a-col>
           </div>
@@ -57,8 +31,6 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
-        <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -70,54 +42,51 @@
                :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                :scroll="{ x: 900 }"
                @change="handleTableChange">
-        <template slot="titleShow" slot-scope="text, record">
+        <template slot="addressShow" slot-scope="text, record">
           <template>
             <a-tooltip>
               <template slot="title">
-                {{ record.title }}
+                {{ record.address }}
               </template>
-              {{ record.title.slice(0, 8) }} ...
+              {{ record.address.slice(0, 8) }} ...
             </a-tooltip>
           </template>
         </template>
-        <template slot="operation" slot-scope="text, record">
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>
-        </template>
       </a-table>
     </div>
-    <drug-add
-      v-if="drugAdd.visiable"
-      @close="handledrugAddClose"
-      @success="handledrugAddSuccess"
-      :drugAddVisiable="drugAdd.visiable">
-    </drug-add>
-    <drug-edit
-      ref="drugEdit"
-      @close="handledrugEditClose"
-      @success="handledrugEditSuccess"
-      :drugEditVisiable="drugEdit.visiable">
-    </drug-edit>
+    <inventory-add
+      v-if="inventoryAdd.visiable"
+      @close="handleinventoryAddClose"
+      @success="handleinventoryAddSuccess"
+      :inventoryAddVisiable="inventoryAdd.visiable">
+    </inventory-add>
+    <inventory-edit
+      ref="inventoryEdit"
+      @close="handleinventoryEditClose"
+      @success="handleinventoryEditSuccess"
+      :inventoryEditVisiable="inventoryEdit.visiable">
+    </inventory-edit>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import drugAdd from './drugAdd'
-import drugEdit from './drugEdit'
+import inventoryAdd from './inventoryAdd'
+import inventoryEdit from './inventoryEdit'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
-  name: 'drug',
-  components: {drugAdd, drugEdit, RangeDate},
+  name: 'inventory',
+  components: {inventoryAdd, inventoryEdit, RangeDate},
   data () {
     return {
       advanced: false,
-      drugAdd: {
+      inventoryAdd: {
         visiable: false
       },
-      drugEdit: {
+      inventoryEdit: {
         visiable: false
       },
       queryParams: {},
@@ -144,41 +113,31 @@ export default {
     }),
     columns () {
       return [{
-        title: '药品编号',
-        dataIndex: 'code'
+        title: '药店名称',
+        dataIndex: 'pharmacyName'
       }, {
-        title: '药品名称',
-        dataIndex: 'name'
-      }, {
-        title: '所属品牌',
-        dataIndex: 'brand'
+        title: '地址',
+        dataIndex: 'address',
+        scopedSlots: { customRender: 'addressShow' },
       }, {
         title: '所属分类',
-        dataIndex: 'category',
+        dataIndex: 'storageType',
         customRender: (text, row, index) => {
           switch (text) {
             case 1:
-              return <a-tag>中药材</a-tag>
+              return <a-tag>出库</a-tag>
             case 2:
-              return <a-tag>中药饮片</a-tag>
-            case 3:
-              return <a-tag>中西成药</a-tag>
-            case 4:
-              return <a-tag>化学原料药</a-tag>
-            case 5:
-              return <a-tag>抗生素</a-tag>
-            case 6:
-              return <a-tag>生化药品</a-tag>
-            case 7:
-              return <a-tag>放射性药品</a-tag>
-            case 8:
-              return <a-tag>血清</a-tag>
-            case 9:
-              return <a-tag>诊断药品</a-tag>
+              return <a-tag>入库</a-tag>
             default:
               return '- -'
           }
         }
+      }, {
+        title: '药品名称',
+        dataIndex: 'drugName'
+      }, {
+        title: '品牌',
+        dataIndex: 'brand'
       }, {
         title: '药品图片',
         dataIndex: 'images',
@@ -192,8 +151,8 @@ export default {
           </a-popover>
         }
       }, {
-        title: '药品类别',
-        dataIndex: 'classificationName',
+        title: '数量',
+        dataIndex: 'quantity',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -202,8 +161,8 @@ export default {
           }
         }
       }, {
-        title: '通用名',
-        dataIndex: 'commonName',
+        title: '保管人',
+        dataIndex: 'custodian',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -212,8 +171,8 @@ export default {
           }
         }
       }, {
-        title: '剂型',
-        dataIndex: 'dosageForm',
+        title: '操作时间',
+        dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -221,20 +180,6 @@ export default {
             return '- -'
           }
         }
-      }, {
-        title: '用法',
-        dataIndex: 'usage',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '操作',
-        dataIndex: 'operation',
-        scopedSlots: {customRender: 'operation'}
       }]
     }
   },
@@ -249,26 +194,26 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.drugAdd.visiable = true
+      this.inventoryAdd.visiable = true
     },
-    handledrugAddClose () {
-      this.drugAdd.visiable = false
+    handleinventoryAddClose () {
+      this.inventoryAdd.visiable = false
     },
-    handledrugAddSuccess () {
-      this.drugAdd.visiable = false
-      this.$message.success('新增药品成功')
+    handleinventoryAddSuccess () {
+      this.inventoryAdd.visiable = false
+      this.$message.success('新增库存成功')
       this.search()
     },
     edit (record) {
-      this.$refs.drugEdit.setFormValues(record)
-      this.drugEdit.visiable = true
+      this.$refs.inventoryEdit.setFormValues(record)
+      this.inventoryEdit.visiable = true
     },
-    handledrugEditClose () {
-      this.drugEdit.visiable = false
+    handleinventoryEditClose () {
+      this.inventoryEdit.visiable = false
     },
-    handledrugEditSuccess () {
-      this.drugEdit.visiable = false
-      this.$message.success('修改药品成功')
+    handleinventoryEditSuccess () {
+      this.inventoryEdit.visiable = false
+      this.$message.success('修改库存成功')
       this.search()
     },
     handleDeptChange (value) {
@@ -286,7 +231,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/drug-info/' + ids).then(() => {
+          that.$delete('/cos/inventory-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -359,7 +304,7 @@ export default {
       if (params.type === undefined) {
         delete params.type
       }
-      this.$get('/cos/drug-info/page', {
+      this.$get('/cos/inventory-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

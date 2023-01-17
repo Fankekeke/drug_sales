@@ -10,7 +10,7 @@
     </template>
     <a-form :form="form" layout="vertical">
       <a-row :gutter="20">
-        <a-col :span="12">
+        <a-col :span="6">
           <a-form-item label='药品名称' v-bind="formItemLayout">
             <a-input v-decorator="[
             'name',
@@ -18,25 +18,141 @@
             ]"/>
           </a-form-item>
         </a-col>
-        <a-col :span="12">
-          <a-form-item label='型号' v-bind="formItemLayout">
+        <a-col :span="6">
+          <a-form-item label='品牌' v-bind="formItemLayout">
             <a-input v-decorator="[
-            'model',
-            { rules: [{ required: true, message: '请输入型号!' }] }
+            'brand',
+            { rules: [{ required: true, message: '请输入品牌!' }] }
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label='药品类型' v-bind="formItemLayout">
+            <a-select v-decorator="[
+              'category',
+              { rules: [{ required: true, message: '请输入药品类型!' }] }
+              ]">
+              <a-select-option value="1">中药材</a-select-option>
+              <a-select-option value="2">中药饮片</a-select-option>
+              <a-select-option value="3">中西成药</a-select-option>
+              <a-select-option value="4">化学原料药</a-select-option>
+              <a-select-option value="5">抗生素</a-select-option>
+              <a-select-option value="6">生化药品</a-select-option>
+              <a-select-option value="7">放射性药品</a-select-option>
+              <a-select-option value="8">血清</a-select-option>
+              <a-select-option value="9">诊断药品</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label='药品类别' v-bind="formItemLayout">
+            <a-select v-decorator="[
+              'classification',
+              { rules: [{ required: true, message: '请输入药品类别!' }] }
+              ]">
+              <a-select-option value="1">中药材</a-select-option>
+              <a-select-option value="2">中药饮片</a-select-option>
+              <a-select-option value="3">中西成药</a-select-option>
+              <a-select-option value="4">化学原料药</a-select-option>
+              <a-select-option value="5">抗生素</a-select-option>
+              <a-select-option value="6">生化药品</a-select-option>
+              <a-select-option value="7">放射性药品</a-select-option>
+              <a-select-option value="8">血清</a-select-option>
+              <a-select-option value="9">诊断药品</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label='通用名' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'commonName'
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label='剂型' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'dosageForm'
+            ]"/>
+          </a-form-item>
+        </a-col>
+         <a-col :span="6">
+          <a-form-item label='用法' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'usage'
             ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='药品类型' v-bind="formItemLayout">
-            <a-select v-decorator="[
-              'type',
-              { rules: [{ required: true, message: '请输入药品类型!' }] }
-              ]">
-              <a-select-option value="1">标准件</a-select-option>
-              <a-select-option value="2">工序外包</a-select-option>
-              <a-select-option value="3">工序外购</a-select-option>
-            </a-select>
+          <a-form-item label='适用症状' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'applicableSymptoms'
+            ]"/>
           </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='适用疾病' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'applicableDisease'
+            ]"/>
+          </a-form-item
+          >
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label='包装清单' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'packingList'
+            ]"/>
+          </a-form-item
+          >
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label='使用剂量' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'dosageUse'
+            ]"/>
+          </a-form-item
+          >
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label='有效期' v-bind="formItemLayout">
+            <a-input-number style="width: 100%" :min="1" :step="1" v-decorator="[
+            'validityPeriod'
+            ]"/>
+          </a-form-item
+          >
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label='批准文号' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'approvalNumber'
+            ]"/>
+          </a-form-item
+          >
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label='生产企业' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'manufacturer'
+            ]"/>
+          </a-form-item
+          >
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label='单价' v-bind="formItemLayout">
+            <a-input-number style="width: 100%" :min="1" :step="0.1" v-decorator="[
+            'unitPrice'
+            ]"/>
+          </a-form-item
+          >
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label='批准文号' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'approvalNumber'
+            ]"/>
+          </a-form-item
+          >
         </a-col>
         <a-col :span="24">
           <a-form-item label='药品图片' v-bind="formItemLayout">
@@ -134,14 +250,14 @@ export default {
     },
     setFormValues ({...drug}) {
       this.rowId = drug.id
-      let fields = ['name', 'type', 'model']
+      let fields = ['name', 'brand', 'category', 'classification', 'commonName', 'dosageForm', 'usage', 'applicableSymptoms', 'applicableDisease', 'packingList', 'dosageUse', 'validityPeriod', 'approvalNumber', 'manufacturer', 'unitPrice', 'images']
       let obj = {}
       Object.keys(drug).forEach((key) => {
         if (key === 'images') {
           this.fileList = []
           this.imagesInit(drug['images'])
         }
-        if (key === 'type') {
+        if (key === 'category') {
           drug[key] = drug[key].toString()
         }
         if (fields.indexOf(key) !== -1) {

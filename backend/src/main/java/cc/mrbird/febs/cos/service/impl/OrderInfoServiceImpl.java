@@ -5,10 +5,7 @@ import cc.mrbird.febs.cos.dao.UserInfoMapper;
 import cc.mrbird.febs.cos.entity.*;
 import cc.mrbird.febs.cos.dao.OrderInfoMapper;
 import cc.mrbird.febs.cos.entity.vo.OrderInfoVo;
-import cc.mrbird.febs.cos.service.IOrderDetailService;
-import cc.mrbird.febs.cos.service.IOrderInfoService;
-import cc.mrbird.febs.cos.service.IPaymentRecordService;
-import cc.mrbird.febs.cos.service.IPharmacyInventoryService;
+import cc.mrbird.febs.cos.service.*;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
@@ -22,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -42,6 +36,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private final IPharmacyInventoryService pharmacyInventoryService;
 
     private final IPaymentRecordService paymentRecordService;
+
+    private final IInventoryStatisticsService inventoryStatisticsService;
 
     /**
      * 分页获取订单信息
@@ -114,11 +110,21 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         Map<Integer, Integer> detailMap = detailList.stream().collect(Collectors.toMap(OrderDetail::getDrugId, OrderDetail::getQuantity));
         // 根据药品ID获取库存信息
         List<PharmacyInventory> inventoryList = pharmacyInventoryService.list(Wrappers.<PharmacyInventory>lambdaQuery().in(PharmacyInventory::getDrugId, detailMap.keySet()).eq(PharmacyInventory::getPharmacyId, orderInfo.getPharmacyId()));
+        List<InventoryStatistics> statisticsList = new ArrayList<>();
         inventoryList.forEach(e -> {
             e.setReserve(e.getReserve() - detailMap.get(e.getDrugId()));
+            InventoryStatistics inventoryStatistics = new InventoryStatistics();
+            inventoryStatistics.setDrugId(e.getDrugId());
+            inventoryStatistics.setPharmacyId(e.getPharmacyId());
+            inventoryStatistics.setQuantity(e.getReserve());
+            inventoryStatistics.setStorageType(2);
+            inventoryStatistics.setCreateDate(DateUtil.formatDateTime(new Date()));
+            statisticsList.add(inventoryStatistics);
         });
         // 修改库存信息
         pharmacyInventoryService.updateBatchById(inventoryList);
+        // 添加库房统计
+        inventoryStatisticsService.saveBatch(statisticsList);
         // 添加付款记录
         PaymentRecord paymentRecord = new PaymentRecord();
         paymentRecord.setCreateDate(DateUtil.formatDateTime(new Date()));

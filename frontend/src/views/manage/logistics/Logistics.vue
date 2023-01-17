@@ -7,44 +7,18 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="药品名称"
+                label="订单编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.name"/>
+                <a-input v-model="queryParams.orderCode"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="药品编号"
+                label="客户名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.code"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="品牌"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.brand"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="所属分类"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-select v-model="queryParams.category" allowClear>
-                  <a-select-option value="1">中药材</a-select-option>
-                  <a-select-option value="2">中药饮片</a-select-option>
-                  <a-select-option value="3">中西成药</a-select-option>
-                  <a-select-option value="4">化学原料药</a-select-option>
-                  <a-select-option value="5">抗生素</a-select-option>
-                  <a-select-option value="6">生化药品</a-select-option>
-                  <a-select-option value="7">放射性药品</a-select-option>
-                  <a-select-option value="8">血清</a-select-option>
-                  <a-select-option value="9">诊断药品</a-select-option>
-                </a-select>
+                <a-input v-model="queryParams.userName"/>
               </a-form-item>
             </a-col>
           </div>
@@ -57,7 +31,6 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -70,13 +43,13 @@
                :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                :scroll="{ x: 900 }"
                @change="handleTableChange">
-        <template slot="titleShow" slot-scope="text, record">
+        <template slot="contentShow" slot-scope="text, record">
           <template>
             <a-tooltip>
               <template slot="title">
-                {{ record.title }}
+                {{ record.remark }}
               </template>
-              {{ record.title.slice(0, 8) }} ...
+              {{ record.remark.slice(0, 10) }} ...
             </a-tooltip>
           </template>
         </template>
@@ -85,39 +58,32 @@
         </template>
       </a-table>
     </div>
-    <drug-add
-      v-if="drugAdd.visiable"
-      @close="handledrugAddClose"
-      @success="handledrugAddSuccess"
-      :drugAddVisiable="drugAdd.visiable">
-    </drug-add>
-    <drug-edit
-      ref="drugEdit"
-      @close="handledrugEditClose"
-      @success="handledrugEditSuccess"
-      :drugEditVisiable="drugEdit.visiable">
-    </drug-edit>
+    <logistics-edit
+      ref="logisticsEdit"
+      @close="handlelogisticsEditClose"
+      @success="handlelogisticsEditSuccess"
+      :logisticsEditVisiable="logisticsEdit.visiable">
+    </logistics-edit>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import drugAdd from './drugAdd'
-import drugEdit from './drugEdit'
+import logisticsEdit from './logisticsEdit'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
-  name: 'drug',
-  components: {drugAdd, drugEdit, RangeDate},
+  name: 'logistics',
+  components: {logisticsEdit, RangeDate},
   data () {
     return {
       advanced: false,
-      drugAdd: {
+      logisticsAdd: {
         visiable: false
       },
-      drugEdit: {
+      logisticsEdit: {
         visiable: false
       },
       queryParams: {},
@@ -144,56 +110,14 @@ export default {
     }),
     columns () {
       return [{
-        title: '药品编号',
+        title: '订单编号',
         dataIndex: 'code'
       }, {
-        title: '药品名称',
-        dataIndex: 'name'
+        title: '总价格',
+        dataIndex: 'totalCost'
       }, {
-        title: '所属品牌',
-        dataIndex: 'brand'
-      }, {
-        title: '所属分类',
-        dataIndex: 'category',
-        customRender: (text, row, index) => {
-          switch (text) {
-            case 1:
-              return <a-tag>中药材</a-tag>
-            case 2:
-              return <a-tag>中药饮片</a-tag>
-            case 3:
-              return <a-tag>中西成药</a-tag>
-            case 4:
-              return <a-tag>化学原料药</a-tag>
-            case 5:
-              return <a-tag>抗生素</a-tag>
-            case 6:
-              return <a-tag>生化药品</a-tag>
-            case 7:
-              return <a-tag>放射性药品</a-tag>
-            case 8:
-              return <a-tag>血清</a-tag>
-            case 9:
-              return <a-tag>诊断药品</a-tag>
-            default:
-              return '- -'
-          }
-        }
-      }, {
-        title: '药品图片',
-        dataIndex: 'images',
-        customRender: (text, record, index) => {
-          if (!record.images) return <a-avatar shape="square" icon="user" />
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
-            </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
-          </a-popover>
-        }
-      }, {
-        title: '药品类别',
-        dataIndex: 'classificationName',
+        title: '客户名称',
+        dataIndex: 'name',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -202,8 +126,8 @@ export default {
           }
         }
       }, {
-        title: '通用名',
-        dataIndex: 'commonName',
+        title: '联系方式',
+        dataIndex: 'phone',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -212,8 +136,8 @@ export default {
           }
         }
       }, {
-        title: '剂型',
-        dataIndex: 'dosageForm',
+        title: '收获地址',
+        dataIndex: 'userAddress',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -222,8 +146,12 @@ export default {
           }
         }
       }, {
-        title: '用法',
-        dataIndex: 'usage',
+        title: '物流内容',
+        dataIndex: 'remark',
+        scopedSlots: { customRender: 'contentShow' }
+      }, {
+        title: '发布时间',
+        dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -249,26 +177,26 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.drugAdd.visiable = true
+      this.logisticsAdd.visiable = true
     },
-    handledrugAddClose () {
-      this.drugAdd.visiable = false
+    handlelogisticsAddClose () {
+      this.logisticsAdd.visiable = false
     },
-    handledrugAddSuccess () {
-      this.drugAdd.visiable = false
-      this.$message.success('新增药品成功')
+    handlelogisticsAddSuccess () {
+      this.logisticsAdd.visiable = false
+      this.$message.success('新增物流成功')
       this.search()
     },
     edit (record) {
-      this.$refs.drugEdit.setFormValues(record)
-      this.drugEdit.visiable = true
+      this.$refs.logisticsEdit.setFormValues(record)
+      this.logisticsEdit.visiable = true
     },
-    handledrugEditClose () {
-      this.drugEdit.visiable = false
+    handlelogisticsEditClose () {
+      this.logisticsEdit.visiable = false
     },
-    handledrugEditSuccess () {
-      this.drugEdit.visiable = false
-      this.$message.success('修改药品成功')
+    handlelogisticsEditSuccess () {
+      this.logisticsEdit.visiable = false
+      this.$message.success('修改物流成功')
       this.search()
     },
     handleDeptChange (value) {
@@ -286,7 +214,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/drug-info/' + ids).then(() => {
+          that.$delete('/cos/logistics-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -356,10 +284,7 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      if (params.type === undefined) {
-        delete params.type
-      }
-      this.$get('/cos/drug-info/page', {
+      this.$get('/cos/logistics-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data
