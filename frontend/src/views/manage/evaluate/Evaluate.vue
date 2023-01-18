@@ -7,10 +7,10 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="员工姓名"
+                label="订单编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.staffName"/>
+                <a-input v-model="queryParams.orderCode"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
@@ -23,10 +23,10 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="工单名称"
+                label="药店名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.orderName"/>
+                <a-input v-model="queryParams.pharmacyName"/>
               </a-form-item>
             </a-col>
           </div>
@@ -51,18 +51,15 @@
                :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                :scroll="{ x: 900 }"
                @change="handleTableChange">
-        <template slot="titleShow" slot-scope="text, record">
+        <template slot="contentShow" slot-scope="text, record">
           <template>
             <a-tooltip>
               <template slot="title">
-                {{ record.title }}
+                {{ record.content }}
               </template>
-              {{ record.title.slice(0, 8) }} ...
+              {{ record.content.slice(0, 10) }} ...
             </a-tooltip>
           </template>
-        </template>
-        <template slot="operation" slot-scope="text, record">
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>
         </template>
       </a-table>
     </div>
@@ -111,46 +108,26 @@ export default {
     }),
     columns () {
       return [{
-        title: '工单名称',
-        dataIndex: 'orderName'
+        title: '订单编号',
+        dataIndex: 'code'
+      }, {
+        title: '订单总价',
+        dataIndex: 'totalCost',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + '元'
+          } else {
+            return '- -'
+          }
+        }
       }, {
         title: '评价客户',
-        dataIndex: 'userName'
+        dataIndex: 'name'
       }, {
-        title: '员工姓名',
-        dataIndex: 'staffName'
+        title: '药房名称',
+        dataIndex: 'pharmacyName'
       }, {
-        title: '准时得分',
-        dataIndex: 'scheduleScore',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text + '分'
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '维修得分',
-        dataIndex: 'repairScore',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text + '分'
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '服务得分',
-        dataIndex: 'serviceScore',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text + '分'
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '综合得分',
+        title: '评价得分',
         dataIndex: 'score',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -158,6 +135,22 @@ export default {
           } else {
             return '- -'
           }
+        }
+      }, {
+        title: '评价内容',
+        dataIndex: 'content',
+       scopedSlots: { customRender: 'contentShow' },
+      }, {
+        title: '评价图片',
+        dataIndex: 'images',
+        customRender: (text, record, index) => {
+          if (!record.images) return <a-avatar shape="square" icon="user" />
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+            </template>
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+          </a-popover>
         }
       }, {
         title: '评价时间',
@@ -220,7 +213,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/staff-evaluation/' + ids).then(() => {
+          that.$delete('/cos/order-evaluate/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -293,7 +286,7 @@ export default {
       if (params.type === undefined) {
         delete params.type
       }
-      this.$get('/cos/staff-evaluation/page', {
+      this.$get('/cos/order-evaluate/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

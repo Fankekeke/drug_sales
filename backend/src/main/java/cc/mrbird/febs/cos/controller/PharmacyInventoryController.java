@@ -15,7 +15,7 @@ import java.util.List;
  * @author FanK
  */
 @RestController
-@RequestMapping("/salm/pharmacy-inventory")
+@RequestMapping("/cos/pharmacy-inventory")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PharmacyInventoryController {
 

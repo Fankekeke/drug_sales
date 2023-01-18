@@ -11,9 +11,7 @@
         pr.order_code,
         pr.create_date,
         ui.NAME AS userName,
-        ui.phone,
-        oi.order_name,
-        oi.server_type
+        ui.phone
         FROM
         payment_record pr
         LEFT JOIN user_info ui ON ( ui.id = pr.user_id )
@@ -25,12 +23,6 @@
         </if>
         <if test="paymentRecord.userName != null and paymentRecord.userName != ''">
             AND ui.NAME LIKE CONCAT('%',#{paymentRecord.userName},'%')
-        </if>
-        <if test="paymentRecord.orderName != null and paymentRecord.orderName != ''">
-            AND pr.order_name LIKE CONCAT('%',#{paymentRecord.orderName},'%')
-        </if>
-        <if test="paymentRecord.serverType != null">
-            AND oi.server_type  = #{paymentRecord.serverType}
         </if>
         <if test="paymentRecord.userId != null">
             AND ui.user_id = #{paymentRecord.userId}

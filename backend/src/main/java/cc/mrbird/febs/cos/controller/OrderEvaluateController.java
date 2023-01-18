@@ -16,7 +16,7 @@ import java.util.List;
  * @author FanK
  */
 @RestController
-@RequestMapping("/salm/order-evaluate")
+@RequestMapping("/cos/order-evaluate")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class OrderEvaluateController {
 

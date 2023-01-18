@@ -15,7 +15,7 @@ import java.util.List;
  * @author FanK
  */
 @RestController
-@RequestMapping("/salm/user-info")
+@RequestMapping("/cos/user-info")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserInfoController {
 

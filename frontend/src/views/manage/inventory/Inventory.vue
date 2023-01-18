@@ -54,32 +54,18 @@
         </template>
       </a-table>
     </div>
-    <inventory-add
-      v-if="inventoryAdd.visiable"
-      @close="handleinventoryAddClose"
-      @success="handleinventoryAddSuccess"
-      :inventoryAddVisiable="inventoryAdd.visiable">
-    </inventory-add>
-    <inventory-edit
-      ref="inventoryEdit"
-      @close="handleinventoryEditClose"
-      @success="handleinventoryEditSuccess"
-      :inventoryEditVisiable="inventoryEdit.visiable">
-    </inventory-edit>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import inventoryAdd from './inventoryAdd'
-import inventoryEdit from './inventoryEdit'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
   name: 'inventory',
-  components: {inventoryAdd, inventoryEdit, RangeDate},
+  components: {RangeDate},
   data () {
     return {
       advanced: false,

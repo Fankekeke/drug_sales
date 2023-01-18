@@ -1,83 +1,48 @@
 <template>
-  <a-modal v-model="show" title="药品详情" @cancel="onClose" :width="800">
-    <template slot="footer">
+  <a-modal v-model="show" title="药店详情" @cancel="onClose" :width="800">
+    <template slot="footer">drug
       <a-button key="back" @click="onClose" type="danger">
         关闭
       </a-button>
     </template>
-    <div style="font-size: 13px;font-family: SimHei" v-if="drugData !== null">
+    <div style="font-size: 13px;font-family: SimHei" v-if="pharmacyData !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">药品信息</span></a-col>
-        <a-col :span="8"><b>药品名称：</b>
-          {{ drugData.name }}
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">药店信息</span></a-col>
+        <a-col :span="8"><b>药店名称：</b>
+          {{ pharmacyData.name }}
         </a-col>
-        <a-col :span="8"><b>药品编号：</b>
-          {{ drugData.code }}
+        <a-col :span="8"><b>药店编号：</b>
+          {{ pharmacyData.code }}
         </a-col>
-        <a-col :span="8"><b>所属品牌：</b>
-          {{ drugData.brand }}
+        <a-col :span="8"><b>详细地址：</b>
+          {{ pharmacyData.address }}
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>所属分类：</b>
-          {{ drugData.category }}
+        <a-col :span="8"><b>营业状态：</b>
+          <span v-if="pharmacyData.businessStatus == 1" style="color: green">营业中</span>
+          <span v-if="pharmacyData.businessStatus == 2" style="color: red">歇业</span>
         </a-col>
-        <a-col :span="8"><b>药品类别：</b>
-          {{ drugData.classification }}
+        <a-col :span="8"><b>法人姓名：</b>
+          {{ pharmacyData.legalPerson }}
         </a-col>
-        <a-col :span="8"><b>通用名：</b>
-          {{ drugData.commonName }}
-        </a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>剂型：</b>
-          {{ drugData.dosageForm }}
-        </a-col>
-        <a-col :span="8"><b>用法：</b>
-          {{ drugData.usage }}
-        </a-col>
-        <a-col :span="8"><b>适用症状：</b>
-          {{ drugData.applicableSymptoms }}
+        <a-col :span="8"><b>联系电话：</b>
+          {{ pharmacyData.phone }}
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>适用疾病：</b>
-          {{ drugData.applicableDisease }}
-        </a-col>
-        <a-col :span="8"><b>包装清单：</b>
-          {{ drugData.packingList }}
-        </a-col>
-        <a-col :span="8"><b>使用剂量：</b>
-          {{ drugData.dosageUse }}
-        </a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>有效期：</b>
-          {{ drugData.validityPeriod }}
-        </a-col>
-        <a-col :span="8"><b>批准文号：</b>
-          {{ drugData.approvalNumber }}
-        </a-col>
-        <a-col :span="8"><b>生产企业：</b>
-          {{ drugData.manufacturer }}
-        </a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>单价：</b>
-          {{ drugData.unitPrice }}
+        <a-col :span="8"><b>营业时间：</b>
+          {{ pharmacyData.businessHours }}
         </a-col>
         <a-col :span="8"><b>创建时间：</b>
-          {{ drugData.createDate }}
+          {{ pharmacyData.createDate }}
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">药品图片</span></a-col>
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">药店图片</span></a-col>
         <a-col :span="24">
           <a-upload
             name="avatar"
@@ -111,20 +76,20 @@ function getBase64 (file) {
   })
 }
 export default {
-  name: 'drugView',
+  name: 'pharmacyView',
   props: {
-    drugShow: {
+    pharmacyShow: {
       type: Boolean,
       default: false
     },
-    drugData: {
+    pharmacyData: {
       type: Object
     }
   },
   computed: {
     show: {
       get: function () {
-        return this.drugShow
+        return this.pharmacyShow
       },
       set: function () {
       }
@@ -139,10 +104,10 @@ export default {
     }
   },
   watch: {
-    drugShow: function (value) {
+    pharmacyShow: function (value) {
       if (value) {
-       if (this.drugData.images !== null && this.drugData.images !== '') {
-          this.imagesInit(this.drugData.images)
+       if (this.pharmacyData.images !== null && this.pharmacyData.images !== '') {
+          this.imagesInit(this.pharmacyData.images)
         }
       }
     }

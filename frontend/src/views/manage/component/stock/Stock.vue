@@ -7,18 +7,26 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="订单编号"
+                label="药店名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.orderCode"/>
+                <a-input v-model="queryParams.pharmacyName"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="客户名称"
+                label="药品名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.userName"/>
+                <a-input v-model="queryParams.drugName"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="品牌"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.brand"/>
               </a-form-item>
             </a-col>
           </div>
@@ -31,7 +39,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button @click="batchDelete">删除</a-button>
+        <a-button type="primary" ghost @click="add">新增</a-button>
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -53,28 +61,49 @@
             </a-tooltip>
           </template>
         </template>
+        <template slot="operation" slot-scope="text, record">
+          <a-icon type="setting" @click="handleDrugViewOpen(record)" title="详 情"></a-icon>
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-left: 15px"></a-icon>
+        </template>
       </a-table>
     </div>
+    <drug-add
+      v-if="drugAdd.visiable"
+      @close="handledrugAddClose"
+      @success="handledrugAddSuccess"
+      :drugAddVisiable="drugAdd.visiable">
+    </drug-add>
+    <drug-view
+      @close="handleDrugViewClose"
+      :drugShow="drugView.visiable"
+      :drugData="drugView.data">
+    </drug-view>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
+import drugAdd from './drugAdd'
+import drugView from './drugView'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
-  name: 'payment',
-  components: {RangeDate},
+  name: 'drug',
+  components: {drugAdd, drugView, RangeDate},
   data () {
     return {
       advanced: false,
-      paymentAdd: {
+      drugAdd: {
         visiable: false
       },
-      paymentEdit: {
+      drugEdit: {
         visiable: false
+      },
+      drugView: {
+        visiable: false,
+        data: null
       },
       queryParams: {},
       filteredInfo: null,
@@ -100,34 +129,83 @@ export default {
     }),
     columns () {
       return [{
-        title: '工单编号',
-        dataIndex: 'orderCode'
+        title: '药店名称',
+        dataIndex: 'pharmacyName'
       }, {
-        title: '客户名称',
-        dataIndex: 'userName'
+        title: '药店编号',
+        dataIndex: 'pharmacyCode'
       }, {
-        title: '联系方式',
-        dataIndex: 'phone'
+        title: '药品名称',
+        dataIndex: 'drugName'
       }, {
-        title: '缴费金额',
-        dataIndex: 'money',
+        title: '所属品牌',
+        dataIndex: 'brand'
+      }, {
+        title: '所属分类',
+        dataIndex: 'category',
+        customRender: (text, row, index) => {
+          switch (text) {
+            case 1:
+              return <a-tag>中药材</a-tag>
+            case 2:
+              return <a-tag>中药饮片</a-tag>
+            case 3:
+              return <a-tag>中西成药</a-tag>
+            case 4:
+              return <a-tag>化学原料药</a-tag>
+            case 5:
+              return <a-tag>抗生素</a-tag>
+            case 6:
+              return <a-tag>生化药品</a-tag>
+            case 7:
+              return <a-tag>放射性药品</a-tag>
+            case 8:
+              return <a-tag>血清</a-tag>
+            case 9:
+              return <a-tag>诊断药品</a-tag>
+            default:
+              return '- -'
+          }
+        }
+      }, {
+        title: '药品图片',
+        dataIndex: 'images',
+        customRender: (text, record, index) => {
+          if (!record.images) return <a-avatar shape="square" icon="user" />
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+            </template>
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+          </a-popover>
+        }
+      }, {
+        title: '库存',
+        dataIndex: 'reserve',
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text + '元'
+            return text + '件'
           } else {
             return '- -'
           }
         }
       }, {
-        title: '缴费时间',
-        dataIndex: 'createDate',
+        title: '上架状态',
+        dataIndex: 'shelfStatus',
         customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
+          switch (text) {
+            case 1:
+              return <a-tag>上架</a-tag>
+            case 2:
+              return <a-tag>下架</a-tag>
+            default:
+              return '- -'
           }
         }
+      }, {
+        title: '操作',
+        dataIndex: 'operation',
+        scopedSlots: {customRender: 'operation'}
       }]
     }
   },
@@ -135,6 +213,13 @@ export default {
     this.fetch()
   },
   methods: {
+    handleDrugViewOpen (row) {
+      this.drugView.data = row
+      this.drugView.visiable = true
+    },
+    handleDrugViewClose () {
+      this.drugView.visiable = false
+    },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
@@ -142,26 +227,26 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.paymentAdd.visiable = true
+      this.drugAdd.visiable = true
     },
-    handlepaymentAddClose () {
-      this.paymentAdd.visiable = false
+    handledrugAddClose () {
+      this.drugAdd.visiable = false
     },
-    handlepaymentAddSuccess () {
-      this.paymentAdd.visiable = false
-      this.$message.success('新增产品成功')
+    handledrugAddSuccess () {
+      this.drugAdd.visiable = false
+      this.$message.success('新增药品成功')
       this.search()
     },
     edit (record) {
-      this.$refs.paymentEdit.setFormValues(record)
-      this.paymentEdit.visiable = true
+      this.$refs.drugEdit.setFormValues(record)
+      this.drugEdit.visiable = true
     },
-    handlepaymentEditClose () {
-      this.paymentEdit.visiable = false
+    handledrugEditClose () {
+      this.drugEdit.visiable = false
     },
-    handlepaymentEditSuccess () {
-      this.paymentEdit.visiable = false
-      this.$message.success('修改产品成功')
+    handledrugEditSuccess () {
+      this.drugEdit.visiable = false
+      this.$message.success('修改药品成功')
       this.search()
     },
     handleDeptChange (value) {
@@ -179,7 +264,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/payment-record/' + ids).then(() => {
+          that.$delete('/cos/pharmacy-inventory/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -252,7 +337,7 @@ export default {
       if (params.type === undefined) {
         delete params.type
       }
-      this.$get('/cos/payment-record/page', {
+      this.$get('/cos/pharmacy-inventory/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

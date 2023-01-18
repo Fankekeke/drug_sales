@@ -7,18 +7,37 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="订单编号"
+                label="药店编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.orderCode"/>
+                <a-input v-model="queryParams.code"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="客户名称"
+                label="药店名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.userName"/>
+                <a-input v-model="queryParams.name"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="法人代表"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.legalPerson"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="营业状态"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-select v-model="queryParams.businessStatus" allowClear>
+                  <a-select-option value="1">营业</a-select-option>
+                  <a-select-option value="2">歇业</a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
           </div>
@@ -31,6 +50,7 @@
     </div>
     <div>
       <div class="operator">
+        <a-button type="primary" ghost @click="add">新增</a-button>
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -43,38 +63,66 @@
                :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                :scroll="{ x: 900 }"
                @change="handleTableChange">
-        <template slot="titleShow" slot-scope="text, record">
+        <template slot="addressShow" slot-scope="text, record">
           <template>
             <a-tooltip>
               <template slot="title">
-                {{ record.title }}
+                {{ record.address }}
               </template>
-              {{ record.title.slice(0, 8) }} ...
+              {{ record.address.slice(0, 8) }} ...
             </a-tooltip>
           </template>
         </template>
+        <template slot="operation" slot-scope="text, record">
+          <a-icon type="setting" @click="handlePharmacyViewOpen(record)" title="详 情"></a-icon>
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-left: 15px"></a-icon>
+        </template>
       </a-table>
     </div>
+    <pharmacy-add
+      v-if="pharmacyAdd.visiable"
+      @close="handlepharmacyAddClose"
+      @success="handlepharmacyAddSuccess"
+      :pharmacyAddVisiable="pharmacyAdd.visiable">
+    </pharmacy-add>
+    <pharmacy-edit
+      ref="pharmacyEdit"
+      @close="handlepharmacyEditClose"
+      @success="handlepharmacyEditSuccess"
+      :pharmacyEditVisiable="pharmacyEdit.visiable">
+    </pharmacy-edit>
+    <pharmacy-view
+      @close="handlePharmacyViewClose"
+      :pharmacyShow="pharmacyView.visiable"
+      :pharmacyData="pharmacyView.data">
+    </pharmacy-view>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
+import pharmacyAdd from './pharmacyAdd'
+import pharmacyEdit from './pharmacyEdit'
+import pharmacyView from './pharmacyView'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
-  name: 'payment',
-  components: {RangeDate},
+  name: 'pharmacy',
+  components: {pharmacyAdd, pharmacyEdit, pharmacyView, RangeDate},
   data () {
     return {
       advanced: false,
-      paymentAdd: {
+      pharmacyAdd: {
         visiable: false
       },
-      paymentEdit: {
+      pharmacyEdit: {
         visiable: false
+      },
+      pharmacyView: {
+        visiable: false,
+        data: null
       },
       queryParams: {},
       filteredInfo: null,
@@ -100,26 +148,67 @@ export default {
     }),
     columns () {
       return [{
-        title: '工单编号',
-        dataIndex: 'orderCode'
+        title: '药店编号',
+        dataIndex: 'code'
       }, {
-        title: '客户名称',
-        dataIndex: 'userName'
-      }, {
-        title: '联系方式',
-        dataIndex: 'phone'
-      }, {
-        title: '缴费金额',
-        dataIndex: 'money',
+        title: '药房名称',
+        dataIndex: 'name',
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text + '元'
+            return text
           } else {
             return '- -'
           }
         }
       }, {
-        title: '缴费时间',
+        title: '具体位置',
+        dataIndex: 'address',
+        scopedSlots: { customRender: 'addressShow' }
+      }, {
+        title: '法人代表',
+        dataIndex: 'legalPerson',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '营业状态',
+        dataIndex: 'businessStatus',
+        customRender: (text, row, index) => {
+          switch (text) {
+            case 1:
+              return <a-tag>营业中</a-tag>
+            case 2:
+              return <a-tag>歇业</a-tag>
+            default:
+              return '- -'
+          }
+        }
+      }, {
+        title: '联系方式',
+        dataIndex: 'phone',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '营业时间',
+        dataIndex: 'businessHours',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '创建时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -128,6 +217,10 @@ export default {
             return '- -'
           }
         }
+      }, {
+        title: '操作',
+        dataIndex: 'operation',
+        scopedSlots: {customRender: 'operation'}
       }]
     }
   },
@@ -135,6 +228,13 @@ export default {
     this.fetch()
   },
   methods: {
+    handlePharmacyViewOpen (row) {
+      this.pharmacyView.data = row
+      this.pharmacyView.visiable = true  
+    },
+    handlePharmacyViewClose () {
+      this.pharmacyView.visiable = false  
+    },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
@@ -142,26 +242,26 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.paymentAdd.visiable = true
+      this.pharmacyAdd.visiable = true
     },
-    handlepaymentAddClose () {
-      this.paymentAdd.visiable = false
+    handlepharmacyAddClose () {
+      this.pharmacyAdd.visiable = false
     },
-    handlepaymentAddSuccess () {
-      this.paymentAdd.visiable = false
-      this.$message.success('新增产品成功')
+    handlepharmacyAddSuccess () {
+      this.pharmacyAdd.visiable = false
+      this.$message.success('新增药房成功')
       this.search()
     },
     edit (record) {
-      this.$refs.paymentEdit.setFormValues(record)
-      this.paymentEdit.visiable = true
+      this.$refs.pharmacyEdit.setFormValues(record)
+      this.pharmacyEdit.visiable = true
     },
-    handlepaymentEditClose () {
-      this.paymentEdit.visiable = false
+    handlepharmacyEditClose () {
+      this.pharmacyEdit.visiable = false
     },
-    handlepaymentEditSuccess () {
-      this.paymentEdit.visiable = false
-      this.$message.success('修改产品成功')
+    handlepharmacyEditSuccess () {
+      this.pharmacyEdit.visiable = false
+      this.$message.success('修改药房成功')
       this.search()
     },
     handleDeptChange (value) {
@@ -179,7 +279,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/payment-record/' + ids).then(() => {
+          that.$delete('/cos/pharmacy-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -249,10 +349,7 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      if (params.type === undefined) {
-        delete params.type
-      }
-      this.$get('/cos/payment-record/page', {
+      this.$get('/cos/pharmacy-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

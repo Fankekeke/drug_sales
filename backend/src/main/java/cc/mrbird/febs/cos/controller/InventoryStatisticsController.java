@@ -17,7 +17,7 @@ import java.util.List;
  * @author FanK
  */
 @RestController
-@RequestMapping("/salm/inventory-statistics")
+@RequestMapping("/cos/inventory-statistics")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class InventoryStatisticsController {
 

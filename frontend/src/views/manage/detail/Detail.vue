@@ -7,6 +7,22 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
+                label="药品名称"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.drugName"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="所属品牌"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.brand"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
                 label="订单编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
@@ -31,7 +47,6 @@
     </div>
     <div>
       <div class="operator">
-        <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -43,13 +58,13 @@
                :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                :scroll="{ x: 900 }"
                @change="handleTableChange">
-        <template slot="titleShow" slot-scope="text, record">
+        <template slot="addressShow" slot-scope="text, record">
           <template>
             <a-tooltip>
               <template slot="title">
-                {{ record.title }}
+                {{ record.userAddress }}
               </template>
-              {{ record.title.slice(0, 8) }} ...
+              {{ record.userAddress.slice(0, 8) }} ...
             </a-tooltip>
           </template>
         </template>
@@ -65,15 +80,15 @@ import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
-  name: 'payment',
+  name: 'detail',
   components: {RangeDate},
   data () {
     return {
       advanced: false,
-      paymentAdd: {
+      detailAdd: {
         visiable: false
       },
-      paymentEdit: {
+      detailEdit: {
         visiable: false
       },
       queryParams: {},
@@ -100,17 +115,49 @@ export default {
     }),
     columns () {
       return [{
-        title: '工单编号',
-        dataIndex: 'orderCode'
+        title: '订单编号',
+        dataIndex: 'code'
       }, {
         title: '客户名称',
-        dataIndex: 'userName'
+        dataIndex: 'name'
       }, {
-        title: '联系方式',
+        title: '客户名称',
         dataIndex: 'phone'
       }, {
-        title: '缴费金额',
-        dataIndex: 'money',
+        title: '收获地址',
+        dataIndex: 'userAddress',
+        scopedSlots: { customRender: 'addressShow' },
+      }, {
+        title: '药品名称',
+        dataIndex: 'drugName'
+      }, {
+        title: '品牌',
+        dataIndex: 'brand'
+      }, {
+        title: '药品图片',
+        dataIndex: 'images',
+        customRender: (text, record, index) => {
+          if (!record.images) return <a-avatar shape="square" icon="user" />
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+            </template>
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+          </a-popover>
+        }
+      }, {
+        title: '数量',
+        dataIndex: 'quantity',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '单价',
+        dataIndex: 'unitPrice',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text + '元'
@@ -119,11 +166,11 @@ export default {
           }
         }
       }, {
-        title: '缴费时间',
-        dataIndex: 'createDate',
+        title: '总价格',
+        dataIndex: 'allPrice',
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text
+            return text + '元'
           } else {
             return '- -'
           }
@@ -142,26 +189,26 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.paymentAdd.visiable = true
+      this.detailAdd.visiable = true
     },
-    handlepaymentAddClose () {
-      this.paymentAdd.visiable = false
+    handledetailAddClose () {
+      this.detailAdd.visiable = false
     },
-    handlepaymentAddSuccess () {
-      this.paymentAdd.visiable = false
-      this.$message.success('新增产品成功')
+    handledetailAddSuccess () {
+      this.detailAdd.visiable = false
+      this.$message.success('新增库存成功')
       this.search()
     },
     edit (record) {
-      this.$refs.paymentEdit.setFormValues(record)
-      this.paymentEdit.visiable = true
+      this.$refs.detailEdit.setFormValues(record)
+      this.detailEdit.visiable = true
     },
-    handlepaymentEditClose () {
-      this.paymentEdit.visiable = false
+    handledetailEditClose () {
+      this.detailEdit.visiable = false
     },
-    handlepaymentEditSuccess () {
-      this.paymentEdit.visiable = false
-      this.$message.success('修改产品成功')
+    handledetailEditSuccess () {
+      this.detailEdit.visiable = false
+      this.$message.success('修改库存成功')
       this.search()
     },
     handleDeptChange (value) {
@@ -179,7 +226,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/payment-record/' + ids).then(() => {
+          that.$delete('/cos/detail-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -252,7 +299,7 @@ export default {
       if (params.type === undefined) {
         delete params.type
       }
-      this.$get('/cos/payment-record/page', {
+      this.$get('/cos/order-detail/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

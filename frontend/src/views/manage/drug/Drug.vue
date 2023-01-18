@@ -81,7 +81,8 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>
+          <a-icon type="setting" @click="handleDrugViewOpen(record)" title="详 情"></a-icon>
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
@@ -97,6 +98,11 @@
       @success="handledrugEditSuccess"
       :drugEditVisiable="drugEdit.visiable">
     </drug-edit>
+    <drug-view
+      @close="handleDrugViewClose"
+      :drugShow="drugView.visiable"
+      :drugData="drugView.data">
+    </drug-view>
   </a-card>
 </template>
 
@@ -104,13 +110,14 @@
 import RangeDate from '@/components/datetime/RangeDate'
 import drugAdd from './drugAdd'
 import drugEdit from './drugEdit'
+import drugView from './drugView'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
   name: 'drug',
-  components: {drugAdd, drugEdit, RangeDate},
+  components: {drugAdd, drugEdit, drugView, RangeDate},
   data () {
     return {
       advanced: false,
@@ -119,6 +126,10 @@ export default {
       },
       drugEdit: {
         visiable: false
+      },
+      drugView: {
+        visiable: false,
+        data: null
       },
       queryParams: {},
       filteredInfo: null,
@@ -242,6 +253,13 @@ export default {
     this.fetch()
   },
   methods: {
+    handleDrugViewOpen (row) {
+      this.drugView.data = row
+      this.drugView.visiable = true
+    },
+    handleDrugViewClose () {
+      this.drugView.visiable = false
+    },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
