@@ -1,5 +1,6 @@
 package cc.mrbird.febs.cos.service.impl;
 
+import cc.mrbird.febs.cos.dao.PharmacyInfoMapper;
 import cc.mrbird.febs.cos.dao.PharmacyInventoryMapper;
 import cc.mrbird.febs.cos.dao.UserInfoMapper;
 import cc.mrbird.febs.cos.entity.*;
@@ -40,6 +41,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private final IInventoryStatisticsService inventoryStatisticsService;
 
     private final ILogisticsInfoService logisticsInfoService;
+
+    private final PharmacyInfoMapper pharmacyInfoMapper;
 
     /**
      * 分页获取订单信息
@@ -142,5 +145,36 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         paymentRecord.setUserId(orderInfo.getUserId());
         paymentRecordService.save(paymentRecord);
         return this.updateById(orderInfo);
+    }
+
+    /**
+     * 订单打印小票
+     *
+     * @param orderId 订单ID
+     * @return 结果
+     */
+    @Override
+    public LinkedHashMap<String, Object> receipt(Integer orderId) {
+        if (orderId == null) {
+            return null;
+        }
+        // 获取订单信息
+        OrderInfo orderInfo = this.getById(orderId);
+        // 药店信息
+        PharmacyInfo pharmacyInfo = pharmacyInfoMapper.selectOne(Wrappers.<PharmacyInfo>lambdaQuery().eq(PharmacyInfo::getId, orderInfo.getPharmacyId()));
+        orderInfo.setPharmacyName(pharmacyInfo.getName());
+        // 客户信息
+        UserInfo userInfo = userInfoMapper.selectOne(Wrappers.<UserInfo>lambdaQuery().eq(UserInfo::getId, orderInfo.getUserId()));
+        orderInfo.setUserName(userInfo.getName());
+        // 订单详情
+        List<LinkedHashMap<String, Object>> detailList = orderDetailService.selectDetailByOrder(orderId);
+        // 返回数据
+        LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>() {
+            {
+                put("order", orderInfo);
+                put("detail", detailList);
+            }
+        };
+        return result;
     }
 }

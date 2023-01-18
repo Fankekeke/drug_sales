@@ -38,4 +38,12 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      * @return 结果
      */
     boolean orderPayment(String orderCode);
+
+    /**
+     * 订单打印小票
+     *
+     * @param orderId 订单ID
+     * @return 结果
+     */
+    LinkedHashMap<String, Object> receipt(Integer orderId);
 }

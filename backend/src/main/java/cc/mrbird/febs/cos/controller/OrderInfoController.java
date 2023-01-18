@@ -35,6 +35,17 @@ public class OrderInfoController {
     }
 
     /**
+     * 订单打印小票
+     *
+     * @param orderId 订单ID
+     * @return 结果
+     */
+    @GetMapping("/receipt/export/{orderId}")
+    public R receipt(@PathVariable("orderId") Integer orderId) {
+        return R.ok(orderInfoService.receipt(orderId));
+    }
+
+    /**
      * 更新订单状态
      *
      * @param orderId 订单ID
