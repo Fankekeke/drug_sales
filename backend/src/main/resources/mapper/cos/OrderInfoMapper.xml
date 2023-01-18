@@ -78,6 +78,10 @@
         DATE_SUB( curdate(), INTERVAL + 9 DAY )) spo
         LEFT JOIN order_info oi ON (
         DATE_FORMAT( oi.create_date, '%Y-%m-%d' ) = DATE_FORMAT( spo.days, '%Y-%m-%d' ))
+        WHERE 1 = 1
+        <if test="pharmacyId != null">
+            AND oi.pharmacy_id = #{pharmacyId}
+        </if>
         GROUP BY
         days
         ORDER BY
@@ -113,6 +117,10 @@
         DATE_SUB( curdate(), INTERVAL + 9 DAY )) spo
         LEFT JOIN order_info oi ON (
         DATE_FORMAT( oi.create_date, '%Y-%m-%d' ) = DATE_FORMAT( spo.days, '%Y-%m-%d' ))
+        WHERE 1 = 1
+        <if test="pharmacyId != null">
+            AND oi.pharmacy_id = #{pharmacyId}
+        </if>
         GROUP BY
         days
         ORDER BY

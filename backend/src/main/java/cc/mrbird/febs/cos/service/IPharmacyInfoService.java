@@ -40,6 +40,20 @@ public interface IPharmacyInfoService extends IService<PharmacyInfo> {
     List<PharmacyOrderRank> selectOrderRank(Integer type);
 
     /**
+     * 查询近十天内各家订单收益统计
+     *
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectOrderPriceDays();
+
+    /**
+     * 查询近十天内各家订单数量统计
+     *
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectOrderNumDays();
+
+    /**
      * 查询药店库存信息
      *
      * @param pharmacyId 药店ID

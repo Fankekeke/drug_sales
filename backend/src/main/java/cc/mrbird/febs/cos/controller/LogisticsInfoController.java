@@ -76,8 +76,7 @@ public class LogisticsInfoController {
      */
     @PostMapping
     public R save(LogisticsInfo logisticsInfo) {
-        logisticsInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(logisticsInfoService.save(logisticsInfo));
+        return R.ok(logisticsInfoService.saveLogistics(logisticsInfo));
     }
 
     /**

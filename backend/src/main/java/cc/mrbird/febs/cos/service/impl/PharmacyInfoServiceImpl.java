@@ -134,6 +134,58 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
     }
 
     /**
+     * 查询近十天内各家订单收益统计
+     *
+     * @return 结果
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> selectOrderPriceDays() {
+        // 正在营业供应商
+        List<PharmacyInfo> pharmacyInfoList = this.list(Wrappers.<PharmacyInfo>lambdaQuery().eq(PharmacyInfo::getBusinessStatus, 1));
+        if (CollectionUtil.isEmpty(pharmacyInfoList)) {
+            return Collections.emptyList();
+        }
+        // 返回数据
+        List<LinkedHashMap<String, Object>> result = new ArrayList<>();
+        pharmacyInfoList.forEach(e -> {
+            LinkedHashMap<String, Object> item = new LinkedHashMap<String, Object>() {
+                {
+                    put("name", e.getName());
+                    put("value", orderInfoMapper.selectOrderPriceWithinDays(e.getId()));
+                }
+            };
+            result.add(item);
+        });
+        return result;
+    }
+
+    /**
+     * 查询近十天内各家订单数量统计
+     *
+     * @return 结果
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> selectOrderNumDays() {
+        // 正在营业供应商
+        List<PharmacyInfo> pharmacyInfoList = this.list(Wrappers.<PharmacyInfo>lambdaQuery().eq(PharmacyInfo::getBusinessStatus, 1));
+        if (CollectionUtil.isEmpty(pharmacyInfoList)) {
+            return Collections.emptyList();
+        }
+        // 返回数据
+        List<LinkedHashMap<String, Object>> result = new ArrayList<>();
+        pharmacyInfoList.forEach(e -> {
+            LinkedHashMap<String, Object> item = new LinkedHashMap<String, Object>() {
+                {
+                    put("name", e.getName());
+                    put("value", orderInfoMapper.selectOrderNumWithinDays(e.getId()));
+                }
+            };
+            result.add(item);
+        });
+        return result;
+    }
+
+    /**
      * 查询药店库存信息
      *
      * @param pharmacyId 药店ID
@@ -210,9 +262,9 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
         // 获取本月收益
         result.put("monthOrderPrice", orderPrice);
         // 近十天内订单统计
-        result.put("orderNumWithinDays", orderInfoMapper.selectOrderNumWithinDays());
+        result.put("orderNumWithinDays", orderInfoMapper.selectOrderNumWithinDays(null));
         // 近十天内收益统计
-        result.put("orderPriceWithinDays", orderInfoMapper.selectOrderPriceWithinDays());
+        result.put("orderPriceWithinDays", orderInfoMapper.selectOrderPriceWithinDays(null));
         // 订单销售药品类别统计
         result.put("orderDrugType", orderInfoMapper.selectOrderDrugType());
         return result;

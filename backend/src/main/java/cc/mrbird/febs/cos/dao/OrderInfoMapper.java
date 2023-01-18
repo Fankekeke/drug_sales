@@ -43,14 +43,14 @@ public interface OrderInfoMapper extends BaseMapper<OrderInfo> {
      *
      * @return 结果
      */
-    List<LinkedHashMap<String, Object>> selectOrderNumWithinDays();
+    List<LinkedHashMap<String, Object>> selectOrderNumWithinDays(@Param("pharmacyId") Integer pharmacyId);
 
     /**
      * 十天内订单收益统计
      *
      * @return 结果
      */
-    List<LinkedHashMap<String, Object>> selectOrderPriceWithinDays();
+    List<LinkedHashMap<String, Object>> selectOrderPriceWithinDays(@Param("pharmacyId") Integer pharmacyId);
 
     /**
      * 订单销售药品类别统计
