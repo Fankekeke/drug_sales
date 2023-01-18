@@ -116,6 +116,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         // 根据药品ID获取库存信息
         List<PharmacyInventory> inventoryList = pharmacyInventoryService.list(Wrappers.<PharmacyInventory>lambdaQuery().in(PharmacyInventory::getDrugId, detailMap.keySet()).eq(PharmacyInventory::getPharmacyId, orderInfo.getPharmacyId()));
         List<InventoryStatistics> statisticsList = new ArrayList<>();
+
         inventoryList.forEach(e -> {
             e.setReserve(e.getReserve() - detailMap.get(e.getDrugId()));
             InventoryStatistics inventoryStatistics = new InventoryStatistics();
