@@ -101,9 +101,9 @@
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import pharmacyAdd from './pharmacyAdd'
-import pharmacyEdit from './pharmacyEdit'
-import pharmacyView from './pharmacyView'
+import pharmacyAdd from './PharmacyAdd'
+import pharmacyEdit from './PharmacyEdit'
+import pharmacyView from './PharmacyView'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
@@ -230,10 +230,10 @@ export default {
   methods: {
     handlePharmacyViewOpen (row) {
       this.pharmacyView.data = row
-      this.pharmacyView.visiable = true  
+      this.pharmacyView.visiable = true
     },
     handlePharmacyViewClose () {
-      this.pharmacyView.visiable = false  
+      this.pharmacyView.visiable = false
     },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys

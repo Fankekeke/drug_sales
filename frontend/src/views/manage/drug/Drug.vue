@@ -108,9 +108,9 @@
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import drugAdd from './drugAdd'
-import drugEdit from './drugEdit'
-import drugView from './drugView'
+import drugAdd from './DrugAdd'
+import drugEdit from './DrugEdit'
+import drugView from './DrugView'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')

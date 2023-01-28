@@ -126,7 +126,7 @@ export default {
       }, {
         title: '收获地址',
         dataIndex: 'userAddress',
-        scopedSlots: { customRender: 'addressShow' },
+        scopedSlots: { customRender: 'addressShow' }
       }, {
         title: '药品名称',
         dataIndex: 'drugName'

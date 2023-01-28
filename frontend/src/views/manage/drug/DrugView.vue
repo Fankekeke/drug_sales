@@ -141,7 +141,7 @@ export default {
   watch: {
     drugShow: function (value) {
       if (value) {
-       if (this.drugData.images !== null && this.drugData.images !== '') {
+        if (this.drugData.images !== null && this.drugData.images !== '') {
           this.imagesInit(this.drugData.images)
         }
       }

@@ -139,7 +139,7 @@ export default {
       }, {
         title: '评价内容',
         dataIndex: 'content',
-       scopedSlots: { customRender: 'contentShow' },
+        scopedSlots: { customRender: 'contentShow' }
       }, {
         title: '评价图片',
         dataIndex: 'images',

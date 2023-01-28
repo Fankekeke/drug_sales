@@ -104,7 +104,7 @@ export default {
       }, {
         title: '地址',
         dataIndex: 'address',
-        scopedSlots: { customRender: 'addressShow' },
+        scopedSlots: { customRender: 'addressShow' }
       }, {
         title: '所属分类',
         dataIndex: 'storageType',

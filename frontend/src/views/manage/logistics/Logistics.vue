@@ -69,7 +69,7 @@
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import logisticsEdit from './logisticsEdit'
+import logisticsEdit from './LogisticsEdit'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')

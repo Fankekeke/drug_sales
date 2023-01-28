@@ -106,7 +106,7 @@ export default {
   watch: {
     pharmacyShow: function (value) {
       if (value) {
-       if (this.pharmacyData.images !== null && this.pharmacyData.images !== '') {
+        if (this.pharmacyData.images !== null && this.pharmacyData.images !== '') {
           this.imagesInit(this.pharmacyData.images)
         }
       }
