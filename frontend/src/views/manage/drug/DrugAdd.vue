@@ -27,10 +27,10 @@
           </a-form-item>
         </a-col>
         <a-col :span="6">
-          <a-form-item label='药品类型' v-bind="formItemLayout">
+          <a-form-item label='所属分类' v-bind="formItemLayout">
             <a-select v-decorator="[
               'category',
-              { rules: [{ required: true, message: '请输入药品类型!' }] }
+              { rules: [{ required: true, message: '请输入所属分类!' }] }
               ]">
               <a-select-option value="1">中药材</a-select-option>
               <a-select-option value="2">中药饮片</a-select-option>
@@ -142,14 +142,6 @@
           <a-form-item label='单价' v-bind="formItemLayout">
             <a-input-number style="width: 100%" :min="1" :step="0.1" v-decorator="[
             'unitPrice'
-            ]"/>
-          </a-form-item
-          >
-        </a-col>
-        <a-col :span="6">
-          <a-form-item label='批准文号' v-bind="formItemLayout">
-            <a-input v-decorator="[
-            'approvalNumber'
             ]"/>
           </a-form-item
           >
