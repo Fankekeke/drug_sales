@@ -41,7 +41,7 @@ public class DrugInfo implements Serializable {
     /**
      * 所属品牌
      */
-    private Integer brand;
+    private String brand;
 
     /**
      * 所属分类
@@ -66,7 +66,7 @@ public class DrugInfo implements Serializable {
     /**
      * 用法
      */
-    private String usage;
+    private String usages;
 
     /**
      * 适用症状

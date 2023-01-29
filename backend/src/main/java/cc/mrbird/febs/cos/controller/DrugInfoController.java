@@ -64,6 +64,7 @@ public class DrugInfoController {
      */
     @PostMapping
     public R save(DrugInfo drugInfo) {
+        drugInfo.setCode("DG-" + System.currentTimeMillis());
         drugInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(drugInfoService.save(drugInfo));
     }

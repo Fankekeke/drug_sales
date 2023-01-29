@@ -13,7 +13,7 @@
         classification,
         common_name,
         dosage_form,
-        `usage`,
+        usages,
         applicable_symptoms,
         applicable_disease,
         packing_list,

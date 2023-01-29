@@ -32,15 +32,11 @@
               'category',
               { rules: [{ required: true, message: '请输入所属分类!' }] }
               ]">
-              <a-select-option value="1">中药材</a-select-option>
-              <a-select-option value="2">中药饮片</a-select-option>
-              <a-select-option value="3">中西成药</a-select-option>
-              <a-select-option value="4">化学原料药</a-select-option>
-              <a-select-option value="5">抗生素</a-select-option>
-              <a-select-option value="6">生化药品</a-select-option>
-              <a-select-option value="7">放射性药品</a-select-option>
-              <a-select-option value="8">血清</a-select-option>
-              <a-select-option value="9">诊断药品</a-select-option>
+              <a-select-option value="1">可卡因</a-select-option>
+              <a-select-option value="2">维生素制剂</a-select-option>
+              <a-select-option value="3">鱼肝油</a-select-option>
+              <a-select-option value="4">药物饮料</a-select-option>
+              <a-select-option value="5">膳食纤维</a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
@@ -79,7 +75,7 @@
          <a-col :span="6">
           <a-form-item label='用法' v-bind="formItemLayout">
             <a-input v-decorator="[
-            'usage'
+            'usages'
             ]"/>
           </a-form-item>
         </a-col>

@@ -35,15 +35,11 @@
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-select v-model="queryParams.category" allowClear>
-                  <a-select-option value="1">中药材</a-select-option>
-                  <a-select-option value="2">中药饮片</a-select-option>
-                  <a-select-option value="3">中西成药</a-select-option>
-                  <a-select-option value="4">化学原料药</a-select-option>
-                  <a-select-option value="5">抗生素</a-select-option>
-                  <a-select-option value="6">生化药品</a-select-option>
-                  <a-select-option value="7">放射性药品</a-select-option>
-                  <a-select-option value="8">血清</a-select-option>
-                  <a-select-option value="9">诊断药品</a-select-option>
+                  <a-select-option value="1">可卡因</a-select-option>
+                  <a-select-option value="2">维生素制剂</a-select-option>
+                  <a-select-option value="3">鱼肝油</a-select-option>
+                  <a-select-option value="4">药物饮料</a-select-option>
+                  <a-select-option value="5">膳食纤维</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -164,8 +160,8 @@ export default {
         title: '所属品牌',
         dataIndex: 'brand'
       }, {
-        title: '所属分类',
-        dataIndex: 'category',
+        title: '药品类别',
+        dataIndex: 'classification',
         customRender: (text, row, index) => {
           switch (text) {
             case 1:
@@ -203,13 +199,22 @@ export default {
           </a-popover>
         }
       }, {
-        title: '药品类别',
-        dataIndex: 'classificationName',
+        title: '所属分类',
+        dataIndex: 'category',
         customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
+          switch (text) {
+            case 1:
+              return <a-tag>可卡因</a-tag>
+            case 2:
+              return <a-tag>维生素制剂</a-tag>
+            case 3:
+              return <a-tag>鱼肝油</a-tag>
+            case 4:
+              return <a-tag>药物饮料</a-tag>
+            case 5:
+              return <a-tag>膳食纤维</a-tag>
+            default:
+              return '- -'
           }
         }
       }, {
@@ -234,7 +239,7 @@ export default {
         }
       }, {
         title: '用法',
-        dataIndex: 'usage',
+        dataIndex: 'usages',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text

@@ -27,20 +27,16 @@
           </a-form-item>
         </a-col>
         <a-col :span="6">
-          <a-form-item label='药品类型' v-bind="formItemLayout">
+          <a-form-item label='所属分类' v-bind="formItemLayout">
             <a-select v-decorator="[
               'category',
-              { rules: [{ required: true, message: '请输入药品类型!' }] }
+              { rules: [{ required: true, message: '请输入所属分类!' }] }
               ]">
-              <a-select-option value="1">中药材</a-select-option>
-              <a-select-option value="2">中药饮片</a-select-option>
-              <a-select-option value="3">中西成药</a-select-option>
-              <a-select-option value="4">化学原料药</a-select-option>
-              <a-select-option value="5">抗生素</a-select-option>
-              <a-select-option value="6">生化药品</a-select-option>
-              <a-select-option value="7">放射性药品</a-select-option>
-              <a-select-option value="8">血清</a-select-option>
-              <a-select-option value="9">诊断药品</a-select-option>
+              <a-select-option value="1">可卡因</a-select-option>
+              <a-select-option value="2">维生素制剂</a-select-option>
+              <a-select-option value="3">鱼肝油</a-select-option>
+              <a-select-option value="4">药物饮料</a-select-option>
+              <a-select-option value="5">膳食纤维</a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
@@ -76,10 +72,10 @@
             ]"/>
           </a-form-item>
         </a-col>
-         <a-col :span="6">
+        <a-col :span="6">
           <a-form-item label='用法' v-bind="formItemLayout">
             <a-input v-decorator="[
-            'usage'
+            'usages'
             ]"/>
           </a-form-item>
         </a-col>
@@ -142,14 +138,6 @@
           <a-form-item label='单价' v-bind="formItemLayout">
             <a-input-number style="width: 100%" :min="1" :step="0.1" v-decorator="[
             'unitPrice'
-            ]"/>
-          </a-form-item
-          >
-        </a-col>
-        <a-col :span="6">
-          <a-form-item label='批准文号' v-bind="formItemLayout">
-            <a-input v-decorator="[
-            'approvalNumber'
             ]"/>
           </a-form-item
           >
@@ -250,14 +238,14 @@ export default {
     },
     setFormValues ({...drug}) {
       this.rowId = drug.id
-      let fields = ['name', 'brand', 'category', 'classification', 'commonName', 'dosageForm', 'usage', 'applicableSymptoms', 'applicableDisease', 'packingList', 'dosageUse', 'validityPeriod', 'approvalNumber', 'manufacturer', 'unitPrice', 'images']
+      let fields = ['name', 'brand', 'category', 'classification', 'commonName', 'dosageForm', 'usages', 'applicableSymptoms', 'applicableDisease', 'packingList', 'dosageUse', 'validityPeriod', 'approvalNumber', 'manufacturer', 'unitPrice', 'images']
       let obj = {}
       Object.keys(drug).forEach((key) => {
         if (key === 'images') {
           this.fileList = []
           this.imagesInit(drug['images'])
         }
-        if (key === 'category') {
+        if (key === 'category' || key === 'classification') {
           drug[key] = drug[key].toString()
         }
         if (fields.indexOf(key) !== -1) {
