@@ -349,6 +349,9 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
+      if (params.businessStatus === undefined) {
+        delete params.businessStatus
+      }
       this.$get('/cos/pharmacy-info/page', {
         ...params
       }).then((r) => {
