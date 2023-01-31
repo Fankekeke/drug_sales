@@ -136,6 +136,9 @@ export default {
       default: false
     }
   },
+  components: {
+    drawerMap
+  },
   computed: {
     ...mapState({
       currentUser: state => state.account.user
