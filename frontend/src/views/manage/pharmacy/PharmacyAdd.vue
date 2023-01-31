@@ -1,63 +1,84 @@
 <template>
-  <a-modal v-model="show" title="新增药房" @cancel="onClose" :width="800">
-    <template slot="footer">
-      <a-button key="back" @click="onClose">
-        取消
-      </a-button>
-      <a-button key="submit" type="primary" :loading="loading" @click="handleSubmit">
-        提交
-      </a-button>
-    </template>
+  <a-drawer
+    title="新增药房"
+    :maskClosable="false"
+    width=1350
+    placement="right"
+    :closable="false"
+    @close="onClose"
+    :visible="pharmacyAddVisiable"
+    style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
     <a-form :form="form" layout="vertical">
-      <a-row :gutter="20">
-        <a-col :span="12">
-          <a-form-item label='药房标题' v-bind="formItemLayout">
+      <a-row :gutter="10">
+        <a-divider orientation="left">
+          <span style="font-size: 13px">基础信息填报</span>
+        </a-divider>
+        <a-col :span="4">
+          <a-form-item label='药房名称'>
             <a-input v-decorator="[
-            'title',
+            'name',
             { rules: [{ required: true, message: '请输入名称!' }] }
             ]"/>
           </a-form-item>
         </a-col>
-        <a-col :span="12">
-          <a-form-item label='上传人' v-bind="formItemLayout">
+        <a-col :span="4">
+          <a-form-item label='营业状态'>
+            <a-select v-decorator="[
+                'businessStatus',
+                ]">
+              <a-select-option value="1">营业中</a-select-option>
+              <a-select-option value="2">歇业</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :span="8">
+          <a-form-item label='所在地'>
+            <a-input-search
+              v-decorator="[
+              'address'
+              ]"
+              enter-button="选择"
+              @search="showChildrenDrawer"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="4">
+          <a-form-item label='经度'>
             <a-input v-decorator="[
-            'publisher',
-            { rules: [{ required: true, message: '请输入上传人!' }] }
+            'longitude'
             ]"/>
           </a-form-item>
         </a-col>
-        <a-col :span="12">
-          <a-form-item label='药房类型' v-bind="formItemLayout">
-            <a-select v-decorator="[
-              'type',
-              { rules: [{ required: true, message: '请输入药房类型!' }] }
-              ]">
-              <a-select-option value="1">通知</a-select-option>
-              <a-select-option value="2">药房</a-select-option>
-            </a-select>
+        <a-col :span="4">
+          <a-form-item label='纬度'>
+            <a-input v-decorator="[
+            'latitude'
+            ]"/>
           </a-form-item>
         </a-col>
-        <a-col :span="12">
-          <a-form-item label='药房状态' v-bind="formItemLayout">
-            <a-select v-decorator="[
-              'rackUp',
-              { rules: [{ required: true, message: '请输入药房状态!' }] }
-              ]">
-              <a-select-option value="0">下架</a-select-option>
-              <a-select-option value="1">已发布</a-select-option>
-            </a-select>
+        <a-col :span="4">
+          <a-form-item label='营业时间'>
+            <a-input v-decorator="[
+            'businessHours'
+            ]"/>
           </a-form-item>
         </a-col>
-        <a-col :span="24">
-          <a-form-item label='药房内容' v-bind="formItemLayout">
-            <a-textarea :rows="6" v-decorator="[
-            'content',
-             { rules: [{ required: true, message: '请输入名称!' }] }
+        <a-col :span="4">
+          <a-form-item label='法人姓名'>
+            <a-input v-decorator="[
+            'legalPerson'
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="4">
+          <a-form-item label='联系电话'>
+            <a-input v-decorator="[
+            'phone'
             ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='图册' v-bind="formItemLayout">
+          <a-form-item label='药店图片' v-bind="formItemLayout">
             <a-upload
               name="avatar"
               action="http://127.0.0.1:9527/file/fileUpload/"
@@ -80,10 +101,21 @@
         </a-col>
       </a-row>
     </a-form>
-  </a-modal>
+
+    <drawerMap :childrenDrawerShow="childrenDrawer" @handlerClosed="handlerClosed"></drawerMap>
+
+    <div class="drawer-bootom-button">
+      <a-popconfirm title="确定放弃编辑？" @confirm="onClose" okText="确定" cancelText="取消">
+        <a-button style="margin-right: .8rem">取消</a-button>
+      </a-popconfirm>
+      <a-button @click="handleSubmit" type="primary" :loading="loading">提交</a-button>
+    </div>
+  </a-drawer>
 </template>
 
 <script>
+import baiduMap from '@/utils/map/baiduMap'
+import drawerMap from '@/utils/map/searchmap/drawerMap'
 import {mapState} from 'vuex'
 function getBase64 (file) {
   return new Promise((resolve, reject) => {
@@ -123,10 +155,44 @@ export default {
       loading: false,
       fileList: [],
       previewVisible: false,
-      previewImage: ''
+      previewImage: '',
+      localPoint: {},
+      stayAddress: '',
+      childrenDrawer: false
     }
   },
   methods: {
+    handlerClosed (localPoint) {
+      this.childrenDrawer = false
+      if (localPoint !== null && localPoint !== undefined) {
+        this.localPoint = localPoint
+        console.log(this.localPoint)
+        let address = baiduMap.getAddress(localPoint)
+        address.getLocation(localPoint, (rs) => {
+          if (rs != null) {
+            if (rs.address !== undefined && rs.address.length !== 0) {
+              this.stayAddress = rs.address
+            }
+            if (rs.surroundingPois !== undefined) {
+              if (rs.surroundingPois.address !== undefined && rs.surroundingPois.address.length !== 0) {
+                this.stayAddress = rs.surroundingPois.address
+              }
+            }
+            let obj = {}
+            obj['address'] = this.stayAddress
+            obj['longitude'] = localPoint.lng
+            obj['latitude'] = localPoint.lat
+            this.form.setFieldsValue(obj)
+          }
+        })
+      }
+    },
+    showChildrenDrawer () {
+      this.childrenDrawer = true
+    },
+    onChildrenDrawerClose () {
+      this.childrenDrawer = false
+    },
     handleCancel () {
       this.previewVisible = false
     },
