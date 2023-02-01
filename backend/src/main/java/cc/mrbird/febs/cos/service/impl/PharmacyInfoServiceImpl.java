@@ -1,5 +1,6 @@
 package cc.mrbird.febs.cos.service.impl;
 
+import cc.mrbird.febs.cos.dao.OrderEvaluateMapper;
 import cc.mrbird.febs.cos.dao.OrderInfoMapper;
 import cc.mrbird.febs.cos.entity.*;
 import cc.mrbird.febs.cos.dao.PharmacyInfoMapper;
@@ -37,6 +38,8 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
     private final OrderInfoMapper orderInfoMapper;
 
     private final PharmacyInfoMapper pharmacyInfoMapper;
+
+    private final OrderEvaluateMapper orderEvaluateMapper;
 
     /**
      * 分页获取药店信息
@@ -236,6 +239,58 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
             item.put("inventory", drugList);
             result.add(item);
         });
+        return result;
+    }
+
+    /**
+     * 查询药店评价排名
+     *
+     * @return 结果
+     */
+    @Override
+    public List<LinkedHashMap<String, BigDecimal>> selectPharmacyEvaluateRank() {
+        List<LinkedHashMap<String, BigDecimal>> result = new ArrayList<>();
+        // 所有营业药店信息
+        List<PharmacyInfo> pharmacyList = this.list(Wrappers.<PharmacyInfo>lambdaQuery().eq(PharmacyInfo::getBusinessStatus, 1));
+        // 所有评价信息
+        List<OrderEvaluate> orderEvaluateList = orderEvaluateMapper.selectList(Wrappers.<OrderEvaluate>lambdaQuery());
+        if (CollectionUtil.isEmpty(pharmacyList)) {
+            return Collections.emptyList();
+        }
+        // 评价信息转MAP
+        Map<Integer, List<OrderEvaluate>> evaluateMap = orderEvaluateList.stream().collect(Collectors.groupingBy(OrderEvaluate::getPharmacyId));
+        for (PharmacyInfo pharmacyInfo : pharmacyList) {
+            LinkedHashMap<String, BigDecimal> item = new LinkedHashMap<>();
+            List<OrderEvaluate> evaluateList = evaluateMap.get(pharmacyInfo.getId());
+            if (CollectionUtil.isEmpty(evaluateList)) {
+                item.put(pharmacyInfo.getName(), null);
+                result.add(item);
+                continue;
+            }
+            BigDecimal score = orderEvaluateList.stream().map(OrderEvaluate::getScore).reduce(BigDecimal.ZERO, BigDecimal::add);
+            item.put(pharmacyInfo.getName(), score.divide(BigDecimal.valueOf(orderEvaluateList.size()), 2));
+            result.add(item);
+        }
+        return result;
+    }
+
+    /**
+     * 查询药店评价信息
+     *
+     * @param pharmacyId 药店ID
+     * @return 结果
+     */
+    @Override
+    public LinkedHashMap<String, Object> selectPharmacyEvaluateByCode(Integer pharmacyId) {
+        // 返回数据
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
+        List<OrderEvaluate> orderEvaluateList = orderEvaluateMapper.selectList(Wrappers.<OrderEvaluate>lambdaQuery().eq(OrderEvaluate::getPharmacyId, pharmacyId));
+        if (CollectionUtil.isEmpty(orderEvaluateList)) {
+            return null;
+        }
+        BigDecimal score = orderEvaluateList.stream().map(OrderEvaluate::getScore).reduce(BigDecimal.ZERO, BigDecimal::add);
+        result.put("score", score.divide(BigDecimal.valueOf(orderEvaluateList.size()), 2));
+        result.put("evaluate", orderEvaluateList);
         return result;
     }
 

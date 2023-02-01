@@ -46,6 +46,27 @@ public class PharmacyInfoController {
     }
 
     /**
+     * 查询药店评价排名
+     *
+     * @return 结果
+     */
+    @GetMapping("/evaluate/rank")
+    public R selectPharmacyEvaluateRank() {
+        return R.ok(pharmacyInfoService.selectPharmacyEvaluateRank());
+    }
+
+    /**
+     * 查询药店评价信息
+     *
+     * @param pharmacyId 药店ID
+     * @return 结果
+     */
+    @GetMapping("/evaluate/code/{pharmacyId}")
+    public R selectPharmacyEvaluateByCode(@PathVariable("pharmacyId") Integer pharmacyId) {
+        return R.ok(pharmacyInfoService.selectPharmacyEvaluateByCode(pharmacyId));
+    }
+
+    /**
      * 获取药店情况
      *
      * @return 结果

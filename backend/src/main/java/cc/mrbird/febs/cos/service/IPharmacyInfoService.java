@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -60,6 +61,21 @@ public interface IPharmacyInfoService extends IService<PharmacyInfo> {
      * @return 结果
      */
     List<LinkedHashMap<String, Object>> selectStockByPharmacy(Integer pharmacyId);
+
+    /**
+     * 查询药店评价排名
+     *
+     * @return 结果
+     */
+    List<LinkedHashMap<String, BigDecimal>> selectPharmacyEvaluateRank();
+
+    /**
+     * 查询药店评价信息
+     *
+     * @param pharmacyId 药店ID
+     * @return 结果
+     */
+    LinkedHashMap<String, Object> selectPharmacyEvaluateByCode(Integer pharmacyId);
 
     /**
      * 主页数据
