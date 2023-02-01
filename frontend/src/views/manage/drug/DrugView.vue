@@ -35,22 +35,26 @@
         <a-col :span="8"><b>剂型：</b>
           {{ drugData.dosageForm }}
         </a-col>
-        <a-col :span="8"><b>用法：</b>
-          {{ drugData.usage }}
+        <a-col :span="16"><b>用法：</b>
+          {{ drugData.usages }}
         </a-col>
-        <a-col :span="8"><b>适用症状：</b>
+        <br/>
+        <br/>
+        <a-col :span="24"><b>适用症状：</b>
           {{ drugData.applicableSymptoms }}
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>适用疾病：</b>
+        <a-col :span="24"><b>适用疾病：</b>
           {{ drugData.applicableDisease }}
         </a-col>
+        <br/>
+        <br/>
         <a-col :span="8"><b>包装清单：</b>
           {{ drugData.packingList }}
         </a-col>
-        <a-col :span="8"><b>使用剂量：</b>
+        <a-col :span="16"><b>使用剂量：</b>
           {{ drugData.dosageUse }}
         </a-col>
       </a-row>
