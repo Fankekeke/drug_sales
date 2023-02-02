@@ -2,6 +2,7 @@ package cc.mrbird.febs.cos.service;
 
 import cc.mrbird.febs.cos.entity.PharmacyInfo;
 import cc.mrbird.febs.cos.entity.PharmacyOrderRank;
+import cc.mrbird.febs.cos.entity.vo.EvaluateRankVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -67,7 +68,7 @@ public interface IPharmacyInfoService extends IService<PharmacyInfo> {
      *
      * @return 结果
      */
-    List<LinkedHashMap<String, BigDecimal>> selectPharmacyEvaluateRank();
+    List<EvaluateRankVo> selectPharmacyEvaluateRank();
 
     /**
      * 查询药店评价信息

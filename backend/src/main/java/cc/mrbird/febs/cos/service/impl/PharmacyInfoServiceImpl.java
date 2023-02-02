@@ -4,6 +4,7 @@ import cc.mrbird.febs.cos.dao.OrderEvaluateMapper;
 import cc.mrbird.febs.cos.dao.OrderInfoMapper;
 import cc.mrbird.febs.cos.entity.*;
 import cc.mrbird.febs.cos.dao.PharmacyInfoMapper;
+import cc.mrbird.febs.cos.entity.vo.EvaluateRankVo;
 import cc.mrbird.febs.cos.service.*;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -248,8 +249,8 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
      * @return 结果
      */
     @Override
-    public List<LinkedHashMap<String, BigDecimal>> selectPharmacyEvaluateRank() {
-        List<LinkedHashMap<String, BigDecimal>> result = new ArrayList<>();
+    public List<EvaluateRankVo> selectPharmacyEvaluateRank() {
+        List<EvaluateRankVo> result = new ArrayList<>();
         // 所有营业药店信息
         List<PharmacyInfo> pharmacyList = this.list(Wrappers.<PharmacyInfo>lambdaQuery().eq(PharmacyInfo::getBusinessStatus, 1));
         // 所有评价信息
@@ -260,18 +261,19 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
         // 评价信息转MAP
         Map<Integer, List<OrderEvaluate>> evaluateMap = orderEvaluateList.stream().collect(Collectors.groupingBy(OrderEvaluate::getPharmacyId));
         for (PharmacyInfo pharmacyInfo : pharmacyList) {
-            LinkedHashMap<String, BigDecimal> item = new LinkedHashMap<>();
+            EvaluateRankVo item = new EvaluateRankVo();
+            item.setPharmacyName(pharmacyInfo.getName());
             List<OrderEvaluate> evaluateList = evaluateMap.get(pharmacyInfo.getId());
             if (CollectionUtil.isEmpty(evaluateList)) {
-                item.put(pharmacyInfo.getName(), null);
                 result.add(item);
                 continue;
             }
             BigDecimal score = orderEvaluateList.stream().map(OrderEvaluate::getScore).reduce(BigDecimal.ZERO, BigDecimal::add);
-            item.put(pharmacyInfo.getName(), score.divide(BigDecimal.valueOf(orderEvaluateList.size()), 2));
+            item.setScore(score.divide(BigDecimal.valueOf(orderEvaluateList.size()), 2));
             result.add(item);
         }
-        return result;
+        // 排名
+        return result.stream().sorted(Comparator.comparing(EvaluateRankVo::getScore)).collect(Collectors.toList());
     }
 
     /**
