@@ -15,7 +15,7 @@
         FROM
         payment_record pr
         LEFT JOIN user_info ui ON ( ui.id = pr.user_id )
-        LEFT JOIN order_info oi ON ( oi.order_code = pr.order_code )
+        LEFT JOIN order_info oi ON ( oi.code = pr.order_code )
         WHERE
         1 = 1
         <if test="paymentRecord.orderCode != null and paymentRecord.orderCode != ''">

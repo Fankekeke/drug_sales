@@ -2,7 +2,7 @@
   <a-drawer
     title="新增药房"
     :maskClosable="false"
-    width=1350
+    width=850
     placement="right"
     :closable="false"
     @close="onClose"
@@ -13,7 +13,7 @@
         <a-divider orientation="left">
           <span style="font-size: 13px">基础信息填报</span>
         </a-divider>
-        <a-col :span="4">
+        <a-col :span="12">
           <a-form-item label='药房名称'>
             <a-input v-decorator="[
             'name',
@@ -21,7 +21,7 @@
             ]"/>
           </a-form-item>
         </a-col>
-        <a-col :span="4">
+        <a-col :span="12">
           <a-form-item label='营业状态'>
             <a-select v-decorator="[
                 'businessStatus',
@@ -31,7 +31,7 @@
             </a-select>
           </a-form-item>
         </a-col>
-        <a-col :span="8">
+        <a-col :span="12">
           <a-form-item label='所在地'>
             <a-input-search
               v-decorator="[
@@ -42,35 +42,35 @@
             />
           </a-form-item>
         </a-col>
-        <a-col :span="4">
+        <a-col :span="6">
           <a-form-item label='经度'>
             <a-input v-decorator="[
             'longitude'
             ]"/>
           </a-form-item>
         </a-col>
-        <a-col :span="4">
+        <a-col :span="6">
           <a-form-item label='纬度'>
             <a-input v-decorator="[
             'latitude'
             ]"/>
           </a-form-item>
         </a-col>
-        <a-col :span="4">
+        <a-col :span="12">
           <a-form-item label='营业时间'>
             <a-input v-decorator="[
             'businessHours'
             ]"/>
           </a-form-item>
         </a-col>
-        <a-col :span="4">
+        <a-col :span="12">
           <a-form-item label='法人姓名'>
             <a-input v-decorator="[
             'legalPerson'
             ]"/>
           </a-form-item>
         </a-col>
-        <a-col :span="4">
+        <a-col :span="12">
           <a-form-item label='联系电话'>
             <a-input v-decorator="[
             'phone'
