@@ -21,14 +21,6 @@
                 <a-input v-model="queryParams.code"/>
               </a-form-item>
             </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="联系方式"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.phone"/>
-              </a-form-item>
-            </a-col>
           </div>
           <span style="float: right; margin-top: 3px;">
             <a-button type="primary" @click="search">查询</a-button>
@@ -54,8 +46,6 @@
                @change="handleTableChange">
         <template slot="titleShow" slot-scope="text, record">
           <template>
-            <a-badge status="processing" v-if="record.rackUp === 1"/>
-            <a-badge status="error" v-if="record.rackUp === 0"/>
             <a-tooltip>
               <template slot="title">
                 {{ record.title }}
@@ -65,8 +55,6 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon v-if="record.status == 2" type="caret-up" @click="editStatus(record, 1)" title="修 改"/>
-          <a-icon v-if="record.status == 1" type="caret-down" @click="editStatus(record, 2)" title="修 改"/>
           <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
@@ -136,8 +124,8 @@ export default {
         title: '员工编号',
         dataIndex: 'code'
       }, {
-        title: '联系方式',
-        dataIndex: 'phone',
+        title: '所属药店',
+        dataIndex: 'pharmacyName',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -159,14 +147,26 @@ export default {
           }
         }
       }, {
+        title: '照片',
+        dataIndex: 'images',
+        customRender: (text, record, index) => {
+          if (!record.images) return <a-avatar shape="square" icon="user" />
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+            </template>
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+          </a-popover>
+        }
+      }, {
         title: '状态',
         dataIndex: 'status',
         customRender: (text, row, index) => {
           switch (text) {
             case 1:
-              return <a-tag color="green">正常</a-tag>
+              return <a-tag color="green">在职</a-tag>
             case 2:
-              return <a-tag color="red">异常</a-tag>
+              return <a-tag color="red">离职</a-tag>
             default:
               return '- -'
           }

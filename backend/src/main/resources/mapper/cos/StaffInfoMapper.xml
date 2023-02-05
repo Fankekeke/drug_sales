@@ -13,9 +13,12 @@
         si.dept_id,
         si.images,
         si.create_date,
-        si.user_id
+        si.user_id,
+        si.pharmacy_id,
+        pi.name AS pharmacyName
         from
         staff_info si
+        left join pharmacy_info pi on (pi.id = si.pharmacy_id)
         where
         1 = 1
         <if test="staffInfo.code != null and staffInfo.code != ''">

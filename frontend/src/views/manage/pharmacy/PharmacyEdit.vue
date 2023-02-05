@@ -6,7 +6,7 @@
     placement="right"
     :closable="false"
     @close="onClose"
-    :visible="communityEditVisiable"
+    :visible="pharmacyEditVisiable"
     style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
     <a-form :form="form" layout="vertical">
       <a-row :gutter="10">
@@ -249,14 +249,14 @@ export default {
     },
     setFormValues ({...pharmacy}) {
       this.rowId = pharmacy.id
-      let fields = ['title', 'content', 'publisher', 'rackUp', 'type']
+      let fields = ['name', 'address', 'businessStatus', 'longitude', 'latitude', 'businessHours', 'legalPerson', 'phone']
       let obj = {}
       Object.keys(pharmacy).forEach((key) => {
         if (key === 'images') {
           this.fileList = []
           this.imagesInit(pharmacy['images'])
         }
-        if (key === 'rackUp' || key === 'type') {
+        if (key === 'businessStatus') {
           pharmacy[key] = pharmacy[key].toString()
         }
         if (fields.indexOf(key) !== -1) {

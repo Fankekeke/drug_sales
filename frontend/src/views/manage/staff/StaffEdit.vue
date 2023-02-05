@@ -19,14 +19,6 @@
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='联系方式' v-bind="formItemLayout">
-            <a-input v-decorator="[
-            'phone',
-            { rules: [{ required: true, message: '请输入联系方式!' }] }
-            ]"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
           <a-form-item label='员工性别' v-bind="formItemLayout">
             <a-select v-decorator="[
               'sex',
@@ -37,19 +29,51 @@
             </a-select>
           </a-form-item>
         </a-col>
+        <a-col :span="12">
+          <a-form-item label='所属药店' v-bind="formItemLayout">
+            <a-select v-decorator="[
+              'pharmacyId',
+              { rules: [{ required: true, message: '请输入所属药店!' }] }
+              ]">
+              <a-select-option :value="item.id" v-for="(item, index) in pharmacyList" :key="index">{{ item.name }}</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='在职状态' v-bind="formItemLayout">
+            <a-radio-group button-style="solid" v-decorator="[
+              'status',
+              { rules: [{ required: true, message: '请输入在职状态!' }] }
+              ]">
+              <a-radio-button value="1">
+                在职
+              </a-radio-button>
+              <a-radio-button value="2">
+                离职
+              </a-radio-button>
+            </a-radio-group>
+          </a-form-item>
+        </a-col>
         <a-col :span="24">
-          <a-form-item label='负责产品' v-bind="formItemLayout">
-            <div v-if="formLoading">
-              <div :style="{ borderBottom: '1px solid #E9E9E9' }">
-                <a-checkbox :indeterminate="indeterminate" :checked="checkAll" @change="onCheckAllChange">
-                  Check all
-                </a-checkbox>
+          <a-form-item label='照片' v-bind="formItemLayout">
+            <a-upload
+              name="avatar"
+              action="http://127.0.0.1:9527/file/fileUpload/"
+              list-type="picture-card"
+              :file-list="fileList"
+              @preview="handlePreview"
+              @change="picHandleChange"
+            >
+              <div v-if="fileList.length < 2">
+                <a-icon type="plus" />
+                <div class="ant-upload-text">
+                  Upload
+                </div>
               </div>
-              <br />
-              <a-checkbox-group v-model="checkedList" :options="plainOptions" @change="onChange">
-                <span slot="label" slot-scope="{ value }" style="color: red">{{ value }}</span>
-              </a-checkbox-group>
-            </div>
+            </a-upload>
+            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+              <img alt="example" style="width: 100%" :src="previewImage" />
+            </a-modal>
           </a-form-item>
         </a-col>
       </a-row>
@@ -100,30 +124,16 @@ export default {
       fileList: [],
       previewVisible: false,
       previewImage: '',
-      checkedList: [],
-      indeterminate: true,
-      checkAll: false,
-      plainOptions: []
+      pharmacyList: []
     }
   },
   mounted () {
-    this.getProduct()
+    this.getPharmacy()
   },
   methods: {
-    getProduct () {
-      this.$get('/cos/drug-info/list').then((r) => {
-        this.plainOptions = r.data.data
-      })
-    },
-    onChange (checkedList) {
-      this.indeterminate = !!checkedList.length && checkedList.length < this.plainOptions.length
-      this.checkAll = checkedList.length === this.plainOptions.length
-    },
-    onCheckAllChange (e) {
-      Object.assign(this, {
-        checkedList: e.target.checked ? this.plainOptions : [],
-        indeterminate: false,
-        checkAll: e.target.checked
+    getPharmacy () {
+      this.$get('/cos/pharmacy-info/list').then((r) => {
+        this.pharmacyList = r.data.data
       })
     },
     handleCancel () {
@@ -165,14 +175,15 @@ export default {
     },
     setFormValues ({...staff}) {
       this.rowId = staff.id
-      let fields = ['name', 'phone', 'sex', 'responsible']
+      let fields = ['name', 'status', 'sex', 'responsible', 'pharmacyId']
       let obj = {}
       Object.keys(staff).forEach((key) => {
-        if (key === 'sex') {
+        if (key === 'sex' || key === 'status') {
           staff[key] = staff[key].toString()
         }
-        if (key === 'responsible') {
-          this.responsibleInit(staff[key].toString())
+        if (key === 'images') {
+          this.fileList = []
+          this.imagesInit(staff['images'])
         }
         if (fields.indexOf(key) !== -1) {
           this.form.getFieldDecorator(key)
@@ -190,9 +201,18 @@ export default {
       this.$emit('close')
     },
     handleSubmit () {
+      // 获取图片List
+      let images = []
+      this.fileList.forEach(image => {
+        if (image.response !== undefined) {
+          images.push(image.response)
+        } else {
+          images.push(image.name)
+        }
+      })
       this.form.validateFields((err, values) => {
         values.id = this.rowId
-        values.responsible = this.checkedList.length > 0 ? this.checkedList.join(',') : null
+        values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
           this.$put('/cos/staff-info', {

@@ -31,6 +31,7 @@
     </div>
     <div>
       <div class="operator">
+        <a-button type="primary" ghost @click="add">添加库存</a-button>
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -54,6 +55,12 @@
         </template>
       </a-table>
     </div>
+    <inventory-add
+      v-if="inventoryAdd.visiable"
+      @close="handleinventoryAddClose"
+      @success="handleinventoryAddSuccess"
+      :inventoryAddVisiable="inventoryAdd.visiable">
+    </inventory-add>
   </a-card>
 </template>
 
@@ -61,11 +68,12 @@
 import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
+import inventoryAdd from './InventoryAdd'
 moment.locale('zh-cn')
 
 export default {
   name: 'inventory',
-  components: {RangeDate},
+  components: {inventoryAdd, RangeDate},
   data () {
     return {
       advanced: false,
@@ -217,7 +225,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/inventory-info/' + ids).then(() => {
+          that.$delete('/cos/pharmacy-inventory/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -290,7 +298,7 @@ export default {
       if (params.type === undefined) {
         delete params.type
       }
-      this.$get('/cos/inventory-info/page', {
+      this.$get('/cos/pharmacy-inventory/page', {
         ...params
       }).then((r) => {
         let data = r.data.data
