@@ -3,6 +3,7 @@ package cc.mrbird.febs.cos.controller;
 
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.OrderInfo;
+import cc.mrbird.febs.cos.entity.vo.OrderInfoVo;
 import cc.mrbird.febs.cos.service.IOrderInfoService;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -32,6 +33,17 @@ public class OrderInfoController {
     @GetMapping("/page")
     public R page(Page<OrderInfo> page, OrderInfo orderInfo) {
         return R.ok(orderInfoService.selectOrderPage(page, orderInfo));
+    }
+
+    /**
+     * 平台内添加订单
+     *
+     * @param orderInfoVo 订单信息
+     * @return 结果
+     */
+    @PostMapping("/platform")
+    public R saveOrderByPlatform(OrderInfoVo orderInfoVo) {
+        return R.ok(orderInfoService.orderAdd(orderInfoVo));
     }
 
     /**
