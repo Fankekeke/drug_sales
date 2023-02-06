@@ -1,6 +1,7 @@
 package cc.mrbird.febs.cos.service;
 
 import cc.mrbird.febs.cos.entity.PharmacyInventory;
+import cc.mrbird.febs.cos.entity.vo.InventoryVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -22,6 +23,14 @@ public interface IPharmacyInventoryService extends IService<PharmacyInventory> {
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> selectPharmacyInventoryPage(Page<PharmacyInventory> page, PharmacyInventory pharmacyInventory);
+
+    /**
+     * 批量设置库房库存
+     *
+     * @param inventoryVo 参数
+     * @return 结果
+     */
+    boolean batchPutInventory(InventoryVo inventoryVo) throws Exception;
 
     /**
      * 根据药房ID获取库存信息

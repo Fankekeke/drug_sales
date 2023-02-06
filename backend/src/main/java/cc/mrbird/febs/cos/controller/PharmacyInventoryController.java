@@ -3,6 +3,7 @@ package cc.mrbird.febs.cos.controller;
 
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.PharmacyInventory;
+import cc.mrbird.febs.cos.entity.vo.InventoryVo;
 import cc.mrbird.febs.cos.service.IPharmacyInventoryService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,17 @@ public class PharmacyInventoryController {
     @GetMapping("/page")
     public R page(Page<PharmacyInventory> page, PharmacyInventory pharmacyInventory) {
         return R.ok(pharmacyInventoryService.selectPharmacyInventoryPage(page, pharmacyInventory));
+    }
+
+    /**
+     * 批量设置库房库存
+     *
+     * @param inventoryVo 参数
+     * @return 结果
+     */
+    @PostMapping("/batch/put")
+    public R batchPutInventory(InventoryVo inventoryVo) throws Exception {
+        return R.ok(pharmacyInventoryService.batchPutInventory(inventoryVo));
     }
 
     /**

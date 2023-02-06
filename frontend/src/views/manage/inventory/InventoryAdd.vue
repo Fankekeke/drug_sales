@@ -38,18 +38,24 @@
             <template slot="nameShow" slot-scope="text, record">
               <a-input v-model="record.name"></a-input>
             </template>
-            <template slot="typeShow" slot-scope="text, record">
-              <a-input v-model="record.type"></a-input>
+            <template slot="brandShow" slot-scope="text, record">
+              <a-input v-model="record.brand"></a-input>
             </template>
             <template slot="typeIdShow" slot-scope="text, record">
-              <a-select v-model="record.typeId" style="width: 100%">
-                <a-select-option v-for="(item, index) in consumableType" :value="item.id" :key="index">{{ item.name }}</a-select-option>
-              </a-select>
+              <span v-if="record.classification == 1">中药材</span>
+              <span v-if="record.classification == 2">中药饮片</span>
+              <span v-if="record.classification == 3">中西成药</span>
+              <span v-if="record.classification == 4">化学原料药</span>
+              <span v-if="record.classification == 5">抗生素</span>
+              <span v-if="record.classification == 6">生化药品</span>
+              <span v-if="record.classification == 7">放射性药品</span>
+              <span v-if="record.classification == 8">血清</span>
+              <span v-if="record.classification == 9">诊断药品</span>
             </template>
-            <template slot="unitShow" slot-scope="text, record">
-              <a-input v-model="record.unit"></a-input>
+            <template slot="dosageFormShow" slot-scope="text, record">
+              <a-input v-model="record.dosageForm"></a-input>
             </template>
-            <template slot="amountShow" slot-scope="text, record">
+            <template slot="reserveShow" slot-scope="text, record">
               <a-input-number v-model="record.amount" :min="1" :step="1"/>
             </template>
             <template slot="priceShow" slot-scope="text, record">
@@ -110,26 +116,26 @@ export default {
     },
     columns () {
       return [{
-        title: '物品名称',
+        title: '药品名称',
         dataIndex: 'name',
         scopedSlots: {customRender: 'nameShow'}
       }, {
-        title: '型号',
-        dataIndex: 'type',
-        scopedSlots: {customRender: 'typeShow'}
+        title: '所属品牌',
+        dataIndex: 'brand',
+        scopedSlots: {customRender: 'brandShow'}
       }, {
         title: '数量',
-        dataIndex: 'amount',
-        scopedSlots: {customRender: 'amountShow'}
+        dataIndex: 'reserve',
+        scopedSlots: {customRender: 'reserveShow'}
       }, {
-        title: '所属类型',
-        dataIndex: 'typeId',
+        title: '药品类别',
+        dataIndex: 'classification',
         width: 200,
         scopedSlots: {customRender: 'typeIdShow'}
       }, {
-        title: '单位',
-        dataIndex: 'unit',
-        scopedSlots: {customRender: 'unitShow'}
+        title: '剂型',
+        dataIndex: 'dosageForm',
+        scopedSlots: {customRender: 'dosageFormShow'}
       }, {
         title: '单价',
         dataIndex: 'price',

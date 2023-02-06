@@ -1,11 +1,15 @@
 package cc.mrbird.febs.cos.service.impl;
 
+import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.cos.entity.InventoryStatistics;
 import cc.mrbird.febs.cos.entity.PharmacyInventory;
 import cc.mrbird.febs.cos.dao.PharmacyInventoryMapper;
+import cc.mrbird.febs.cos.entity.vo.InventoryVo;
 import cc.mrbird.febs.cos.service.IInventoryStatisticsService;
 import cc.mrbird.febs.cos.service.IPharmacyInventoryService;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -15,9 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author FanK
@@ -31,13 +34,49 @@ public class PharmacyInventoryServiceImpl extends ServiceImpl<PharmacyInventoryM
     /**
      * 分页获取药店库存信息
      *
-     * @param page     分页对象
+     * @param page              分页对象
      * @param pharmacyInventory 药店库存信息
      * @return 结果
      */
     @Override
     public IPage<LinkedHashMap<String, Object>> selectPharmacyInventoryPage(Page<PharmacyInventory> page, PharmacyInventory pharmacyInventory) {
         return baseMapper.selectPharmacyInventoryPage(page, pharmacyInventory);
+    }
+
+    /**
+     * 批量设置库房库存
+     *
+     * @param inventoryVo 参数
+     * @return 结果
+     */
+    @Override
+    public boolean batchPutInventory(InventoryVo inventoryVo) throws Exception {
+        if (inventoryVo.getPharmacyId() == null || CollectionUtil.isEmpty(inventoryVo.getPharmacyInventoryList())) {
+            throw new FebsException("所属药店和药品信息不能为空！");
+        }
+        List<Integer> drugIds = inventoryVo.getPharmacyInventoryList().stream().map(PharmacyInventory::getDrugId).filter(Objects::nonNull).collect(Collectors.toList());
+        if (CollectionUtil.isEmpty(drugIds)) {
+            return false;
+        }
+        // 根据药品编号查询库存
+        List<PharmacyInventory> pharmacyInventoryList = this.list(Wrappers.<PharmacyInventory>lambdaQuery().eq(PharmacyInventory::getPharmacyId, inventoryVo.getPharmacyId()).in(PharmacyInventory::getDrugId, drugIds));
+        // 转MAP
+        Map<Integer, PharmacyInventory> inventoryMap = pharmacyInventoryList.stream().collect(Collectors.toMap(PharmacyInventory::getDrugId, e -> e));
+        List<PharmacyInventory> batchData = new ArrayList<>();
+        for (PharmacyInventory pharmacyInventoryVo : inventoryVo.getPharmacyInventoryList()) {
+            PharmacyInventory item = inventoryMap.get(pharmacyInventoryVo.getDrugId());
+            if (item == null) {
+                item = new PharmacyInventory();
+                item.setPharmacyId(inventoryVo.getPharmacyId());
+                item.setShelfStatus(1);
+                item.setDrugId(pharmacyInventoryVo.getDrugId());
+                item.setReserve(pharmacyInventoryVo.getReserve());
+            } else {
+                item.setReserve(item.getReserve() + (pharmacyInventoryVo.getReserve() == null ? 1 : pharmacyInventoryVo.getReserve()));
+            }
+            batchData.add(item);
+        }
+        return this.saveOrUpdateBatch(batchData);
     }
 
     /**
