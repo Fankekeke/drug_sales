@@ -15,7 +15,7 @@
         </a-divider>
         <a-col :span="12">
           <a-form-item label='药店'>
-            <a-select v-decorator="[
+            <a-select @change="pharmacyCheck" v-decorator="[
               'pharmacyId',
               { rules: [{ required: true, message: '请输入所属药店!' }] }
               ]">
@@ -25,21 +25,30 @@
         </a-col>
       </a-row>
       <a-row :gutter="10" style="font-size: 13px;font-family: SimHei" v-if="pharmacyInfo != null">
-        <a-col :span="12"><b>药店名称：</b>
-          {{ pharmacyInfo.name }}
+        <a-col :span="8"><b>营业时间：</b>
+          {{ pharmacyInfo.businessHours }}
+        </a-col>
+        <a-col :span="8"><b>药店编号：</b>
+          {{ pharmacyInfo.code }}
+        </a-col>
+        <a-col :span="8"><b>地址：</b>
+          {{ pharmacyInfo.address }}
         </a-col>
       </a-row>
+      <br/>
       <a-row :gutter="10">
         <a-divider orientation="left">
           <span style="font-size: 13px">药品信息</span>
         </a-divider>
         <a-col :span="24">
           <a-table :columns="columns" :data-source="dataList" :pagination="false">
-            <template slot="nameShow" slot-scope="text, record">
-              <a-input v-model="record.name"></a-input>
+            <template slot="nameShow" slot-scope="text, record, index">
+              <a-select style="width: 100%" @change="handleChange($event, record)">
+                <a-select-option v-for="(item, index) in drugList" :key="index" :value="item.id">{{ item.name }}</a-select-option>
+              </a-select>
             </template>
             <template slot="brandShow" slot-scope="text, record">
-              <a-input v-model="record.brand"></a-input>
+              <span>{{ record.brand }}</span>
             </template>
             <template slot="typeIdShow" slot-scope="text, record">
               <span v-if="record.classification == 1">中药材</span>
@@ -53,13 +62,13 @@
               <span v-if="record.classification == 9">诊断药品</span>
             </template>
             <template slot="dosageFormShow" slot-scope="text, record">
-              <a-input v-model="record.dosageForm"></a-input>
+              <span>{{ record.dosageForm }}</span>
             </template>
             <template slot="reserveShow" slot-scope="text, record">
               <a-input-number v-model="record.amount" :min="1" :step="1"/>
             </template>
             <template slot="priceShow" slot-scope="text, record">
-              <a-input-number v-model="record.price" :min="1"/>
+              <span>{{ record.unitPrice }}元</span>
             </template>
           </a-table>
           <a-button @click="dataAdd" type="primary" ghost style="margin-top: 10px;width: 100%">
@@ -120,17 +129,16 @@ export default {
         dataIndex: 'name',
         scopedSlots: {customRender: 'nameShow'}
       }, {
-        title: '所属品牌',
-        dataIndex: 'brand',
-        scopedSlots: {customRender: 'brandShow'}
-      }, {
         title: '数量',
         dataIndex: 'reserve',
         scopedSlots: {customRender: 'reserveShow'}
       }, {
+        title: '所属品牌',
+        dataIndex: 'brand',
+        scopedSlots: {customRender: 'brandShow'}
+      }, {
         title: '药品类别',
         dataIndex: 'classification',
-        width: 200,
         scopedSlots: {customRender: 'typeIdShow'}
       }, {
         title: '剂型',
@@ -138,7 +146,7 @@ export default {
         scopedSlots: {customRender: 'dosageFormShow'}
       }, {
         title: '单价',
-        dataIndex: 'price',
+        dataIndex: 'unitPrice',
         scopedSlots: {customRender: 'priceShow'}
       }]
     }
@@ -156,15 +164,45 @@ export default {
       childrenDrawer: false,
       pharmacyList: [],
       pharmacyInfo: null,
-      dataList: []
+      dataList: [],
+      drugList: []
     }
   },
   mounted () {
     this.getPharmacy()
+    this.getDrug()
   },
   methods: {
+    handleChange (value, record) {
+      if (value) {
+        this.drugList.forEach(e => {
+          if (e.id === value) {
+            record.brand = e.brand
+            record.classification = e.classification
+            record.dosageForm = e.dosageForm
+            record.unitPrice = e.unitPrice
+            record.drugId = e.id
+            console.log(record)
+          }
+        })
+      }
+    },
+    pharmacyCheck (value) {
+      if (value) {
+        this.pharmacyList.forEach(e => {
+          if (e.id === value) {
+            this.pharmacyInfo = e
+          }
+        })
+      }
+    },
     dataAdd () {
-      this.dataList.push({name: '', type: '', typeId: '', unit: '', amount: '', price: ''})
+      this.dataList.push({drugId: null, reserve: 1, brand: '', classification: '', dosageForm: '', unitPrice: ''})
+    },
+    getDrug () {
+      this.$get('/cos/drug-info/list').then((r) => {
+        this.drugList = r.data.data
+      })
     },
     getPharmacy () {
       this.$get('/cos/pharmacy-info/list').then((r) => {
