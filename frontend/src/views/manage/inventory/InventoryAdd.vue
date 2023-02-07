@@ -262,18 +262,13 @@ export default {
       this.$emit('close')
     },
     handleSubmit () {
-      // 获取图片List
-      let images = []
-      this.fileList.forEach(image => {
-        images.push(image.response)
-      })
       this.form.validateFields((err, values) => {
-        values.images = images.length > 0 ? images.join(',') : null
+        values.pharmacyInventoryList = this.dataList
         if (!err) {
-          values.publisher = this.currentUser.userId
           this.loading = true
-          this.$post('/cos/inventory-info', {
-            ...values
+          this.$post('/cos/pharmacy-inventory/batch/put', {
+            pharmacyId: values.pharmacyId,
+            pharmacyInventoryList: values.pharmacyInventoryList,
           }).then((r) => {
             this.reset()
             this.$emit('success')
