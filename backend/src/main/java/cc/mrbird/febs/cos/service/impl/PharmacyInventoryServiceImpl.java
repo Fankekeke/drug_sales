@@ -68,14 +68,14 @@ public class PharmacyInventoryServiceImpl extends ServiceImpl<PharmacyInventoryM
         List<PharmacyInventory> batchData = new ArrayList<>();
         for (PharmacyInventory pharmacyInventoryVo : inventoryList) {
             PharmacyInventory item = inventoryMap.get(pharmacyInventoryVo.getDrugId());
-            if (item == null) {
+            if (item == null || item.getDrugId() == null) {
                 item = new PharmacyInventory();
                 item.setPharmacyId(pharmacyId);
                 item.setShelfStatus(1);
                 item.setDrugId(pharmacyInventoryVo.getDrugId());
                 item.setReserve(pharmacyInventoryVo.getReserve());
             } else {
-                item.setReserve(item.getReserve() + (pharmacyInventoryVo.getReserve() == null ? 1 : pharmacyInventoryVo.getReserve()));
+                item.setReserve(item.getReserve() + pharmacyInventoryVo.getReserve());
             }
             batchData.add(item);
         }

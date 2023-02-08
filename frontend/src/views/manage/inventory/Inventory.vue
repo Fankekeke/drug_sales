@@ -110,22 +110,8 @@ export default {
         title: '药店名称',
         dataIndex: 'pharmacyName'
       }, {
-        title: '地址',
-        dataIndex: 'address',
-        scopedSlots: { customRender: 'addressShow' }
-      }, {
-        title: '所属分类',
-        dataIndex: 'storageType',
-        customRender: (text, row, index) => {
-          switch (text) {
-            case 1:
-              return <a-tag>出库</a-tag>
-            case 2:
-              return <a-tag>入库</a-tag>
-            default:
-              return '- -'
-          }
-        }
+        title: '药店编号',
+        dataIndex: 'pharmacyCode'
       }, {
         title: '药品名称',
         dataIndex: 'drugName'
@@ -146,32 +132,31 @@ export default {
         }
       }, {
         title: '数量',
-        dataIndex: 'quantity',
+        dataIndex: 'reserve',
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text
+            return text + '件'
           } else {
             return '- -'
           }
         }
       }, {
-        title: '保管人',
-        dataIndex: 'custodian',
+        title: '所属分类',
+        dataIndex: 'category',
         customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '操作时间',
-        dataIndex: 'createDate',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
+          switch (text) {
+            case 1:
+              return <a-tag>可卡因</a-tag>
+            case 2:
+              return <a-tag>维生素制剂</a-tag>
+            case 3:
+              return <a-tag>鱼肝油</a-tag>
+            case 4:
+              return <a-tag>药物饮料</a-tag>
+            case 5:
+              return <a-tag>膳食纤维</a-tag>
+            default:
+              return '- -'
           }
         }
       }]

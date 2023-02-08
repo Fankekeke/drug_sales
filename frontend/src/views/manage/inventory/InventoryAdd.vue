@@ -65,7 +65,7 @@
               <span>{{ record.dosageForm }}</span>
             </template>
             <template slot="reserveShow" slot-scope="text, record">
-              <a-input-number v-model="record.amount" :min="1" :step="1"/>
+              <a-input-number v-model="record.reserve" :min="1" :step="1"/>
             </template>
             <template slot="priceShow" slot-scope="text, record">
               <span>{{ record.unitPrice }}元</span>
@@ -268,7 +268,7 @@ export default {
           this.loading = true
           this.$post('/cos/pharmacy-inventory/batch/put', {
             pharmacyId: values.pharmacyId,
-            pharmacyInventoryList: values.pharmacyInventoryList,
+            pharmacyInventoryList: JSON.stringify(values.pharmacyInventoryList)
           }).then((r) => {
             this.reset()
             this.$emit('success')
