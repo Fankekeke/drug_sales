@@ -26,11 +26,12 @@ public interface IPharmacyInventoryService extends IService<PharmacyInventory> {
 
     /**
      * 批量设置库房库存
-     *
-     * @param inventoryVo 参数
+     * @param pharmacyId 参数
+     * @param pharmacyInventoryList 参数
      * @return 结果
+     * @throws Exception 异常
      */
-    boolean batchPutInventory(InventoryVo inventoryVo) throws Exception;
+    boolean batchPutInventory(Integer pharmacyId, String pharmacyInventoryList) throws Exception;
 
     /**
      * 根据药房ID获取库存信息

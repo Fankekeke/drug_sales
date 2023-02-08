@@ -10,6 +10,7 @@ import cc.mrbird.febs.cos.service.IPharmacyInventoryService;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -45,29 +46,31 @@ public class PharmacyInventoryServiceImpl extends ServiceImpl<PharmacyInventoryM
 
     /**
      * 批量设置库房库存
-     *
-     * @param inventoryVo 参数
+     * @param pharmacyId 参数
+     * @param pharmacyInventorys 参数
      * @return 结果
+     * @throws Exception 异常
      */
     @Override
-    public boolean batchPutInventory(InventoryVo inventoryVo) throws Exception {
-        if (inventoryVo.getPharmacyId() == null || CollectionUtil.isEmpty(inventoryVo.getPharmacyInventoryList())) {
+    public boolean batchPutInventory(Integer pharmacyId, String pharmacyInventorys) throws Exception {
+        List<PharmacyInventory> inventoryList = JSONUtil.toList(pharmacyInventorys, PharmacyInventory.class);
+        if (pharmacyId == null || CollectionUtil.isEmpty(inventoryList)) {
             throw new FebsException("所属药店和药品信息不能为空！");
         }
-        List<Integer> drugIds = inventoryVo.getPharmacyInventoryList().stream().map(PharmacyInventory::getDrugId).filter(Objects::nonNull).collect(Collectors.toList());
+        List<Integer> drugIds = inventoryList.stream().map(PharmacyInventory::getDrugId).filter(Objects::nonNull).collect(Collectors.toList());
         if (CollectionUtil.isEmpty(drugIds)) {
             return false;
         }
         // 根据药品编号查询库存
-        List<PharmacyInventory> pharmacyInventoryList = this.list(Wrappers.<PharmacyInventory>lambdaQuery().eq(PharmacyInventory::getPharmacyId, inventoryVo.getPharmacyId()).in(PharmacyInventory::getDrugId, drugIds));
+        List<PharmacyInventory> pharmacyInventoryList = this.list(Wrappers.<PharmacyInventory>lambdaQuery().eq(PharmacyInventory::getPharmacyId, pharmacyId).in(PharmacyInventory::getDrugId, drugIds));
         // 转MAP
         Map<Integer, PharmacyInventory> inventoryMap = pharmacyInventoryList.stream().collect(Collectors.toMap(PharmacyInventory::getDrugId, e -> e));
         List<PharmacyInventory> batchData = new ArrayList<>();
-        for (PharmacyInventory pharmacyInventoryVo : inventoryVo.getPharmacyInventoryList()) {
+        for (PharmacyInventory pharmacyInventoryVo : inventoryList) {
             PharmacyInventory item = inventoryMap.get(pharmacyInventoryVo.getDrugId());
             if (item == null) {
                 item = new PharmacyInventory();
-                item.setPharmacyId(inventoryVo.getPharmacyId());
+                item.setPharmacyId(pharmacyId);
                 item.setShelfStatus(1);
                 item.setDrugId(pharmacyInventoryVo.getDrugId());
                 item.setReserve(pharmacyInventoryVo.getReserve());

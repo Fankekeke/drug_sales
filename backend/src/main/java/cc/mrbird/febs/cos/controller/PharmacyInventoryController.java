@@ -36,13 +36,14 @@ public class PharmacyInventoryController {
 
     /**
      * 批量设置库房库存
-     *
-     * @param inventoryVo 参数
+     * @param pharmacyId 参数
+     * @param pharmacyInventoryList 参数
      * @return 结果
+     * @throws Exception 异常
      */
     @PostMapping("/batch/put")
-    public R batchPutInventory(InventoryVo inventoryVo) throws Exception {
-        return R.ok(pharmacyInventoryService.batchPutInventory(inventoryVo));
+    public R batchPutInventory(@RequestParam("pharmacyId") Integer pharmacyId, @RequestParam("pharmacyInventoryList") String pharmacyInventoryList) throws Exception {
+        return R.ok(pharmacyInventoryService.batchPutInventory(pharmacyId, pharmacyInventoryList));
     }
 
     /**
