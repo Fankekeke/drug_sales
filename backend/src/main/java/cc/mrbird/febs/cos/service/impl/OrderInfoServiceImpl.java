@@ -10,6 +10,7 @@ import cc.mrbird.febs.cos.service.*;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -78,7 +79,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
         this.save(orderInfo);
         // 添加订单详情信息
-        List<OrderDetail> detailList = orderInfoVo.getOrderDetailList();
+        List<OrderDetail> detailList = JSONUtil.toList(orderInfoVo.getOrderDetailList(), OrderDetail.class);
         if (CollectionUtil.isNotEmpty(detailList)) {
             BigDecimal totalCost = BigDecimal.ONE;
             // 计算药品总价，绑定订单

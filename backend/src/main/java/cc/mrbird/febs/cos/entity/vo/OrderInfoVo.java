@@ -18,6 +18,6 @@ import java.util.List;
 @Accessors(chain = true)
 public class OrderInfoVo extends OrderInfo {
 
-    private List<OrderDetail> orderDetailList;
+    private String orderDetailList;
 
 }
