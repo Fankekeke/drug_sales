@@ -1,11 +1,8 @@
 <template>
-  <a-modal v-model="show" title="工单办理" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="订单处理" @cancel="onClose" :width="800">
     <template slot="footer">
       <a-button key="back" @click="submit" type="primary">
-        确认
-      </a-button>
-      <a-button key="reject" @click="orderReject" type="danger">
-        驳回
+        发货
       </a-button>
       <a-button @click="onClose">
         关闭
@@ -15,7 +12,7 @@
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">基础信息</span></a-col>
         <a-col :span="8"><b>工单编号：</b>
-          {{ orderAuditData.orderCode }}
+          {{ orderAuditData.code }}
         </a-col>
         <a-col :span="8"><b>客户名称：</b>
           {{ orderAuditData.userName }}
@@ -27,75 +24,45 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col :span="8"><b>当前状态：</b>
-          <span v-if="orderAuditData.status == 0">正在对应</span>
-          <span v-if="orderAuditData.status == 1">已派发</span>
-          <span v-if="orderAuditData.status == 2">缴费</span>
-          <span v-if="orderAuditData.status == 3">正在维修</span>
-          <span v-if="orderAuditData.status == 4">维修完成</span>
-          <span v-if="orderAuditData.status == 5">已退换</span>
-          <span v-if="orderAuditData.status == 6">完成</span>
+          <span v-if="orderAuditData.status == 0">待付款</span>
+          <span v-if="orderAuditData.status == 1">已下单</span>
+          <span v-if="orderAuditData.status == 2">配送中</span>
+          <span v-if="orderAuditData.status == 3">已收货</span>
         </a-col>
-        <a-col :span="8"><b>服务类型：</b>
-          {{ orderAuditData.serverTypeName }}
+        <a-col :span="8"><b>订单金额：</b>
+          {{ orderAuditData.totalCost }} 元
         </a-col>
-        <a-col :span="8"><b>创建时间：</b>
+        <a-col :span="8"><b>下单时间：</b>
           {{ orderAuditData.createDate }}
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">备注信息</span></a-col>
-        <a-col :span="24">
-          {{ orderAuditData.remark }}
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">药店信息</span></a-col>
+        <a-col :span="8"><b>药店名称：</b>
+            {{ orderAuditData.pharmacyName }}
+          </a-col>
+        <a-col :span="8"><b>药店地址：</b>
+          {{ orderAuditData.address }}
+        </a-col>
+        <a-col :span="8"><b>联系方式：</b>
+          {{ orderAuditData.pharmacyPhone }}
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">工单图片</span></a-col>
-        <a-col :span="24">
-          <a-upload
-            name="avatar"
-            action="http://127.0.0.1:9527/file/fileUpload/"
-            list-type="picture-card"
-            :file-list="fileList"
-            @preview="handlePreview"
-            @change="picHandleChange"
-          >
-          </a-upload>
-          <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-            <img alt="example" style="width: 100%" :src="previewImage" />
-          </a-modal>
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">购买药品信息</span></a-col>
+         <a-col :span="24">
+          <a-table :columns="columns" :data-source="durgList">
+          </a-table>
         </a-col>
       </a-row>
       <a-divider orientation="left">
-        <span style="font-size: 12px;font-family: SimHei">工单分配</span>
+        <span style="font-size: 12px;font-family: SimHei">订单发货</span>
       </a-divider>
       <a-row style="padding-left: 24px;padding-right: 24px;" :gutter="50">
-        <a-col :span="24" style="margin-bottom: 15px">
-          <a-radio-group v-model="auditData.staffId" button-style="solid">
-            <a-radio-button v-for="(item, index) in staffList" :key="index" :value="item.id">
-              {{ item.name }}（{{ item.workStatus > 0 ? '工作' : '空闲' }}）
-            </a-radio-button>
-          </a-radio-group>
-        </a-col>
-        <br/>
-        <a-col :span="12">
-          <a-form-item label='工单名称' v-bind="formItemLayout">
-            <a-input v-model="auditData.orderName"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label='收费价格' v-bind="formItemLayout">
-            <a-input-number v-model="auditData.price" :min="0" :max="99999" style="width: 100%"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label='对应时间' v-bind="formItemLayout">
-            <a-date-picker :default-value="moment(new Date(), 'YYYY-MM-DD')" @change="onDateChange" style="width: 100%"/>
-          </a-form-item>
-        </a-col>
         <a-col :span="24">
-          <a-form-item label='维修备注' v-bind="formItemLayout">
+          <a-form-item label='物流备注' v-bind="formItemLayout">
             <a-textarea :rows="6" v-model="auditData.remark"/>
           </a-form-item>
         </a-col>
@@ -141,15 +108,39 @@ export default {
       },
       set: function () {
       }
+    },
+    columns () {
+      return [{
+        title: '药品名称',
+        dataIndex: 'drugName'
+      }, {
+        title: '品牌',
+        dataIndex: 'brand'
+      }, {
+        title: '数量',
+        dataIndex: 'quantity'
+      }, {
+        title: '药品图片',
+        dataIndex: 'images',
+        customRender: (text, record, index) => {
+          if (!record.images) return <a-avatar shape="square" icon="user" />
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+            </template>
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+          </a-popover>
+        }
+      }, {
+        title: '单价',
+        dataIndex: 'unitPrice'
+      }]
     }
   },
   watch: {
     'orderAuditShow': function (value) {
       if (value) {
-        this.selectStaffByProduct(this.orderAuditData.productId)
-        if (this.orderAuditData.images !== null && this.orderAuditData.images !== '') {
-          this.imagesInit(this.orderAuditData.images)
-        }
+        this.selectOrderDetail(this.orderAuditData.id)
       }
     }
   },
@@ -161,17 +152,19 @@ export default {
       previewVisible: false,
       previewImage: '',
       auditData: {
-        orderName: '',
-        staffId: null,
-        price: 0,
-        reserveDate: '',
         remark: ''
       },
-      staffList: []
+      staffList: [],
+      durgList: []
     }
   },
   methods: {
     moment,
+    selectOrderDetail (orderId) {
+      this.$get(`/cos/order-detail/detail/${orderId}`).then((r) => {
+        this.durgList = r.data.data
+      })
+    },
     selectStaffByProduct (productId) {
       this.$get(`/cos/staff-info/work/${productId}`).then((r) => {
         this.staffList = r.data.data
@@ -202,29 +195,9 @@ export default {
         this.fileList = imageList
       }
     },
-    orderReject () {
-      this.$get(`/cos/order-info/reject/${this.orderAuditData.orderCode}`).then((r) => {
-        this.$emit('success')
-      })
-    },
     submit () {
-      if (this.auditData.staffId === null) {
-        this.$message.error('请选择维修人员')
-        return false
-      }
-      if (this.auditData.orderName === '') {
-        this.$message.error('请输入工单名称')
-        return false
-      }
-      if (this.auditData.reserveDate === '') {
-        this.auditData.reserveDate = moment(new Date()).format('YYYY-MM-DD')
-      }
-      this.$get(`/cos/order-info/distribute`, {
-        'orderName': this.auditData.orderName,
-        'orderCode': this.orderAuditData.orderCode,
-        'staffId': this.auditData.staffId,
-        'date': this.auditData.reserveDate,
-        'money': this.auditData.price,
+      this.$get(`/cos/order-info/ship`, {
+        'orderId': this.orderAuditData.id,
         'remark': this.auditData.remark
       }).then((r) => {
         this.cleanData()
@@ -236,10 +209,6 @@ export default {
       this.$emit('close')
     },
     cleanData () {
-      this.auditData.orderName = ''
-      this.auditData.staffId = null
-      this.auditData.price = 0
-      this.auditData.reserveDate = ''
       this.auditData.remark = ''
     }
   }

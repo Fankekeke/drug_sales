@@ -17,7 +17,9 @@
         ui.phone,
         ui.address AS userAddress,
         phi.name AS pharmacyName,
-        phi.address
+        phi.address,
+        phi.legal_person,
+        phi.phone as pharmacyPhone
         from
         order_info oi
         left join pharmacy_info phi on

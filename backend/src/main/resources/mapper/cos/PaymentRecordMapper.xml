@@ -11,11 +11,15 @@
         pr.order_code,
         pr.create_date,
         ui.NAME AS userName,
-        ui.phone
+        ui.phone,
+        phi.name AS pharmacyName,
+        phi.images,
+        phi.address
         FROM
         payment_record pr
         LEFT JOIN user_info ui ON ( ui.id = pr.user_id )
         LEFT JOIN order_info oi ON ( oi.code = pr.order_code )
+        LEFT JOIN pharmacy_info phi on (phi.id = oi.pharmacy_id)
         WHERE
         1 = 1
         <if test="paymentRecord.orderCode != null and paymentRecord.orderCode != ''">

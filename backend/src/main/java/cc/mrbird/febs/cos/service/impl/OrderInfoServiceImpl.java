@@ -179,4 +179,26 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         };
         return result;
     }
+
+    /**
+     * 订单发货
+     *
+     * @param orderId 订单ID
+     * @param remark  物流信息
+     * @return 结果
+     */
+    @Override
+    public boolean orderShip(Integer orderId, String remark) {
+        logisticsInfoService.update(Wrappers.<LogisticsInfo>lambdaUpdate().set(LogisticsInfo::getCurrentLogistics, 0).eq(LogisticsInfo::getOrderId, orderId));
+        LogisticsInfo logisticsInfo = new LogisticsInfo();
+        logisticsInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        logisticsInfo.setOrderId(orderId);
+        logisticsInfo.setRemark(remark);
+        logisticsInfo.setCurrentLogistics(1);
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setId(orderId);
+        orderInfo.setOrderStatus(2);
+        this.updateById(orderInfo);
+        return logisticsInfoService.save(logisticsInfo);
+    }
 }

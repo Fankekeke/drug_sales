@@ -70,6 +70,18 @@ public class OrderInfoController {
     }
 
     /**
+     * 订单发货
+     *
+     * @param orderId 订单ID
+     * @param remark  物流信息
+     * @return 结果
+     */
+    @GetMapping("/ship")
+    public R orderShip(@RequestParam("orderId") Integer orderId, @RequestParam("remark") String remark) {
+        return R.ok(orderInfoService.orderShip(orderId, remark));
+    }
+
+    /**
      * 获取详情信息
      *
      * @param id id

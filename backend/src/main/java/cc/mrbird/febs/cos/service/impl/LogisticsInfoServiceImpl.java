@@ -40,7 +40,7 @@ public class LogisticsInfoServiceImpl extends ServiceImpl<LogisticsInfoMapper, L
      */
     @Override
     public List<LogisticsInfo> selectLogisticsByOrder(Integer orderId) {
-        return this.list(Wrappers.<LogisticsInfo>lambdaQuery().eq(LogisticsInfo::getOrderId, orderId));
+        return this.list(Wrappers.<LogisticsInfo>lambdaQuery().eq(LogisticsInfo::getOrderId, orderId).orderByAsc(LogisticsInfo::getCurrentLogistics).orderByDesc(LogisticsInfo::getCreateDate));
     }
 
     /**

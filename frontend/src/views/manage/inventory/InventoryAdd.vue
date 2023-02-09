@@ -42,7 +42,7 @@
         </a-divider>
         <a-col :span="24">
           <a-table :columns="columns" :data-source="dataList" :pagination="false">
-            <template slot="nameShow" slot-scope="text, record, index">
+            <template slot="nameShow" slot-scope="text, record">
               <a-select style="width: 100%" @change="handleChange($event, record)">
                 <a-select-option v-for="(item, index) in drugList" :key="index" :value="item.id">{{ item.name }}</a-select-option>
               </a-select>

@@ -100,7 +100,7 @@ export default {
     }),
     columns () {
       return [{
-        title: '工单编号',
+        title: '订单编号',
         dataIndex: 'orderCode'
       }, {
         title: '客户名称',
@@ -114,6 +114,38 @@ export default {
         customRender: (text, row, index) => {
           if (text !== null) {
             return text + '元'
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '药店名称',
+        dataIndex: 'pharmacyName',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '药店图片',
+        dataIndex: 'images',
+        customRender: (text, record, index) => {
+          if (!record.images) return <a-avatar shape="square" icon="user" />
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+            </template>
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+          </a-popover>
+        }
+      }, {
+        title: '药店地址',
+        dataIndex: 'address',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
           } else {
             return '- -'
           }

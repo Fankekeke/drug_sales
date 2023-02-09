@@ -46,4 +46,13 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      * @return 结果
      */
     LinkedHashMap<String, Object> receipt(Integer orderId);
+
+    /**
+     * 订单发货
+     *
+     * @param orderId 订单ID
+     * @param remark  物流信息
+     * @return 结果
+     */
+    boolean orderShip(Integer orderId, String remark);
 }

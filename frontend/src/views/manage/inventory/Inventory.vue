@@ -107,6 +107,19 @@ export default {
     }),
     columns () {
       return [{
+        title: '出入库类型',
+        dataIndex: 'storageType',
+        customRender: (text, row, index) => {
+          switch (text) {
+            case 1:
+              return <a-tag color='red'>出库</a-tag>
+            case 2:
+              return <a-tag color='green'>入库</a-tag>
+            default:
+              return '- -'
+          }
+        }
+      }, {
         title: '药店名称',
         dataIndex: 'pharmacyName'
       }, {
@@ -157,6 +170,16 @@ export default {
               return <a-tag>膳食纤维</a-tag>
             default:
               return '- -'
+          }
+        }
+      }, {
+        title: '操作时间',
+        dataIndex: 'createDate',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + '件'
+          } else {
+            return '- -'
           }
         }
       }]

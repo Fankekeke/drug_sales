@@ -7,10 +7,10 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="工单编号"
+                label="订单编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.orderCode"/>
+                <a-input v-model="queryParams.code"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
@@ -23,27 +23,10 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="工单名称"
+                label="药店名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.orderName"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="工单状态"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-select v-model="queryParams.status" allowClear>
-                  <a-select-option value="0">正在对应</a-select-option>
-                  <a-select-option value="1">已派发</a-select-option>
-                  <a-select-option value="2">缴费</a-select-option>
-                  <a-select-option value="3">正在维修</a-select-option>
-                  <a-select-option value="4">维修完成</a-select-option>
-                  <a-select-option value="5">已退换</a-select-option>
-                  <a-select-option value="6">完成</a-select-option>
-                  <a-select-option value="7">驳回</a-select-option>
-                </a-select>
+                <a-input v-model="queryParams.pharmacyName"/>
               </a-form-item>
             </a-col>
           </div>
@@ -80,8 +63,7 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon type="file-search" @click="orderViewOpen(record)" title="详 情"></a-icon>
-          <a-icon v-if="record.status == 0" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="orderAuditOpen(record)" title="修 改" style="margin-left: 15px"></a-icon>
-          <a-icon v-if="record.status == 3" type="audit" @click="orderStatusOpen(record)" title="修 改" style="margin-left: 15px"></a-icon>
+          <a-icon v-if="record.status == 1" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="orderAuditOpen(record)" title="修 改" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
@@ -162,11 +144,8 @@ export default {
     }),
     columns () {
       return [{
-        title: '工单编号',
-        dataIndex: 'orderCode'
-      }, {
-        title: '工单名称',
-        dataIndex: 'orderName'
+        title: '订单编号',
+        dataIndex: 'code'
       }, {
         title: '客户名称',
         dataIndex: 'userName'
@@ -174,8 +153,18 @@ export default {
         title: '联系方式',
         dataIndex: 'phone'
       }, {
-        title: '服务类型',
-        dataIndex: 'serverTypeName',
+        title: '订单总额',
+        dataIndex: 'totalCost',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + '元'
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '收获地址',
+        dataIndex: 'userAddress',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -184,44 +173,34 @@ export default {
           }
         }
       }, {
-        title: '工单图片',
-        dataIndex: 'images',
-        customRender: (text, record, index) => {
-          if (!record.images) return <a-avatar shape="square" icon="user" />
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
-            </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
-          </a-popover>
+        title: '所属药店',
+        dataIndex: 'pharmacyName',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
         }
       }, {
-        title: '工单状态',
-        dataIndex: 'status',
+        title: '订单状态',
+        dataIndex: 'orderStatus',
         customRender: (text, row, index) => {
           switch (text) {
             case 0:
-              return <a-tag>正在对应</a-tag>
+              return <a-tag>待付款</a-tag>
             case 1:
-              return <a-tag>已派发</a-tag>
+              return <a-tag>已下单</a-tag>
             case 2:
-              return <a-tag>缴费</a-tag>
+              return <a-tag>配送中</a-tag>
             case 3:
-              return <a-tag>正在维修</a-tag>
-            case 4:
-              return <a-tag>维修完成</a-tag>
-            case 5:
-              return <a-tag>已退换</a-tag>
-            case 6:
-              return <a-tag>完成</a-tag>
-            case 7:
-              return <a-tag>驳回</a-tag>
+              return <a-tag>已收货</a-tag>
             default:
               return '- -'
           }
         }
       }, {
-        title: '创建时间',
+        title: '下单时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
