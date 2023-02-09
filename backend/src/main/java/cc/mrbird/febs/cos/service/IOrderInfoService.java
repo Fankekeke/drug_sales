@@ -29,7 +29,7 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      * @param orderInfoVo 订单信息
      * @return 结果
      */
-    boolean orderAdd(OrderInfoVo orderInfoVo);
+    boolean orderAdd(OrderInfoVo orderInfoVo, boolean flag);
 
     /**
      * 订单付款

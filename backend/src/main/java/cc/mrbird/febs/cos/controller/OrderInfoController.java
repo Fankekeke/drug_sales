@@ -43,7 +43,18 @@ public class OrderInfoController {
      */
     @PostMapping("/platform")
     public R saveOrderByPlatform(OrderInfoVo orderInfoVo) {
-        return R.ok(orderInfoService.orderAdd(orderInfoVo));
+        return R.ok(orderInfoService.orderAdd(orderInfoVo, true));
+    }
+
+    /**
+     * 添加订单
+     *
+     * @param orderInfoVo 订单信息
+     * @return 结果
+     */
+    @PostMapping("/order")
+    public R saveOrder(OrderInfoVo orderInfoVo) {
+        return R.ok(orderInfoService.orderAdd(orderInfoVo, false));
     }
 
     /**

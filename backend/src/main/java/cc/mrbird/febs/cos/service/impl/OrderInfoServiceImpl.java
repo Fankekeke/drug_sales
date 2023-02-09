@@ -1,7 +1,6 @@
 package cc.mrbird.febs.cos.service.impl;
 
 import cc.mrbird.febs.cos.dao.PharmacyInfoMapper;
-import cc.mrbird.febs.cos.dao.PharmacyInventoryMapper;
 import cc.mrbird.febs.cos.dao.UserInfoMapper;
 import cc.mrbird.febs.cos.entity.*;
 import cc.mrbird.febs.cos.dao.OrderInfoMapper;
@@ -61,14 +60,15 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      * 添加订单信息
      *
      * @param orderInfoVo 订单信息
+     * @param flag 是否付款完成（0.否 1.是）
      * @return 结果
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean orderAdd(OrderInfoVo orderInfoVo) {
+    public boolean orderAdd(OrderInfoVo orderInfoVo, boolean flag) {
         // 添加订单信息
         OrderInfo orderInfo = new OrderInfo();
-        orderInfo.setOrderStatus(0);
+        orderInfo.setOrderStatus(flag ? 3 : 0);
         orderInfo.setCode("OR-" + System.currentTimeMillis());
         orderInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         orderInfo.setPharmacyId(orderInfo.getPharmacyId());
@@ -91,8 +91,55 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             orderInfo.setTotalCost(totalCost);
             orderDetailService.saveBatch(detailList);
         }
+        if (flag) {
+            this.orderPaymentPlatform(orderInfo.getCode(), orderInfoVo.getStaffCode());
+        }
         // 重新更新订单信息
         return this.updateById(orderInfo);
+    }
+
+    /**
+     * 平台内订单付款
+     *
+     * @param orderCode 订单编号
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void orderPaymentPlatform(String orderCode, String staffCode) {
+        if (StrUtil.isEmpty(orderCode)) {
+            return;
+        }
+        // 获取订单信息
+        OrderInfo orderInfo = this.getOne(Wrappers.<OrderInfo>lambdaQuery().eq(OrderInfo::getCode, orderCode));
+        // 订单详情
+        List<OrderDetail> detailList = orderDetailService.list(Wrappers.<OrderDetail>lambdaQuery().eq(OrderDetail::getOrderId, orderInfo.getId()));
+        Map<Integer, Integer> detailMap = detailList.stream().collect(Collectors.toMap(OrderDetail::getDrugId, OrderDetail::getQuantity));
+        // 根据药品ID获取库存信息
+        List<PharmacyInventory> inventoryList = pharmacyInventoryService.list(Wrappers.<PharmacyInventory>lambdaQuery().in(PharmacyInventory::getDrugId, detailMap.keySet()).eq(PharmacyInventory::getPharmacyId, orderInfo.getPharmacyId()));
+        List<InventoryStatistics> statisticsList = new ArrayList<>();
+
+        inventoryList.forEach(e -> {
+            e.setReserve(e.getReserve() - detailMap.get(e.getDrugId()));
+            InventoryStatistics inventoryStatistics = new InventoryStatistics();
+            inventoryStatistics.setDrugId(e.getDrugId());
+            inventoryStatistics.setPharmacyId(e.getPharmacyId());
+            inventoryStatistics.setQuantity(e.getReserve());
+            inventoryStatistics.setStorageType(2);
+            inventoryStatistics.setCustodian(staffCode);
+            inventoryStatistics.setCreateDate(DateUtil.formatDateTime(new Date()));
+            statisticsList.add(inventoryStatistics);
+        });
+        // 修改库存信息
+        pharmacyInventoryService.updateBatchById(inventoryList);
+        // 添加库房统计
+        inventoryStatisticsService.saveBatch(statisticsList);
+        // 添加付款记录
+        PaymentRecord paymentRecord = new PaymentRecord();
+        paymentRecord.setCreateDate(DateUtil.formatDateTime(new Date()));
+        paymentRecord.setMoney(orderInfo.getTotalCost());
+        paymentRecord.setOrderCode(orderCode);
+        paymentRecord.setUserId(orderInfo.getUserId());
+        paymentRecordService.save(paymentRecord);
+        this.updateById(orderInfo);
     }
 
     /**
