@@ -16,13 +16,16 @@
         phi.address,
         di.name AS drugName,
         di.brand,
-        di.images
+        di.images,
+        si.name as staffName,
+        si.images as staffImages
         from
         inventory_statistics ls
         left join pharmacy_info phi on
         (phi.id = ls.pharmacy_id)
         left join drug_info di on
         (di.id = ls.drug_id)
+        left join staff_info si on (si.code = ls.custodian)
         where
         1 = 1
         <if test="inventoryStatistics.drugName != null and inventoryStatistics.drugName != ''">

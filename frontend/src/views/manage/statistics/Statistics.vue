@@ -15,7 +15,7 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="药房名称"
+                label="药店名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.pharmacyName"/>
@@ -31,7 +31,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">添加库存</a-button>
+        <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -43,24 +43,18 @@
                :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                :scroll="{ x: 900 }"
                @change="handleTableChange">
-        <template slot="addressShow" slot-scope="text, record">
+        <template slot="titleShow" slot-scope="text, record">
           <template>
             <a-tooltip>
               <template slot="title">
-                {{ record.address }}
+                {{ record.title }}
               </template>
-              {{ record.address.slice(0, 8) }} ...
+              {{ record.title.slice(0, 8) }} ...
             </a-tooltip>
           </template>
         </template>
       </a-table>
     </div>
-    <inventory-add
-      v-if="inventoryAdd.visiable"
-      @close="handleinventoryAddClose"
-      @success="handleinventoryAddSuccess"
-      :inventoryAddVisiable="inventoryAdd.visiable">
-    </inventory-add>
   </a-card>
 </template>
 
@@ -68,19 +62,18 @@
 import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
-import inventoryAdd from './InventoryAdd'
 moment.locale('zh-cn')
 
 export default {
-  name: 'inventory',
-  components: {inventoryAdd, RangeDate},
+  name: 'payment',
+  components: {RangeDate},
   data () {
     return {
       advanced: false,
-      inventoryAdd: {
+      paymentAdd: {
         visiable: false
       },
-      inventoryEdit: {
+      paymentEdit: {
         visiable: false
       },
       queryParams: {},
@@ -107,17 +100,50 @@ export default {
     }),
     columns () {
       return [{
-        title: '药店名称',
-        dataIndex: 'pharmacyName'
-      }, {
-        title: '药店编号',
-        dataIndex: 'pharmacyCode'
+        title: '出入库类型',
+        dataIndex: 'storageType',
+        customRender: (text, row, index) => {
+          switch (text) {
+            case 1:
+              return <a-tag color='red'>出库</a-tag>
+            case 2:
+              return <a-tag color='green'>入库</a-tag>
+            default:
+              return '- -'
+          }
+        }
       }, {
         title: '药品名称',
         dataIndex: 'drugName'
       }, {
         title: '品牌',
         dataIndex: 'brand'
+      }, {
+        title: '操作员',
+        dataIndex: 'staffName',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            if (!record.staffImages) return text
+            return <a-popover>
+              <template slot="content">
+                <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.staffImages.split(',')[0] } />
+              </template>
+              {{ text }}
+            </a-popover>
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '药店名称',
+        dataIndex: 'pharmacyName',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }, {
         title: '药品图片',
         dataIndex: 'images',
@@ -131,32 +157,23 @@ export default {
           </a-popover>
         }
       }, {
-        title: '数量',
-        dataIndex: 'reserve',
+        title: '药店地址',
+        dataIndex: 'address',
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text + '件'
+            return text
           } else {
             return '- -'
           }
         }
       }, {
-        title: '所属分类',
-        dataIndex: 'category',
+        title: '操作时间',
+        dataIndex: 'createDate',
         customRender: (text, row, index) => {
-          switch (text) {
-            case 1:
-              return <a-tag>可卡因</a-tag>
-            case 2:
-              return <a-tag>维生素制剂</a-tag>
-            case 3:
-              return <a-tag>鱼肝油</a-tag>
-            case 4:
-              return <a-tag>药物饮料</a-tag>
-            case 5:
-              return <a-tag>膳食纤维</a-tag>
-            default:
-              return '- -'
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
           }
         }
       }]
@@ -173,26 +190,26 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.inventoryAdd.visiable = true
+      this.paymentAdd.visiable = true
     },
-    handleinventoryAddClose () {
-      this.inventoryAdd.visiable = false
+    handlepaymentAddClose () {
+      this.paymentAdd.visiable = false
     },
-    handleinventoryAddSuccess () {
-      this.inventoryAdd.visiable = false
-      this.$message.success('新增库存成功')
+    handlepaymentAddSuccess () {
+      this.paymentAdd.visiable = false
+      this.$message.success('新增产品成功')
       this.search()
     },
     edit (record) {
-      this.$refs.inventoryEdit.setFormValues(record)
-      this.inventoryEdit.visiable = true
+      this.$refs.paymentEdit.setFormValues(record)
+      this.paymentEdit.visiable = true
     },
-    handleinventoryEditClose () {
-      this.inventoryEdit.visiable = false
+    handlepaymentEditClose () {
+      this.paymentEdit.visiable = false
     },
-    handleinventoryEditSuccess () {
-      this.inventoryEdit.visiable = false
-      this.$message.success('修改库存成功')
+    handlepaymentEditSuccess () {
+      this.paymentEdit.visiable = false
+      this.$message.success('修改产品成功')
       this.search()
     },
     handleDeptChange (value) {
@@ -210,7 +227,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/pharmacy-inventory/' + ids).then(() => {
+          that.$delete('/cos/inventory-statistics/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -283,7 +300,7 @@ export default {
       if (params.type === undefined) {
         delete params.type
       }
-      this.$get('/cos/pharmacy-inventory/page', {
+      this.$get('/cos/inventory-statistics/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

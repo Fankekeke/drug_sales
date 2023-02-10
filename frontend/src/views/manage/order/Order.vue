@@ -39,6 +39,7 @@
     </div>
     <div>
       <div class="operator">
+        <a-button type="primary" ghost @click="add">添加订单</a-button>
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -84,6 +85,11 @@
       :orderShow="orderView.visiable"
       :orderData="orderView.data">
     </order-view>
+    <order-add
+      @close="handleorderAddClose"
+      @success="handleorderAddSuccess"
+      :orderAddShow="orderAdd.visiable">
+    </order-add>
   </a-card>
 </template>
 
@@ -91,6 +97,7 @@
 import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
+import OrderAdd from './OrderAdd'
 import OrderAudit from './OrderAudit'
 import OrderView from './OrderView'
 import OrderStatus from './OrderStatus.vue'
@@ -98,7 +105,7 @@ moment.locale('zh-cn')
 
 export default {
   name: 'order',
-  components: {OrderView, OrderAudit, RangeDate, OrderStatus},
+  components: {OrderView, OrderAudit, RangeDate, OrderStatus, OrderAdd},
   data () {
     return {
       advanced: false,
@@ -265,7 +272,7 @@ export default {
     },
     handleorderAddSuccess () {
       this.orderAdd.visiable = false
-      this.$message.success('新增产品成功')
+      this.$message.success('添加平台订单成功')
       this.search()
     },
     edit (record) {
