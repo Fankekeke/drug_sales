@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="订单详情" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="订单详情" @cancel="onClose" :width="900">
     <template slot="footer">
       <a-button key="back" @click="onClose" type="danger">
         关闭
@@ -20,19 +20,19 @@
           {{ orderData.code }}
         </a-col>
         <a-col :span="8"><b>客户名称：</b>
-          {{ orderData.userName }}
+          {{ orderData.userName ? orderData.userName : '- -' }}
         </a-col>
         <a-col :span="8"><b>联系方式：</b>
-          {{ orderData.phone }}
+          {{ orderData.phone ? orderData.phone : '- -' }}
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col :span="8"><b>当前状态：</b>
-          <span v-if="orderData.status == 0">待付款</span>
-          <span v-if="orderData.status == 1">已下单</span>
-          <span v-if="orderData.status == 2">配送中</span>
-          <span v-if="orderData.status == 3">已收货</span>
+          <span v-if="orderData.orderStatus == 0">待付款</span>
+          <span v-if="orderData.orderStatus == 1">已下单</span>
+          <span v-if="orderData.orderStatus == 2">配送中</span>
+          <span v-if="orderData.orderStatus == 3">已收货</span>
         </a-col>
         <a-col :span="8"><b>订单金额：</b>
           {{ orderData.totalCost }} 元

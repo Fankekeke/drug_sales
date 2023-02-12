@@ -121,7 +121,7 @@ export default {
       }, {
         title: '操作员',
         dataIndex: 'staffName',
-        customRender: (text, row, index) => {
+        customRender: (text, record, index) => {
           if (text !== null) {
             if (!record.staffImages) return text
             return <a-popover>
@@ -130,6 +130,16 @@ export default {
               </template>
               {{ text }}
             </a-popover>
+          } else {
+            return '- -'
+          }
+        }
+      }, {
+        title: '数量',
+        dataIndex: 'quantity',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text + '件'
           } else {
             return '- -'
           }

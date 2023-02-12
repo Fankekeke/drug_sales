@@ -53,8 +53,8 @@
         od.order_id,
         di.name AS drugName,
         di.brand,
-        di.images
-        di.dosageForm
+        di.images,
+        di.dosage_form,
         oi.code,
         ui.name,
         ui.phone,

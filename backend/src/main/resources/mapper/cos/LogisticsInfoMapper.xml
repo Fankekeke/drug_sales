@@ -15,14 +15,14 @@
         ui.phone,
         ui.address AS userAddress
         from
-        order_info oi
+        logistics_info li
+        left join order_info oi on
+        (oi.id = li.order_id)
         left join user_info ui on
         (ui.id = oi.user_id)
-        left join logistics_info li on
-        (oi.id = li.order_id)
-        and li.current_logistics = 1
         where
         1 = 1
+        and li.current_logistics = 1
         <if test="logisticsInfo.orderCode != null and logisticsInfo.orderCode != ''">
             AND oi.code LIKE CONCAT('%',#{logisticsInfo.orderCode},'%')
         </if>

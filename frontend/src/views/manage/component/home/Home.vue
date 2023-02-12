@@ -2,15 +2,27 @@
   <div>
     <a-row style="margin-top: 15px">
       <a-col :span="24">
-        <div style="background: #ECECEC; padding: 30px;" v-if="user.roleId == 73">
+        <div style="background: #ECECEC; padding: 30px;">
           <a-row :gutter="16">
             <a-col :span="6">
               <a-card hoverable>
                 <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月收益/元</a-col>
+                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">订单总量</a-col>
                   <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
                   <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.incomeMonth }}
+                    {{ titleData.orderCode }}
+                    <span style="font-size: 20px;margin-top: 3px">单</span>
+                  </a-col>
+                </a-row>
+              </a-card>
+            </a-col>
+            <a-col :span="6">
+              <a-card hoverable>
+                <a-row>
+                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">总收益</a-col>
+                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
+                  <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
+                    {{ titleData.orderPrice }}
                     <span style="font-size: 20px;margin-top: 3px">元</span>
                   </a-col>
                 </a-row>
@@ -19,11 +31,10 @@
             <a-col :span="6">
               <a-card hoverable>
                 <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月工单</a-col>
+                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">店铺数量</a-col>
                   <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
                   <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.workOrderMonth }}
-                    <span style="font-size: 20px;margin-top: 3px">单</span>
+                    {{ titleData.pharmacyNum }}
                   </a-col>
                 </a-row>
               </a-card>
@@ -31,23 +42,10 @@
             <a-col :span="6">
               <a-card hoverable>
                 <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">已完成</a-col>
+                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">员工数量</a-col>
                   <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
                   <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.completedWorkOrder }}
-                    <span style="font-size: 20px;margin-top: 3px">单</span>
-                  </a-col>
-                </a-row>
-              </a-card>
-            </a-col>
-            <a-col :span="6">
-              <a-card hoverable>
-                <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">维修工单</a-col>
-                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
-                  <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.completedRepairOrder }}
-                    <span style="font-size: 20px;margin-top: 3px">单</span>
+                    {{ titleData.staffNum }}
                   </a-col>
                 </a-row>
               </a-card>
@@ -56,7 +54,7 @@
         </div>
       </a-col>
     </a-row>
-    <a-row style="margin-top: 15px" v-if="user.roleId == 73">
+    <a-row style="margin-top: 15px">
       <a-col :span="12">
         <a-card hoverable :bordered="false" style="width: 100%">
           <a-skeleton active v-if="loading" />
@@ -70,17 +68,11 @@
         </a-card>
       </a-col>
     </a-row>
-    <a-row style="margin-top: 15px" v-if="user.roleId == 73">
+    <a-row style="margin-top: 15px">
       <a-col :span="9">
         <a-card hoverable :bordered="false" style="width: 100%">
           <a-skeleton active v-if="loading" />
           <apexchart v-if="!loading" type="donut" height="270" :options="chartOptions2" :series="series2"></apexchart>
-        </a-card>
-      </a-col>
-      <a-col :span="15">
-        <a-card hoverable :bordered="false" style="width: 100%">
-          <a-skeleton active v-if="loading" />
-          <apexchart v-if="!loading" type="scatter" height="300" :options="chartOptions3" :series="series3"></apexchart>
         </a-card>
       </a-col>
     </a-row>
@@ -277,7 +269,7 @@ export default {
   },
   methods: {
     selectHomeData () {
-      this.$get('/cos/order-info/home/data', {roleId: this.user.roleId, userId: this.user.userId}).then((r) => {
+      this.$get('/cos/pharmacy-info/home/data', {roleId: this.user.roleId, userId: this.user.userId}).then((r) => {
         let titleData = { userNum: r.data.userNum, staffNum: r.data.staffNum, orderNum: r.data.orderNum, amount: r.data.amount }
         this.$emit('setTitle', titleData)
         this.titleData.incomeMonth = r.data.incomeMonth

@@ -66,7 +66,16 @@ public class PharmacyInventoryServiceImpl extends ServiceImpl<PharmacyInventoryM
         // 转MAP
         Map<Integer, PharmacyInventory> inventoryMap = pharmacyInventoryList.stream().collect(Collectors.toMap(PharmacyInventory::getDrugId, e -> e));
         List<PharmacyInventory> batchData = new ArrayList<>();
+        List<InventoryStatistics> statisticsList = new ArrayList<>();
         for (PharmacyInventory pharmacyInventoryVo : inventoryList) {
+            InventoryStatistics inventoryStatistics = new InventoryStatistics();
+            inventoryStatistics.setDrugId(pharmacyInventoryVo.getDrugId());
+            inventoryStatistics.setPharmacyId(pharmacyId);
+            inventoryStatistics.setQuantity(pharmacyInventoryVo.getReserve());
+            inventoryStatistics.setCreateDate(DateUtil.formatDateTime(new Date()));
+            inventoryStatistics.setStorageType(2);
+            statisticsList.add(inventoryStatistics);
+
             PharmacyInventory item = inventoryMap.get(pharmacyInventoryVo.getDrugId());
             if (item == null || item.getDrugId() == null) {
                 item = new PharmacyInventory();
@@ -79,6 +88,7 @@ public class PharmacyInventoryServiceImpl extends ServiceImpl<PharmacyInventoryM
             }
             batchData.add(item);
         }
+        inventoryStatisticsService.saveBatch(statisticsList);
         return this.saveOrUpdateBatch(batchData);
     }
 

@@ -56,6 +56,16 @@ public class PharmacyInfoController {
     }
 
     /**
+     * 统计数据
+     *
+     * @return 结果
+     */
+    @GetMapping("/home/data")
+    public R selectHomeData() {
+        return R.ok(pharmacyInfoService.homeData());
+    }
+
+    /**
      * 查询药店评价信息
      *
      * @param pharmacyId 药店ID

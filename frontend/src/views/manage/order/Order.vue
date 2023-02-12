@@ -155,10 +155,24 @@ export default {
         dataIndex: 'code'
       }, {
         title: '客户名称',
-        dataIndex: 'userName'
+        dataIndex: 'name',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return <a-tag>平台内下单</a-tag>
+          }
+        }
       }, {
         title: '联系方式',
-        dataIndex: 'phone'
+        dataIndex: 'phone',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }, {
         title: '订单总额',
         dataIndex: 'totalCost',

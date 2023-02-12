@@ -22,16 +22,16 @@
               <a-col :span="4"></a-col>
               <a-col :span="4"></a-col>
               <a-col :span="4">
-                <head-info title="客户数量" :content="titleData.userNum" :center="false" :bordered="false" v-if="user.roleId == 73"/>
+                <head-info title="客户数量" :content="titleData.userNum" :center="false" :bordered="false"/>
               </a-col>
               <a-col :span="4">
-                <head-info title="员工数量" :content="titleData.staffNum" :center="false" :bordered="false" v-if="user.roleId == 73"/>
+                <head-info title="员工数量" :content="titleData.staffNum" :center="false" :bordered="false"/>
               </a-col>
               <a-col :span="4">
-                <head-info title="工单数量" :content="titleData.orderNum" :center="false" :bordered="false" v-if="user.roleId == 73"/>
+                <head-info title="工单数量" :content="titleData.orderNum" :center="false" :bordered="false"/>
               </a-col>
               <a-col :span="4">
-                <head-info title="缴费收益" :content="titleData.amount" :center="false" v-if="user.roleId == 73"/>
+                <head-info title="缴费收益" :content="titleData.amount" :center="false"/>
               </a-col>
             </a-row>
           </div>
@@ -39,7 +39,7 @@
       </a-card>
     </a-row>
     <home @setTitle="setTitleData"></home>
-    <a-row :gutter="8" class="count-info" style="margin-top: 15px" v-show="user.roleId == 73">
+    <a-row :gutter="8" class="count-info" style="margin-top: 15px">
       <a-col :span="12" class="visit-count-wrapper">
         <a-card class="visit-count" hoverable>
           <apexchart ref="count" type=bar height=300 :options="chartOptions" :series="series" />

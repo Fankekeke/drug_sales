@@ -8,11 +8,11 @@
         修改
       </a-button>
     </template>
-    <div>
+    <div style="font-size: 13px;font-family: SimHei">
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">当前物流</span></a-col>
          <a-col :span="24">
-          <a-table :columns="logisticsColumns" :data-source="logisticsList">
+          <a-table :columns="logisticsColumns" :data-source="logisticsList" :pagination="false">
           </a-table>
         </a-col>
       </a-row>
@@ -114,8 +114,8 @@ export default {
       }
     },
     setFormValues ({...logistics}) {
-      this.rowId = logistics.id
-      this.selectLogistics(logistics.orderId);
+      this.rowId = logistics.orderId
+      this.selectLogistics(logistics.orderId)
     },
     reset () {
       this.loading = false
@@ -130,7 +130,7 @@ export default {
         values.id = this.rowId
         if (!err) {
           this.loading = true
-          this.$put('/cos/order-info/ship', {
+          this.$get('/cos/order-info/ship', {
             'orderId': this.rowId,
             'remark': this.remark
           }).then((r) => {

@@ -19,7 +19,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/cos/inventory-statistics")
-@RequiredArgsConstructor(onConstructor = @__(@Resource))
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class InventoryStatisticsController {
 
     private final IInventoryStatisticsService inventoryStatisticsService;

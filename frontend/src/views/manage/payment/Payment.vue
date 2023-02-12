@@ -104,10 +104,24 @@ export default {
         dataIndex: 'orderCode'
       }, {
         title: '客户名称',
-        dataIndex: 'userName'
+        dataIndex: 'userName',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return <a-tag>平台内下单</a-tag>
+          }
+        }
       }, {
         title: '联系方式',
-        dataIndex: 'phone'
+        dataIndex: 'phone',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }, {
         title: '缴费金额',
         dataIndex: 'money',

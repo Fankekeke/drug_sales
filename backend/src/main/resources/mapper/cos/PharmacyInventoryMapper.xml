@@ -45,6 +45,9 @@
         di.name as drugName,
         di.brand,
         di.category,
+        di.classification,
+        di.dosage_form,
+        di.unit_price,
         di.images
         from
         pharmacy_inventory pin

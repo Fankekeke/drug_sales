@@ -71,7 +71,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         orderInfo.setOrderStatus(flag ? 3 : 0);
         orderInfo.setCode("OR-" + System.currentTimeMillis());
         orderInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
-        orderInfo.setPharmacyId(orderInfo.getPharmacyId());
+        orderInfo.setPharmacyId(orderInfoVo.getPharmacyId());
         // 所属用户
         UserInfo userInfo = userInfoMapper.selectOne(Wrappers.<UserInfo>lambdaQuery().eq(UserInfo::getUserId, orderInfoVo.getUserId()));
         if (userInfo != null) {
@@ -91,11 +91,12 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             orderInfo.setTotalCost(totalCost);
             orderDetailService.saveBatch(detailList);
         }
+        boolean result = this.updateById(orderInfo);
         if (flag) {
             this.orderPaymentPlatform(orderInfo.getCode(), orderInfoVo.getStaffCode());
         }
         // 重新更新订单信息
-        return this.updateById(orderInfo);
+        return result;
     }
 
     /**
@@ -118,15 +119,15 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         List<InventoryStatistics> statisticsList = new ArrayList<>();
 
         inventoryList.forEach(e -> {
-            e.setReserve(e.getReserve() - detailMap.get(e.getDrugId()));
             InventoryStatistics inventoryStatistics = new InventoryStatistics();
             inventoryStatistics.setDrugId(e.getDrugId());
             inventoryStatistics.setPharmacyId(e.getPharmacyId());
-            inventoryStatistics.setQuantity(e.getReserve());
-            inventoryStatistics.setStorageType(2);
+            inventoryStatistics.setQuantity(detailMap.get(e.getDrugId()));
+            inventoryStatistics.setStorageType(1);
             inventoryStatistics.setCustodian(staffCode);
             inventoryStatistics.setCreateDate(DateUtil.formatDateTime(new Date()));
             statisticsList.add(inventoryStatistics);
+            e.setReserve(e.getReserve() - detailMap.get(e.getDrugId()));
         });
         // 修改库存信息
         pharmacyInventoryService.updateBatchById(inventoryList);
@@ -171,7 +172,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             inventoryStatistics.setDrugId(e.getDrugId());
             inventoryStatistics.setPharmacyId(e.getPharmacyId());
             inventoryStatistics.setQuantity(e.getReserve());
-            inventoryStatistics.setStorageType(2);
+            inventoryStatistics.setStorageType(1);
             inventoryStatistics.setCreateDate(DateUtil.formatDateTime(new Date()));
             statisticsList.add(inventoryStatistics);
         });

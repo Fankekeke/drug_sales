@@ -39,7 +39,6 @@
     </div>
     <div>
       <div class="operator">
-        <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -60,10 +59,6 @@
               {{ record.title.slice(0, 8) }} ...
             </a-tooltip>
           </template>
-        </template>
-        <template slot="operation" slot-scope="text, record">
-          <a-icon v-if="record.status == 2" type="caret-up" @click="editStatus(record, 1)" title="修 改"/>
-          <a-icon v-if="record.status == 1" type="caret-down" @click="editStatus(record, 2)" title="修 改"/>
         </template>
       </a-table>
     </div>
@@ -130,19 +125,6 @@ export default {
         title: '区',
         dataIndex: 'area'
       }, {
-        title: '状态',
-        dataIndex: 'status',
-        customRender: (text, row, index) => {
-          switch (text) {
-            case 1:
-              return <a-tag color="green">正常</a-tag>
-            case 2:
-              return <a-tag color="red">异常</a-tag>
-            default:
-              return '- -'
-          }
-        }
-      }, {
         title: '注册时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
@@ -152,10 +134,6 @@ export default {
             return '- -'
           }
         }
-      }, {
-        title: '操作',
-        dataIndex: 'operation',
-        scopedSlots: {customRender: 'operation'}
       }]
     }
   },

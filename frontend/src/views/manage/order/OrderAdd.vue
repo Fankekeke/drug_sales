@@ -19,17 +19,23 @@
               'pharmacyId',
               { rules: [{ required: true, message: '请输入所属药店!' }] }
               ]">
-              <a-select-option :value="item.id" v-for="(item, index) in pharmacyList" :key="index">{{ item.name }}</a-select-option>
+              <a-select-option :value="item.id" v-for="(item, index) in pharmacyList" :key="index">{{
+                  item.name
+                }}
+              </a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
         <a-col :span="12">
           <a-form-item label='员工'>
-            <a-select @change="pharmacyCheck" v-decorator="[
+            <a-select v-decorator="[
               'staffCode',
-              { rules: [{ required: true, message: '请选择员工!' }] }
+              { rules: [{ required: true, message: '请输入所属员工!' }] }
               ]">
-              <a-select-option :value="item.id" v-for="(item, index) in staffList" :key="index">{{ item.name }}</a-select-option>
+              <a-select-option :value="item.code" v-for="(item, index) in staffList" :key="index">{{
+                  item.name
+                }}
+              </a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
@@ -54,7 +60,10 @@
           <a-table :columns="columns" :data-source="dataList" :pagination="false">
             <template slot="nameShow" slot-scope="text, record">
               <a-select style="width: 100%" @change="handleChange($event, record)">
-                <a-select-option v-for="(item, index) in drugList" :key="index" :value="item.id">{{ item.name }}</a-select-option>
+                <a-select-option v-for="(item, index) in drugList" :key="index" :value="item.drugId">{{
+                    item.drugName
+                  }}
+                </a-select-option>
               </a-select>
             </template>
             <template slot="brandShow" slot-scope="text, record">
@@ -75,7 +84,7 @@
               <span>{{ record.dosageForm }}</span>
             </template>
             <template slot="reserveShow" slot-scope="text, record">
-              <a-input-number v-model="record.quantity" :min="1" :step="1"/>
+              <a-input-number v-model="record.quantity" :min="1" :max="record.reserve" :step="1"/>
             </template>
             <template slot="priceShow" slot-scope="text, record">
               <span>{{ record.unitPrice }}元</span>
@@ -100,6 +109,7 @@
 import baiduMap from '@/utils/map/baiduMap'
 import drawerMap from '@/utils/map/searchmap/drawerMap'
 import {mapState} from 'vuex'
+
 function getBase64 (file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -108,9 +118,10 @@ function getBase64 (file) {
     reader.onerror = error => reject(error)
   })
 }
+
 const formItemLayout = {
-  labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
+  labelCol: {span: 24},
+  wrapperCol: {span: 24}
 }
 export default {
   name: 'inventoryAdd',
@@ -136,7 +147,7 @@ export default {
     columns () {
       return [{
         title: '药品名称',
-        dataIndex: 'name',
+        dataIndex: 'drugName',
         scopedSlots: {customRender: 'nameShow'}
       }, {
         title: '数量',
@@ -161,6 +172,13 @@ export default {
       }]
     }
   },
+  watch: {
+    'orderAddShow': function (value) {
+      if (value) {
+        this.dataList = []
+      }
+    }
+  },
   data () {
     return {
       formItemLayout,
@@ -175,24 +193,27 @@ export default {
       pharmacyList: [],
       pharmacyInfo: null,
       dataList: [],
-      drugList: []
+      drugList: [],
+      staffList: [],
+      staffCode: ''
     }
   },
   mounted () {
     this.getPharmacy()
-    this.getDrug()
     this.getStaff()
   },
   methods: {
     handleChange (value, record) {
+      console.log(value)
       if (value) {
         this.drugList.forEach(e => {
-          if (e.id === value) {
+          if (e.drugId === value) {
             record.brand = e.brand
             record.classification = e.classification
             record.dosageForm = e.dosageForm
             record.unitPrice = e.unitPrice
-            record.drugId = e.id
+            record.reserve = e.reserve
+            record.drugId = e.drugId
             console.log(record)
           }
         })
@@ -202,6 +223,7 @@ export default {
       if (value) {
         this.pharmacyList.forEach(e => {
           if (e.id === value) {
+            this.getDrug(e.id)
             this.pharmacyInfo = e
           }
         })
@@ -210,13 +232,13 @@ export default {
     dataAdd () {
       this.dataList.push({drugId: null, quantity: 1, brand: '', classification: '', dosageForm: '', unitPrice: ''})
     },
-    getStaff () {
-      this.$get('/cos/staff-info/list').then((r) => {
+    getStaff (pharmacyId) {
+      this.$get(`/cos/staff-info/list`).then((r) => {
         this.staffList = r.data.data
       })
     },
-    getDrug () {
-      this.$get('/cos/drug-info/list').then((r) => {
+    getDrug (pharmacyId) {
+      this.$get(`/cos/pharmacy-inventory/detail/pharmacy/${pharmacyId}`).then((r) => {
         this.drugList = r.data.data
       })
     },
@@ -253,7 +275,7 @@ export default {
     showChildrenDrawer () {
       this.childrenDrawer = true
     },
-    onChildrenDrawerClose () {
+    onChildrenDrawerClos () {
       this.childrenDrawer = false
     },
     handleCancel () {
@@ -266,7 +288,7 @@ export default {
       this.previewImage = file.url || file.preview
       this.previewVisible = true
     },
-    picHandleChange ({ fileList }) {
+    picHandleChange ({fileList}) {
       this.fileList = fileList
     },
     reset () {
