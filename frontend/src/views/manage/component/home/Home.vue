@@ -7,10 +7,10 @@
             <a-col :span="6">
               <a-card hoverable>
                 <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">订单总量</a-col>
+                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月订单量</a-col>
                   <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
                   <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.orderCode }}
+                    {{ titleData.monthOrderNum }}
                     <span style="font-size: 20px;margin-top: 3px">单</span>
                   </a-col>
                 </a-row>
@@ -19,10 +19,10 @@
             <a-col :span="6">
               <a-card hoverable>
                 <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">总收益</a-col>
+                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月收益</a-col>
                   <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
                   <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.orderPrice }}
+                    {{ titleData.monthOrderPrice }}
                     <span style="font-size: 20px;margin-top: 3px">元</span>
                   </a-col>
                 </a-row>
@@ -31,10 +31,11 @@
             <a-col :span="6">
               <a-card hoverable>
                 <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">店铺数量</a-col>
+                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本年订单量</a-col>
                   <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
                   <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.pharmacyNum }}
+                    {{ titleData.yearOrderNum }}
+                    <span style="font-size: 20px;margin-top: 3px">单</span>
                   </a-col>
                 </a-row>
               </a-card>
@@ -42,10 +43,11 @@
             <a-col :span="6">
               <a-card hoverable>
                 <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">员工数量</a-col>
+                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本年收益</a-col>
                   <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
                   <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
-                    {{ titleData.staffNum }}
+                    {{ titleData.yearOrderPrice }}
+                    <span style="font-size: 20px;margin-top: 3px">元</span>
                   </a-col>
                 </a-row>
               </a-card>
@@ -120,10 +122,10 @@ export default {
       },
       bulletinList: [],
       titleData: {
-        incomeMonth: 0,
-        workOrderMonth: 0,
-        completedWorkOrder: 0,
-        completedRepairOrder: 0
+        orderCode: 0,
+        orderPrice: 0,
+        pharmacyNum: 0,
+        staffNum: 0
       },
       loading: false,
       series: [{
@@ -269,28 +271,28 @@ export default {
   },
   methods: {
     selectHomeData () {
-      this.$get('/cos/pharmacy-info/home/data', {roleId: this.user.roleId, userId: this.user.userId}).then((r) => {
-        let titleData = { userNum: r.data.userNum, staffNum: r.data.staffNum, orderNum: r.data.orderNum, amount: r.data.amount }
+      this.$get('/cos/pharmacy-info/home/data').then((r) => {
+        let titleData = { orderCode: r.data.orderCode, orderPrice: r.data.orderPrice, pharmacyNum: r.data.pharmacyNum, staffNum: r.data.staffNum }
         this.$emit('setTitle', titleData)
-        this.titleData.incomeMonth = r.data.incomeMonth
-        this.titleData.workOrderMonth = r.data.workOrderMonth
-        this.titleData.completedWorkOrder = r.data.completedWorkOrder
-        this.titleData.completedRepairOrder = r.data.completedRepairOrder
+        this.titleData.monthOrderNum = r.data.monthOrderNum
+        this.titleData.monthOrderPrice = r.data.monthOrderPrice
+        this.titleData.yearOrderNum = r.data.yearOrderNum
+        this.titleData.yearOrderPrice = r.data.yearOrderPrice
         this.bulletinList = r.data.bulletin
         let values = []
-        if (r.data.orderRecord !== null && r.data.orderRecord.length !== 0) {
+        if (r.data.orderNumWithinDays !== null && r.data.orderNumWithinDays.length !== 0) {
           if (this.chartOptions1.xaxis.categories.length === 0) {
-            this.chartOptions1.xaxis.categories = r.data.orderRecord.map(obj => { return obj.days })
+            this.chartOptions1.xaxis.categories = r.data.orderNumWithinDays.map(obj => { return obj.days })
           }
-          let itemData = { name: '订单数', data: r.data.orderRecord.map(obj => { return obj.count }) }
+          let itemData = { name: '订单数', data: r.data.orderNumWithinDays.map(obj => { return obj.count }) }
           values.push(itemData)
           this.series1 = values
         }
-        this.series[0].data = r.data.paymentRecord.map(obj => { return obj.amount })
+        this.series[0].data = r.data.orderPriceWithinDays.map(obj => { return obj.price })
         this.chartOptions.xaxis.categories = r.data.paymentRecord.map(obj => { return obj.days })
-        if (r.data.orderRate.length !== 0) {
-          this.series2 = r.data.orderRate.map(obj => { return obj.count })
-          this.chartOptions2.labels = r.data.orderRate.map(obj => { return obj.name })
+        if (r.data.orderDrugType.length !== 0) {
+          this.series2 = r.data.orderDrugType.map(obj => { return obj.count })
+          this.chartOptions2.labels = r.data.orderDrugType.map(obj => { return obj.name })
         }
       })
     }

@@ -42,6 +42,8 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
 
     private final OrderEvaluateMapper orderEvaluateMapper;
 
+    private final IBulletinInfoService bulletinInfoService;
+
     /**
      * 分页获取药店信息
      *
@@ -312,12 +314,24 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
         result.put("pharmacyNum", pharmacyInfoMapper.selectCount(Wrappers.<PharmacyInfo>lambdaQuery().eq(PharmacyInfo::getBusinessStatus, 1)));
         // 员工数量
         result.put("staffNum", staffInfoService.count(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getStatus, 1)));
+
         // 本月订单数量
         List<OrderInfo> orderList = orderInfoMapper.selectOrderByMonth();
         result.put("monthOrderNum", CollectionUtil.isEmpty(orderList) ? 0 : orderList.size());
         BigDecimal orderPrice = orderList.stream().map(OrderInfo::getTotalCost).reduce(BigDecimal.ZERO, BigDecimal::add);
         // 获取本月收益
         result.put("monthOrderPrice", orderPrice);
+
+        // 本年订单数量
+        List<OrderInfo> orderYearList = orderInfoMapper.selectOrderByYear();
+        result.put("yearOrderNum", CollectionUtil.isEmpty(orderYearList) ? 0 : orderYearList.size());
+        // 本年总收益
+        BigDecimal orderYearPrice = orderYearList.stream().map(OrderInfo::getTotalCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+        result.put("yearOrderPrice", orderYearPrice);
+
+        // 公告信息
+        result.put("bulletin", bulletinInfoService.list(Wrappers.<BulletinInfo>lambdaQuery().eq(BulletinInfo::getRackUp, 1)));
+
         // 近十天内订单统计
         result.put("orderNumWithinDays", orderInfoMapper.selectOrderNumWithinDays(null));
         // 近十天内收益统计

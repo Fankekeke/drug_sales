@@ -39,6 +39,13 @@ public interface OrderInfoMapper extends BaseMapper<OrderInfo> {
     List<OrderInfo> selectOrderByMonth();
 
     /**
+     * 获取本年订单信息
+     *
+     * @return 结果
+     */
+    List<OrderInfo> selectOrderByYear();
+
+    /**
      * 十天内订单数量统计
      *
      * @return 结果

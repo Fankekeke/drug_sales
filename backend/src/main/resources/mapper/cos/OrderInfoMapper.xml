@@ -48,7 +48,12 @@
 
     <!-- 订单销售药品类别统计 -->
     <select id="selectOrderDrugType" resultType="java.util.LinkedHashMap">
-        SELECT * FROM order_info oi
+        select sum(od.quantity) as count, di.name from
+        order_detail od
+        left join drug_info di on
+        (di.id = od.drug_id)
+        where 1 = 1
+        group by od.drug_id
     </select>
 
     <!-- 十天内订单数量统计 -->
@@ -153,5 +158,31 @@
         DATE_FORMAT( oi.create_date, '%Y%m' ) = DATE_FORMAT(
         CURDATE(),
         '%Y%m')
+    </select>
+
+    <!-- 获取本年订单信息 -->
+    <select id="selectOrderByYear" resultType="cc.mrbird.febs.cos.entity.OrderInfo">
+        select
+        oi.id,
+        oi.code,
+        oi.pharmacy_id,
+        oi.total_cost,
+        oi.user_id,
+        oi.create_date,
+        oi.logistics_id,
+        oi.order_status,
+        ui.name,
+        ui.phone,
+        ui.address AS userAddress,
+        phi.name AS pharmacyName,
+        phi.address
+        from
+        order_info oi
+        left join user_info ui on
+        (ui.id = oi.user_id)
+        where
+        DATE_FORMAT( oi.create_date, '%Y' ) = DATE_FORMAT(
+        CURDATE(),
+        '%Y')
     </select>
 </mapper>
