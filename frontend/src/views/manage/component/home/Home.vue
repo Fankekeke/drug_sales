@@ -77,9 +77,7 @@
           <apexchart v-if="!loading" type="donut" height="270" :options="chartOptions2" :series="series2"></apexchart>
         </a-card>
       </a-col>
-    </a-row>
-    <a-row style="margin-top: 15px">
-      <a-col :span="12">
+      <a-col :span="15">
         <a-card hoverable :loading="loading" :bordered="false" title="公告信息" style="margin-top: 15px">
           <div style="padding: 0 22px">
             <a-list item-layout="vertical" :pagination="pagination" :data-source="bulletinList">
@@ -205,9 +203,9 @@ export default {
           type: 'donut',
           height: 300
         },
-        labels: ['整租', '合租'],
+        labels: [],
         title: {
-          text: '工单服务类型统计',
+          text: '类型统计',
           align: 'left'
         },
         responsive: [{
@@ -282,17 +280,25 @@ export default {
         let values = []
         if (r.data.orderNumWithinDays !== null && r.data.orderNumWithinDays.length !== 0) {
           if (this.chartOptions1.xaxis.categories.length === 0) {
-            this.chartOptions1.xaxis.categories = r.data.orderNumWithinDays.map(obj => { return obj.days })
+            console.log(r.data.orderNumWithinDays)
+            this.chartOptions1.xaxis.categories = Array.from(r.data.orderNumWithinDays, ({days}) => days)
           }
-          let itemData = { name: '订单数', data: r.data.orderNumWithinDays.map(obj => { return obj.count }) }
+          let itemData = { name: '订单数', data: Array.from(r.data.orderNumWithinDays, ({count}) => count) }
           values.push(itemData)
           this.series1 = values
         }
-        this.series[0].data = r.data.orderPriceWithinDays.map(obj => { return obj.price })
-        this.chartOptions.xaxis.categories = r.data.paymentRecord.map(obj => { return obj.days })
+        this.series[0].data = Array.from(r.data.orderPriceWithinDays, ({price}) => price)
+        this.chartOptions.xaxis.categories = Array.from(r.data.orderPriceWithinDays, ({days}) => days)
         if (r.data.orderDrugType.length !== 0) {
-          this.series2 = r.data.orderDrugType.map(obj => { return obj.count })
-          this.chartOptions2.labels = r.data.orderDrugType.map(obj => { return obj.name })
+          let series = []
+          let chartOptions = []
+          r.data.orderDrugType.forEach(e => {
+            series.push(e.count)
+            chartOptions.push(e.name)
+          })
+          this.series2 = series
+          this.chartOptions2.labels = chartOptions
+          console.log(this.chartOptions2.labels)
         }
       })
     }

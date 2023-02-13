@@ -147,9 +147,7 @@
         oi.order_status,
         ui.name,
         ui.phone,
-        ui.address AS userAddress,
-        phi.name AS pharmacyName,
-        phi.address
+        ui.address AS userAddress
         from
         order_info oi
         left join user_info ui on
@@ -173,9 +171,7 @@
         oi.order_status,
         ui.name,
         ui.phone,
-        ui.address AS userAddress,
-        phi.name AS pharmacyName,
-        phi.address
+        ui.address AS userAddress
         from
         order_info oi
         left join user_info ui on
