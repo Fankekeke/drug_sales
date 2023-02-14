@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -53,6 +55,21 @@ public class PharmacyInfoController {
     @GetMapping("/evaluate/rank")
     public R selectPharmacyEvaluateRank() {
         return R.ok(pharmacyInfoService.selectPharmacyEvaluateRank());
+    }
+
+    /**
+     * 统计数据查询
+     *
+     * @return 结果
+     */
+    @GetMapping("/selectOrderDays")
+    public R selectOrderDays() {
+        return R.ok(new HashMap<String, Object>(16) {
+            {
+                put("orderPriceDays", pharmacyInfoService.selectOrderPriceDays());
+                put("orderNumDays", pharmacyInfoService.selectOrderNumDays());
+            }
+        });
     }
 
     /**

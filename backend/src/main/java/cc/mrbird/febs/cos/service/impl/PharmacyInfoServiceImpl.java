@@ -267,6 +267,7 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
             item.setPharmacyName(pharmacyInfo.getName());
             List<OrderEvaluate> evaluateList = evaluateMap.get(pharmacyInfo.getId());
             if (CollectionUtil.isEmpty(evaluateList)) {
+                item.setScore(BigDecimal.ZERO);
                 result.add(item);
                 continue;
             }
