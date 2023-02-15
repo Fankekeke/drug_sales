@@ -138,8 +138,27 @@ export default {
       })
     },
     selectOrderDays () {
+      this.loading = true
       this.$get(`/cos/pharmacy-info/selectOrderDays`).then((r) => {
-        console.log(JSON.stringify(r.data))
+        this.series1 = []
+        if (r.data.orderNumDays.length !== 0) {
+          this.chartOptions1.xaxis.categories = Array.from(r.data.orderNumDays[0].value, ({days}) => days)
+          r.data.orderNumDays.forEach(e => {
+            let value = { name: e.name, data: Array.from(e.value, ({count}) => count) }
+            this.series1.push(value)
+          })
+        }
+        if (r.data.orderPriceDays.length !== 0) {
+          this.chartOptions1.xaxis.categories = Array.from(r.data.orderPriceDays[0].value, ({days}) => days)
+          this.chartOptions2.xaxis.categories = Array.from(r.data.orderPriceDays[0].value, ({days}) => days)
+          r.data.orderPriceDays.forEach(e => {
+            let value = { name: e.name, data: Array.from(e.value, ({price}) => price) }
+            this.series2.push(value)
+          })
+        }
+        setTimeout(() => {
+          this.loading = false
+        }, 200)
       })
     }
   }
