@@ -6,7 +6,7 @@
         <a-form-item
           fieldDecoratorId="clientName"
           :fieldDecoratorOptions="{rules: [{ required: true, message: '请输入客户名称' }]}">
-          <a-input type="text" v-model="clientName" placeholder="账号"></a-input>
+          <a-input type="text" v-model="clientName" placeholder="昵称"></a-input>
         </a-form-item>
         <a-form-item
           fieldDecoratorId="email"
