@@ -146,6 +146,34 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     }
 
     /**
+     * 获取用户订单统计
+     *
+     * @param userId 用户ID
+     * @return 结果
+     */
+    @Override
+    public LinkedHashMap<String, Object> selectOrderRateByUser(Integer userId) {
+        // 返回数据
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
+        if (userId == null) {
+            return result;
+        }
+        // 获取用户信息
+        UserInfo userInfo = userInfoMapper.selectOne(Wrappers.<UserInfo>lambdaQuery().eq(UserInfo::getUserId, userId));
+        if (userInfo == null) {
+            return result;
+        }
+        result.put("user", userInfo);
+        // 获取用户订单
+        List<OrderInfo> orderList = this.list(Wrappers.<OrderInfo>lambdaQuery().eq(OrderInfo::getUserId, userInfo.getUserId()));
+        if (CollectionUtil.isEmpty(orderList)) {
+            return result;
+        }
+        LinkedHashMap<String, Object> rate = new LinkedHashMap<>();
+        return null;
+    }
+
+    /**
      * 订单付款
      *
      * @param orderCode 订单编号
@@ -221,13 +249,12 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         // 订单详情
         List<LinkedHashMap<String, Object>> detailList = orderDetailService.selectDetailByOrder(orderId);
         // 返回数据
-        LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>() {
+        return new LinkedHashMap<String, Object>() {
             {
                 put("order", orderInfo);
                 put("detail", detailList);
             }
         };
-        return result;
     }
 
     /**
