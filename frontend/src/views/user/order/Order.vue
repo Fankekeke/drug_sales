@@ -64,7 +64,7 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon type="file-search" @click="orderViewOpen(record)" title="详 情"></a-icon>
-          <a-icon v-if="record.status == 1" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="orderAuditOpen(record)" title="修 改" style="margin-left: 15px"></a-icon>
+          <a-icon v-if="!record.evaluateFlag" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="orderEvaluateOpen(record)" title="评 价" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
@@ -73,11 +73,12 @@
       :orderShow="orderView.visiable"
       :orderData="orderView.data">
     </order-view>
-    <order-add
+    <order-evaluate
       @close="handleorderAddClose"
       @success="handleorderAddSuccess"
-      :orderAddShow="orderAdd.visiable">
-    </order-add>
+      :evaluateAddVisiable="orderEvaluateView.visiable"
+      :orderData="orderEvaluateView.data">
+    </order-evaluate>
   </a-card>
 </template>
 
@@ -85,7 +86,7 @@
 import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
-import OrderAdd from './OrderAdd'
+import OrderEvaluate from './OrderEvaluate'
 import OrderAudit from './OrderAudit'
 import OrderView from './OrderView'
 import OrderStatus from './OrderStatus.vue'
@@ -93,7 +94,7 @@ moment.locale('zh-cn')
 
 export default {
   name: 'order',
-  components: {OrderView, OrderAudit, RangeDate, OrderStatus, OrderAdd},
+  components: {OrderView, RangeDate, OrderEvaluate},
   data () {
     return {
       advanced: false,
@@ -108,6 +109,10 @@ export default {
         data: null
       },
       orderStatusView: {
+        visiable: false,
+        data: null
+      },
+      orderEvaluateView: {
         visiable: false,
         data: null
       },
@@ -229,6 +234,10 @@ export default {
     this.fetch()
   },
   methods: {
+    orderEvaluateOpen (row) {
+      this.orderEvaluateView.data = row
+      this.orderEvaluateView.visiable = true
+    },
     orderStatusOpen (row) {
       this.orderStatusView.data = row
       this.orderStatusView.visiable = true
@@ -270,11 +279,11 @@ export default {
       this.orderAdd.visiable = true
     },
     handleorderAddClose () {
-      this.orderAdd.visiable = false
+      this.orderEvaluateView.visiable = false
     },
     handleorderAddSuccess () {
-      this.orderAdd.visiable = false
-      this.$message.success('添加平台订单成功')
+      this.orderEvaluateView.visiable = false
+      this.$message.success('订单评价成功！')
       this.search()
     },
     edit (record) {

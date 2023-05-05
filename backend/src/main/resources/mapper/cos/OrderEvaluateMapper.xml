@@ -37,6 +37,9 @@
         <if test="orderEvaluate.pharmacyName != null and orderEvaluate.pharmacyName != ''">
             AND phi.name LIKE CONCAT('%',#{orderEvaluate.pharmacyName},'%')
         </if>
+        <if test="orderEvaluate.userId != null ">
+            AND ui.user_id = #{orderEvaluate.userId}
+        </if>
         order by
         oe.create_date desc
     </select>

@@ -13,19 +13,23 @@
         oi.create_date,
         oi.logistics_id,
         oi.order_status,
+        ui.id AS userId,
         ui.name,
         ui.phone,
         ui.address AS userAddress,
         phi.name AS pharmacyName,
         phi.address,
         phi.legal_person,
-        phi.phone as pharmacyPhone
+        phi.phone as pharmacyPhone,
+        oe.id as evaluateFlag
         from
         order_info oi
         left join pharmacy_info phi on
         (phi.id = oi.pharmacy_id)
         left join user_info ui on
         (ui.id = oi.user_id)
+        left join order_evaluate oe on
+        (oe.order_id = oi.id)
         where
         1 = 1
         <if test="orderInfo.code != null and orderInfo.code != ''">
