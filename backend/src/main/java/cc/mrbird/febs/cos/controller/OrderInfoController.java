@@ -58,6 +58,19 @@ public class OrderInfoController {
     }
 
     /**
+     * 订单付款
+     *
+     * @param orderCode 订单编号
+     * @param staffCode 员工编号
+     * @return 结果
+     */
+    @GetMapping("/payment")
+    public R orderPaymentPlatform(String orderCode, String staffCode) {
+        orderInfoService.orderPaymentPlatform(orderCode, staffCode);
+        return R.ok(true);
+    }
+
+    /**
      * 订单打印小票
      *
      * @param orderId 订单ID

@@ -55,4 +55,13 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      * @return 结果
      */
     boolean orderShip(Integer orderId, String remark);
+
+    /**
+     * 订单付款
+     *
+     * @param orderCode 订单编号
+     * @param staffCode 员工编号
+     * @return 结果
+     */
+    void orderPaymentPlatform(String orderCode, String staffCode);
 }

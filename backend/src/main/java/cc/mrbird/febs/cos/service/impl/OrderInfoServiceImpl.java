@@ -96,6 +96,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             this.orderPaymentPlatform(orderInfo.getCode(), orderInfoVo.getStaffCode());
         }
         // 重新更新订单信息
+
         return result;
     }
 
@@ -104,6 +105,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      *
      * @param orderCode 订单编号
      */
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void orderPaymentPlatform(String orderCode, String staffCode) {
         if (StrUtil.isEmpty(orderCode)) {
