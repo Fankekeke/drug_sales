@@ -1,6 +1,6 @@
 <template>
   <a-row :gutter="20" style="width: 100%;margin-top: 20px">
-    <a-col :span="6" v-for="(item, index) in rentList" :key="index">
+    <a-col :span="6" v-for="(item, index) in drugList" :key="index">
       <div style="width: 100%;margin-bottom: 15px;text-align: left;box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;">
         <a-divider orientation="left">
           <span style="font-size: 13px;font-family: SimHei;">{{item.title}} - {{item.number}}</span>
@@ -31,28 +31,29 @@
 import RentView from '../owner/RentView.vue'
 
 export default {
-  name: 'House',
+  name: 'Cart',
   components: {RentView},
   data () {
     return {
-      rentList: [],
-      rentView: {
+      drugList: [],
+      drugView: {
         visiable: false,
         data: null
-      }
+      },
+      key: ''
     }
   },
   mounted () {
-    this.selectRentList()
+    this.selectDrugList()
   },
   methods: {
-    rentDetail (row) {
-      this.rentView.visiable = true
-      this.rentView.data = row
+    drugDetail (row) {
+      this.drugView.visiable = true
+      this.drugView.data = row
     },
-    selectRentList () {
-      this.$get('/cos/rent-info/rent/list').then((r) => {
-        this.rentList = r.data.data
+    selectDrugList () {
+      this.$get(`/cos/pharmacy-inventory/drug/${this.key}`).then((r) => {
+        this.drugList = r.data.data
       })
     }
   }
