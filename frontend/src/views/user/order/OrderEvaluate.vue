@@ -186,7 +186,7 @@ export default {
     }
   },
   methods: {
-     dataInit (orderId) {
+    dataInit (orderId) {
       // 药品信息
       this.$get(`/cos/order-detail/detail/${orderId}`).then((r) => {
         this.durgList = r.data.data

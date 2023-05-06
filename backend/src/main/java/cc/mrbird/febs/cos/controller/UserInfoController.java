@@ -41,9 +41,9 @@ public class UserInfoController {
      * @param id id
      * @return 结果
      */
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public R detail(@PathVariable("id") Integer id) {
-        return R.ok(userInfoService.getById(id));
+        return R.ok(userInfoService.detail(id));
     }
 
     /**

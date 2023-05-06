@@ -65,4 +65,12 @@ public interface OrderInfoMapper extends BaseMapper<OrderInfo> {
      * @return 结果
      */
     List<LinkedHashMap<String, Object>> selectOrderDrugType();
+
+    /**
+     * 获取用户订单物流
+     *
+     * @param userId 用户ID
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectOrderLogistics(@Param("userId") Integer userId);
 }

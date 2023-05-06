@@ -41,6 +41,9 @@
         <if test="orderInfo.pharmacyName != null and orderInfo.pharmacyName != ''">
             AND phi.name LIKE CONCAT('%',#{orderInfo.pharmacyName},'%')
         </if>
+        <if test="orderInfo.userId != null">
+            AND ui.user_id = #{orderInfo.userId}
+        </if>
         order by
         oi.create_date desc
     </select>
@@ -176,5 +179,18 @@
         DATE_FORMAT( oi.create_date, '%Y' ) = DATE_FORMAT(
         CURDATE(),
         '%Y')
+    </select>
+
+    <!-- 获取用户订单物流 -->
+    <select id="selectOrderLogistics" resultType="java.util.LinkedHashMap">
+        SELECT
+            oi.`code`,
+            li.remark
+        FROM
+            order_info oi
+                LEFT JOIN logistics_info li ON ( oi.id = li.order_id )
+                LEFT JOIN user_info ui ON ( ui.id = oi.user_id AND ui.user_id = #{userId} )
+        WHERE
+            li.current_logistics = 1
     </select>
 </mapper>

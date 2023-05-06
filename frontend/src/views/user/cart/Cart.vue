@@ -23,16 +23,20 @@
         </a-card>
       </div>
     </a-col>
-    <rent-view :rentShow="rentView.visiable" :rentData="rentView.data" @close="rentView.visiable = false"></rent-view>
+    <drug-view
+      @close="handleDrugViewClose"
+      :drugShow="drugView.visiable"
+      :drugData="drugView.data">
+    </drug-view>
   </a-row>
 </template>
 
 <script>
-import RentView from '../owner/RentView.vue'
+import drugView from './DrugView'
 
 export default {
   name: 'Cart',
-  components: {RentView},
+  components: {drugView},
   data () {
     return {
       drugList: [],
@@ -47,6 +51,9 @@ export default {
     this.selectDrugList()
   },
   methods: {
+    handleDrugViewClose () {
+      this.drugView.visiable = false
+    },
     drugDetail (row) {
       this.drugView.visiable = true
       this.drugView.data = row
