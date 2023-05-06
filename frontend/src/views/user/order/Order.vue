@@ -87,9 +87,7 @@ import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
 import moment from 'moment'
 import OrderEvaluate from './OrderEvaluate'
-import OrderAudit from './OrderAudit'
 import OrderView from './OrderView'
-import OrderStatus from './OrderStatus.vue'
 moment.locale('zh-cn')
 
 export default {

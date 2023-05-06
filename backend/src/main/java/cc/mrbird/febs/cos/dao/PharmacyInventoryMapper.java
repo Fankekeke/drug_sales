@@ -30,4 +30,12 @@ public interface PharmacyInventoryMapper extends BaseMapper<PharmacyInventory> {
      * @return 结果
      */
     List<LinkedHashMap<String, Object>> selectInventoryByPharmacy(@Param("pharmacyId") Integer pharmacyId);
+
+    /**
+     * 获取药品信息
+     *
+     * @param key key
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectPharmacyDrugList(@Param("key") String key);
 }

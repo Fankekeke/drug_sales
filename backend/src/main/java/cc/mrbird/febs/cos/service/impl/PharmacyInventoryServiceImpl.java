@@ -45,6 +45,17 @@ public class PharmacyInventoryServiceImpl extends ServiceImpl<PharmacyInventoryM
     }
 
     /**
+     * 获取药品信息
+     *
+     * @param key key
+     * @return 结果
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> selectPharmacyDrugList(String key) {
+        return baseMapper.selectPharmacyDrugList(key);
+    }
+
+    /**
      * 批量设置库房库存
      * @param pharmacyId 参数
      * @param pharmacyInventorys 参数

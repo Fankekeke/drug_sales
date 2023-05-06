@@ -23,6 +23,17 @@ public class PharmacyInventoryController {
     private final IPharmacyInventoryService pharmacyInventoryService;
 
     /**
+     * 获取药品信息
+     *
+     * @param key key
+     * @return 结果
+     */
+    @GetMapping("/drug/{key}")
+    public R selectPharmacyDrugList(@PathVariable("key") String key) {
+        return R.ok(pharmacyInventoryService.selectPharmacyDrugList(key));
+    }
+
+    /**
      * 分页获取药店库存信息
      *
      * @param page              分页对象
@@ -36,7 +47,8 @@ public class PharmacyInventoryController {
 
     /**
      * 批量设置库房库存
-     * @param pharmacyId 参数
+     *
+     * @param pharmacyId            参数
      * @param pharmacyInventoryList 参数
      * @return 结果
      * @throws Exception 异常

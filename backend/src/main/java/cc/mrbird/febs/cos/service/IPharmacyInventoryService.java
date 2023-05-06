@@ -25,6 +25,14 @@ public interface IPharmacyInventoryService extends IService<PharmacyInventory> {
     IPage<LinkedHashMap<String, Object>> selectPharmacyInventoryPage(Page<PharmacyInventory> page, PharmacyInventory pharmacyInventory);
 
     /**
+     * 获取药品信息
+     *
+     * @param key key
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectPharmacyDrugList(String key);
+
+    /**
      * 批量设置库房库存
      * @param pharmacyId 参数
      * @param pharmacyInventoryList 参数
