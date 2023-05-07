@@ -28,8 +28,8 @@ public class PharmacyInventoryController {
      * @param key key
      * @return 结果
      */
-    @GetMapping("/drug/{key}")
-    public R selectPharmacyDrugList(@PathVariable("key") String key) {
+    @GetMapping("/drug/list")
+    public R selectPharmacyDrugList(@RequestParam(value = "key", required = false) String key) {
         return R.ok(pharmacyInventoryService.selectPharmacyDrugList(key));
     }
 

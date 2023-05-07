@@ -5,6 +5,7 @@ import cc.mrbird.febs.cos.entity.UserInfo;
 import cc.mrbird.febs.cos.dao.UserInfoMapper;
 import cc.mrbird.febs.cos.service.IUserInfoService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +45,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     public LinkedHashMap<String, Object> detail(Integer userId) {
         // 返回数据
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-        result.put("user", this.getById(userId));
+        result.put("user", this.getOne(Wrappers.<UserInfo> lambdaQuery().eq(UserInfo::getUserId, userId)));
 
         result.put("order", orderInfoMapper.selectOrderLogistics(userId));
         return result;

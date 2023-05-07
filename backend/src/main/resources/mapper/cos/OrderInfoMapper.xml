@@ -185,12 +185,15 @@
     <select id="selectOrderLogistics" resultType="java.util.LinkedHashMap">
         SELECT
             oi.`code`,
-            li.remark
+            li.remark,
+            li.create_date as createDate
         FROM
             order_info oi
                 LEFT JOIN logistics_info li ON ( oi.id = li.order_id )
-                LEFT JOIN user_info ui ON ( ui.id = oi.user_id AND ui.user_id = #{userId} )
+                LEFT JOIN user_info ui ON ( ui.id = oi.user_id )
         WHERE
-            li.current_logistics = 1
+            1 = 1
+          AND ui.user_id = #{userId}
+          AND li.current_logistics = 1
     </select>
 </mapper>

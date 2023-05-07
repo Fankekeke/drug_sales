@@ -4,6 +4,7 @@ package cc.mrbird.febs.cos.controller;
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.DrugInfo;
 import cc.mrbird.febs.cos.service.IDrugInfoService;
+import cc.mrbird.febs.cos.service.IPharmacyInfoService;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -22,6 +24,8 @@ import java.util.List;
 public class DrugInfoController {
 
     private final IDrugInfoService drugInfoService;
+
+    private final IPharmacyInfoService pharmacyInfoService;
 
     /**
      * 分页获取药品信息
@@ -44,6 +48,14 @@ public class DrugInfoController {
     @GetMapping("/{id}")
     public R detail(@PathVariable("id") Integer id) {
         return R.ok(drugInfoService.getById(id));
+    }
+
+    @GetMapping("/selectDrugDetail")
+    public R selectDrugDetail(@RequestParam("drugId") Integer drugId, @RequestParam("pharmacyId") Integer pharmacyId) {
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
+        result.put("drug", drugInfoService.getById(drugId));
+        result.put("pharmacy", pharmacyInfoService.getById(pharmacyId));
+        return R.ok(result);
     }
 
     /**
