@@ -73,12 +73,16 @@ export default {
       this.cartView.visiable = false
     },
     handleDrugViewSuccess (drugData) {
+      let check = false
       this.cartView.data.forEach(e => {
         if (e.drugId === drugData.drugId && e.pharmacyId === drugData.pharmacyId) {
           e.total = drugData.total
+          check = true
         }
       })
-      this.cartView.data.push(drugData)
+      if (!check) {
+        this.cartView.data.push(drugData)
+      }
       this.drugView.visiable = false
     },
     drugDetail (row) {

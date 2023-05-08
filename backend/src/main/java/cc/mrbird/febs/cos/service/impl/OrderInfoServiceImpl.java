@@ -4,7 +4,9 @@ import cc.mrbird.febs.cos.dao.PharmacyInfoMapper;
 import cc.mrbird.febs.cos.dao.UserInfoMapper;
 import cc.mrbird.febs.cos.entity.*;
 import cc.mrbird.febs.cos.dao.OrderInfoMapper;
+import cc.mrbird.febs.cos.entity.vo.OrderDetailVo;
 import cc.mrbird.febs.cos.entity.vo.OrderInfoVo;
+import cc.mrbird.febs.cos.entity.vo.OrderSubVo;
 import cc.mrbird.febs.cos.service.*;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
@@ -171,6 +173,29 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
         LinkedHashMap<String, Object> rate = new LinkedHashMap<>();
         return null;
+    }
+
+    /**
+     * 用户提交订单
+     *
+     * @param orderDetailVo 订单信息
+     * @return 结果
+     */
+    @Override
+    public boolean orderSubmit(OrderDetailVo orderDetailVo) {
+        // 获取订单信息
+        List<OrderSubVo> orderSubVos = JSONUtil.toList(orderDetailVo.getDrugString(), OrderSubVo.class);
+        // 根据药店分组
+        Map<Integer, List<OrderSubVo>> orderSubMap = orderSubVos.stream().collect(Collectors.groupingBy(OrderSubVo::getPharmacyId));
+        // 设置要添加订单
+        List<OrderInfo> orderList = new ArrayList<>();
+        // 添加的订单详情
+        List<OrderDetail> orderDetailList = new ArrayList<>();
+
+        orderSubMap.forEach((key, value) -> {
+            OrderInfo orderItem = new OrderInfo();
+        });
+        return false;
     }
 
     /**

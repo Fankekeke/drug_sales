@@ -23,8 +23,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2b51975f-5e37-45a1-bd9d-0f3c12f944d0" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/vo/OrderDetailVo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/entity/vo/OrderSubVo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/controller/OrderInfoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/cc/mrbird/febs/cos/controller/OrderInfoController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn-error.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/user/cart/Cart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/user/cart/Cart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/user/cart/CartView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/user/cart/CartView.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,28 +57,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "G:/Project/药品销售平台/drug_sales/frontend/src/views/statistics/Sale",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;G:/Project/药品销售平台/drug_sales/frontend/src/views/user/cart&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="G:\Project\药品销售平台\drug_sales\frontend\src\views\user\cart" />
       <recent name="G:\Project\药品销售平台\drug_sales\frontend\src\views\manage\inventory" />
       <recent name="G:\Project\药品销售平台\drug_sales\frontend\src\utils" />
       <recent name="E:\Project\售后管理系统\after_sale_cos\frontend\src\utils" />
       <recent name="E:\Project\售后管理系统\after_sale_cos\frontend\src\views\service\repair" />
-      <recent name="E:\Project\售后管理系统\after_sale_cos\frontend\src\views\service\order" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -149,6 +153,18 @@
       <workItem from="1676170443231" duration="1673000" />
       <workItem from="1676192981981" duration="693000" />
       <workItem from="1676289381861" duration="5990000" />
+      <workItem from="1676376909743" duration="4223000" />
+      <workItem from="1676463679805" duration="861000" />
+      <workItem from="1676466679333" duration="1798000" />
+      <workItem from="1676556273565" duration="184000" />
+      <workItem from="1676694902050" duration="51000" />
+      <workItem from="1679199914083" duration="1453000" />
+      <workItem from="1682427651503" duration="2818000" />
+      <workItem from="1682510459512" duration="396000" />
+      <workItem from="1682515782670" duration="19000" />
+      <workItem from="1683381750122" duration="5248000" />
+      <workItem from="1683419787880" duration="15383000" />
+      <workItem from="1683548526898" duration="3421000" />
     </task>
     <servers />
   </component>

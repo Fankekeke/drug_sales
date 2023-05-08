@@ -1,6 +1,7 @@
 package cc.mrbird.febs.cos.service;
 
 import cc.mrbird.febs.cos.entity.OrderInfo;
+import cc.mrbird.febs.cos.entity.vo.OrderDetailVo;
 import cc.mrbird.febs.cos.entity.vo.OrderInfoVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -72,4 +73,12 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      * @return 结果
      */
     LinkedHashMap<String, Object> selectOrderRateByUser(Integer userId);
+
+    /**
+     * 用户提交订单
+     *
+     * @param orderDetailVo 订单信息
+     * @return 结果
+     */
+    boolean orderSubmit(OrderDetailVo orderDetailVo);
 }

@@ -27,13 +27,17 @@
             </a-card>
           </div>
         </a-col>
+        <a-col v-if="cartData.length === 0">
+          <p style="font-size: 23px;font-weight: 500;text-align: center">无数据</p>
+          <p style="text-align: center"><a-icon type="folder-open" style="font-size: 50px" theme="twoTone"/></p>
+        </a-col>
       </a-row>
     </div>
     <div class="drawer-bootom-button">
       <a-popconfirm title="确定放弃编辑？" @confirm="onClose" okText="确定" cancelText="取消">
         <a-button style="margin-right: .8rem">取消</a-button>
       </a-popconfirm>
-      <a-button @click="handleSubmit" type="primary" :loading="loading">付款</a-button>
+      <a-button @click="handleSubmit" type="primary" :loading="loading">添加到订单</a-button>
     </div>
   </a-drawer>
 </template>
