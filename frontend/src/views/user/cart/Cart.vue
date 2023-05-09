@@ -32,6 +32,7 @@
     </drug-view>
     <cart-view
       @close="handleCartViewClose"
+      @success="handleCartViewSuccess"
       :cartShow="cartView.visiable"
       :cartData="cartView.data">
     </cart-view>
@@ -71,6 +72,11 @@ export default {
     },
     handleCartViewClose () {
       this.cartView.visiable = false
+    },
+    handleCartViewSuccess () {
+      this.cartView.visiable = false
+      this.cartView.data = []
+      this.$message.success('添加订单成功，请前往我的订单付款')
     },
     handleDrugViewSuccess (drugData) {
       let check = false

@@ -78,6 +78,20 @@ export default {
     }
   },
   methods: {
+    handleSubmit () {
+      if (this.cartData.length === 0) {
+        this.$message.error('无数据信息！')
+        return false
+      }
+      let drugList = []
+      this.cartData.forEach(e => {
+        drugList.push({pharmacyId: e.pharmacyId, drugId: e.drugId, total: e.total, unitPrice: e.unitPrice})
+      });
+      let values= {userId: this.currentUser.userId, drugString: JSON.stringify(drugList)}
+      this.$post('/cos/order-info/orderSubmit', values).then((r) => {
+        this.$emit('success')
+      })
+    },
     onClose () {
       this.$emit('close')
     }
