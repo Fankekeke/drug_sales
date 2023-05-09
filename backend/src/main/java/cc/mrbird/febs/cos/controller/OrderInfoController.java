@@ -78,7 +78,7 @@ public class OrderInfoController {
      * @return 结果
      */
     @GetMapping("/payment")
-    public R orderPaymentPlatform(String orderCode, String staffCode) {
+    public R orderPaymentPlatform(@RequestParam("orderCode") String orderCode, @RequestParam(value = "staffCode", required = false) String staffCode) {
         orderInfoService.orderPaymentPlatform(orderCode, staffCode);
         return R.ok(true);
     }

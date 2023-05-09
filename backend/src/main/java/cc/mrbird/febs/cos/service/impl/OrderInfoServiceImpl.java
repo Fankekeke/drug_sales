@@ -2,6 +2,7 @@ package cc.mrbird.febs.cos.service.impl;
 
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.cos.dao.PharmacyInfoMapper;
+import cc.mrbird.febs.cos.dao.StaffInfoMapper;
 import cc.mrbird.febs.cos.dao.UserInfoMapper;
 import cc.mrbird.febs.cos.entity.*;
 import cc.mrbird.febs.cos.dao.OrderInfoMapper;
@@ -46,6 +47,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private final ILogisticsInfoService logisticsInfoService;
 
     private final PharmacyInfoMapper pharmacyInfoMapper;
+
+    private final StaffInfoMapper staffInfoMapper;
 
     /**
      * 分页获取订单信息
@@ -116,6 +119,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
         // 获取订单信息
         OrderInfo orderInfo = this.getOne(Wrappers.<OrderInfo>lambdaQuery().eq(OrderInfo::getCode, orderCode));
+        if (StrUtil.isEmpty(staffCode)) {
+            List<StaffInfo> staffInfoList = staffInfoMapper.selectList(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getPharmacyId, orderInfo.getPharmacyId()));
+            staffCode = staffInfoList.get(0).getCode();
+        }
         // 订单详情
         List<OrderDetail> detailList = orderDetailService.list(Wrappers.<OrderDetail>lambdaQuery().eq(OrderDetail::getOrderId, orderInfo.getId()));
         Map<Integer, Integer> detailMap = detailList.stream().collect(Collectors.toMap(OrderDetail::getDrugId, OrderDetail::getQuantity));
@@ -123,13 +130,14 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         List<PharmacyInventory> inventoryList = pharmacyInventoryService.list(Wrappers.<PharmacyInventory>lambdaQuery().in(PharmacyInventory::getDrugId, detailMap.keySet()).eq(PharmacyInventory::getPharmacyId, orderInfo.getPharmacyId()));
         List<InventoryStatistics> statisticsList = new ArrayList<>();
 
+        String finalStaffCode = staffCode;
         inventoryList.forEach(e -> {
             InventoryStatistics inventoryStatistics = new InventoryStatistics();
             inventoryStatistics.setDrugId(e.getDrugId());
             inventoryStatistics.setPharmacyId(e.getPharmacyId());
             inventoryStatistics.setQuantity(detailMap.get(e.getDrugId()));
             inventoryStatistics.setStorageType(1);
-            inventoryStatistics.setCustodian(staffCode);
+            inventoryStatistics.setCustodian(finalStaffCode);
             inventoryStatistics.setCreateDate(DateUtil.formatDateTime(new Date()));
             statisticsList.add(inventoryStatistics);
             e.setReserve(e.getReserve() - detailMap.get(e.getDrugId()));
