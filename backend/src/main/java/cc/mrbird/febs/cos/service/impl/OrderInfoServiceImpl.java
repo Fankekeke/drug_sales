@@ -228,6 +228,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 orderDetailList.add(orderDetail);
             }
             orderItem.setTotalCost(totalCost);
+            this.updateById(orderItem);
         });
         return orderDetailService.saveBatch(orderDetailList);
     }

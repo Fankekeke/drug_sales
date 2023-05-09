@@ -44,6 +44,7 @@
 
 <script>
 import moment from 'moment'
+import {mapState} from "vuex";
 moment.locale('zh-cn')
 export default {
   name: 'cartView',
@@ -57,6 +58,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      currentUser: state => state.account.user
+    }),
     show: {
       get: function () {
         return this.cartShow
@@ -86,8 +90,8 @@ export default {
       let drugList = []
       this.cartData.forEach(e => {
         drugList.push({pharmacyId: e.pharmacyId, drugId: e.drugId, total: e.total, unitPrice: e.unitPrice})
-      });
-      let values= {userId: this.currentUser.userId, drugString: JSON.stringify(drugList)}
+      })
+      let values = {userId: this.currentUser.userId, drugString: JSON.stringify(drugList)}
       this.$post('/cos/order-info/orderSubmit', values).then((r) => {
         this.$emit('success')
       })

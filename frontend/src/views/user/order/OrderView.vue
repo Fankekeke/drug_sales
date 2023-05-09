@@ -20,7 +20,7 @@
           {{ orderData.code }}
         </a-col>
         <a-col :span="8"><b>客户名称：</b>
-          {{ orderData.userName ? orderData.userName : '- -' }}
+          {{ orderData.name ? orderData.name : '- -' }}
         </a-col>
         <a-col :span="8"><b>联系方式：</b>
           {{ orderData.phone ? orderData.phone : '- -' }}

@@ -137,6 +137,7 @@
 <script>
 import moment from 'moment'
 import baiduMap from '@/utils/map/baiduMap'
+import {mapState} from 'vuex'
 moment.locale('zh-cn')
 function getBase64 (file) {
   return new Promise((resolve, reject) => {
@@ -158,6 +159,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      currentUser: state => state.account.user
+    }),
     show: {
       get: function () {
         return this.drugShow
