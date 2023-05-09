@@ -1,5 +1,6 @@
 package cc.mrbird.febs.cos.service;
 
+import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.cos.entity.OrderInfo;
 import cc.mrbird.febs.cos.entity.vo.OrderDetailVo;
 import cc.mrbird.febs.cos.entity.vo.OrderInfoVo;
@@ -80,5 +81,5 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      * @param orderDetailVo 订单信息
      * @return 结果
      */
-    boolean orderSubmit(OrderDetailVo orderDetailVo);
+    boolean orderSubmit(OrderDetailVo orderDetailVo) throws FebsException;
 }

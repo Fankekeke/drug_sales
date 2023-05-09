@@ -1,6 +1,7 @@
 package cc.mrbird.febs.cos.controller;
 
 
+import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.OrderInfo;
 import cc.mrbird.febs.cos.entity.vo.OrderDetailVo;
@@ -43,8 +44,8 @@ public class OrderInfoController {
      * @return 结果
      */
     @PostMapping("/orderSubmit")
-    public R orderSubmit(OrderDetailVo orderDetailVo) {
-        return R.ok();
+    public R orderSubmit(OrderDetailVo orderDetailVo) throws FebsException {
+        return R.ok(orderInfoService.orderSubmit(orderDetailVo));
     }
 
     /**

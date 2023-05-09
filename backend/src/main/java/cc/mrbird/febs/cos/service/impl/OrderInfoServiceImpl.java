@@ -1,5 +1,6 @@
 package cc.mrbird.febs.cos.service.impl;
 
+import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.cos.dao.PharmacyInfoMapper;
 import cc.mrbird.febs.cos.dao.UserInfoMapper;
 import cc.mrbird.febs.cos.entity.*;
@@ -182,7 +183,13 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      * @return 结果
      */
     @Override
-    public boolean orderSubmit(OrderDetailVo orderDetailVo) {
+    @Transactional(rollbackFor = Exception.class)
+    public boolean orderSubmit(OrderDetailVo orderDetailVo) throws FebsException {
+        // 获取用户信息
+        UserInfo userInfo = userInfoMapper.selectOne(Wrappers.<UserInfo>lambdaQuery().eq(UserInfo::getUserId, orderDetailVo.getUserId()));
+        if (null == userInfo) {
+            throw new FebsException("未获取到用户信息");
+        }
         // 获取订单信息
         List<OrderSubVo> orderSubVos = JSONUtil.toList(orderDetailVo.getDrugString(), OrderSubVo.class);
         // 根据药店分组
@@ -194,8 +201,27 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
         orderSubMap.forEach((key, value) -> {
             OrderInfo orderItem = new OrderInfo();
+            orderItem.setCode(StrUtil.toString(System.currentTimeMillis()) + key);
+            orderItem.setPharmacyId(key);
+            orderItem.setCreateDate(DateUtil.formatDateTime(new Date()));
+            orderItem.setOrderStatus(0);
+            orderItem.setUserId(userInfo.getId());
+            this.save(orderItem);
+            // 总价格
+            BigDecimal totalCost = BigDecimal.ZERO;
+            for (OrderSubVo orderSubItem: value) {
+                OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setDrugId(orderSubItem.getDrugId());
+                orderDetail.setQuantity(orderSubItem.getTotal().intValue());
+                orderDetail.setUnitPrice(orderSubItem.getUnitPrice());
+                orderDetail.setOrderId(orderItem.getId());
+                orderDetail.setAllPrice(orderDetail.getUnitPrice().multiply(orderSubItem.getTotal()));
+                totalCost = totalCost.add(orderDetail.getAllPrice());
+                orderDetailList.add(orderDetail);
+            }
+            orderItem.setTotalCost(totalCost);
         });
-        return false;
+        return orderDetailService.saveBatch(orderDetailList);
     }
 
     /**
