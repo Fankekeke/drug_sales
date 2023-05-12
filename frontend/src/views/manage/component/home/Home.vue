@@ -2,7 +2,7 @@
   <div>
     <a-row style="margin-top: 15px">
       <a-col :span="24">
-        <div style="background: #ECECEC; padding: 30px;">
+        <div style="background: #ECECEC; padding: 30px;" v-if="user.roleId == 74">
           <a-row :gutter="16">
             <a-col :span="6">
               <a-card hoverable>
@@ -56,7 +56,7 @@
         </div>
       </a-col>
     </a-row>
-    <a-row style="margin-top: 15px">
+    <a-row style="margin-top: 15px" v-if="user.roleId == 74">
       <a-col :span="12">
         <a-card hoverable :bordered="false" style="width: 100%">
           <a-skeleton active v-if="loading" />
@@ -71,7 +71,7 @@
       </a-col>
     </a-row>
     <a-row style="margin-top: 15px">
-      <a-col :span="9">
+      <a-col :span="9" v-if="user.roleId == 74">
         <a-card hoverable :bordered="false" style="width: 100%">
           <a-skeleton active v-if="loading" />
           <apexchart v-if="!loading" type="donut" height="270" :options="chartOptions2" :series="series2"></apexchart>
@@ -261,6 +261,7 @@ export default {
     }
   },
   mounted () {
+    console.log(this.user)
     this.loading = true
     this.selectHomeData()
     setTimeout(() => {

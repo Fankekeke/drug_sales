@@ -153,6 +153,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         paymentRecord.setOrderCode(orderCode);
         paymentRecord.setUserId(orderInfo.getUserId());
         paymentRecordService.save(paymentRecord);
+        orderInfo.setOrderStatus(1);
         this.updateById(orderInfo);
     }
 

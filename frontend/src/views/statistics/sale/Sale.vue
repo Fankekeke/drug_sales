@@ -120,7 +120,7 @@ export default {
         tooltip: {
           y: {
             formatter: function (val) {
-              return val + ' 单'
+              return val + ' 元'
             }
           }
         }

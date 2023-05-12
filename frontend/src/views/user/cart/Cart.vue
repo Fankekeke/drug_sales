@@ -3,7 +3,7 @@
     <a-col :span="24" style="margin-top: 15px;margin-bottom: 35px;">
       <a-input-search placeholder="搜索药品" style="width: 300px;margin: 0 auto" v-model="key" @search="selectDrugList" />
       <a-button type="primary" style="margin-left: 25px" @click="cartOpen">
-        购物车
+        购物车【{{ cartView.data.length }} 件】
       </a-button>
     </a-col>
     <a-col :span="24"></a-col>

@@ -64,6 +64,7 @@
         <template slot="operation" slot-scope="text, record">
           <a-icon type="file-search" @click="orderViewOpen(record)" title="详 情"></a-icon>
           <a-icon v-if="record.orderStatus ==  0" type="alipay" @click="orderPay(record)" title="支 付" style="margin-left: 15px"></a-icon>
+          <a-icon v-if="record.orderStatus ==  2" type="shopping" theme="twoTone" twoToneColor="#4a9ff5" @click="orderReceive(record)" title="收 货" style="margin-left: 15px"></a-icon>
           <a-icon v-if="!record.evaluateFlag && record.orderStatus ==  3" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="orderEvaluateOpen(record)" title="评 价" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
@@ -232,6 +233,12 @@ export default {
     this.fetch()
   },
   methods: {
+    orderReceive (record) {
+      this.$get('/cos/order-info/edit/status', {orderId: record.id, status: 3}).then(() => {
+        this.$message.success('收货成功')
+        this.search()
+      })
+    },
     orderPay (record) {
       let data = { outTradeNo: record.code, subject: `${record.createDate}缴费信息`, totalAmount: record.totalCost, body: '' }
       this.$post('/cos/pay/alipay', data).then((r) => {

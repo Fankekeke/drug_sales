@@ -18,7 +18,7 @@
         </a-col>
         <a-col :span="12">
           <div>
-            <a-row class="more-info">
+            <a-row class="more-info" v-if="user.roleId == 74">
               <a-col :span="4"></a-col>
               <a-col :span="4"></a-col>
               <a-col :span="4">
@@ -39,7 +39,7 @@
       </a-card>
     </a-row>
     <home @setTitle="setTitleData"></home>
-    <a-row :gutter="8" class="count-info" style="margin-top: 15px">
+    <a-row :gutter="8" class="count-info" style="margin-top: 15px" v-show="user.roleId == 74">
       <a-col :span="12" class="visit-count-wrapper">
         <a-card class="visit-count" hoverable>
           <apexchart ref="count" type=bar height=300 :options="chartOptions" :series="series" />
