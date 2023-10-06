@@ -54,6 +54,21 @@
             </a-radio-group>
           </a-form-item>
         </a-col>
+        <a-col :span="12">
+          <a-form-item label='是否为店主' v-bind="formItemLayout">
+            <a-radio-group button-style="solid" v-decorator="[
+              'isAdmin',
+              { rules: [{ required: true, message: '请输入是否为店主!' }] }
+              ]">
+              <a-radio-button value="1">
+                是
+              </a-radio-button>
+              <a-radio-button value="0">
+                否
+              </a-radio-button>
+            </a-radio-group>
+          </a-form-item>
+        </a-col>
         <a-col :span="24">
           <a-form-item label='照片' v-bind="formItemLayout">
             <a-upload

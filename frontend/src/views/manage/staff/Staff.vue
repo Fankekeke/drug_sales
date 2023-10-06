@@ -147,6 +147,19 @@ export default {
           }
         }
       }, {
+        title: '状态',
+        dataIndex: 'isAdmin',
+        customRender: (text, row, index) => {
+          switch (text) {
+            case 1:
+              return <a-tag color="blue">是</a-tag>
+            case 0:
+              return <a-tag color="pink">否</a-tag>
+            default:
+              return '- -'
+          }
+        }
+      }, {
         title: '照片',
         dataIndex: 'images',
         customRender: (text, record, index) => {

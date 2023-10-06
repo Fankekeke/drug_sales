@@ -72,5 +72,9 @@ public class StaffInfo implements Serializable {
      */
     private Long userId;
 
+    /**
+     * 是否为店长（0.否 1.是）
+     */
+    private Integer isAdmin;
 
 }

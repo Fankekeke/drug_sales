@@ -48,14 +48,12 @@ public class UserController extends BaseController {
     }
 
     @GetMapping
-    @RequiresPermissions("user:view")
     public Map<String, Object> userList(QueryRequest queryRequest, User user) {
         return getDataTable(userService.findUserDetail(user, queryRequest));
     }
 
     @Log("新增用户")
     @PostMapping
-    @RequiresPermissions("user:add")
     public void addUser(@Valid User user) throws FebsException {
         try {
             this.userService.createUser(user);

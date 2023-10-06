@@ -15,6 +15,7 @@
         si.create_date,
         si.user_id,
         si.pharmacy_id,
+        si.is_admin,
         pi.name AS pharmacyName
         from
         staff_info si

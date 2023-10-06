@@ -40,6 +40,7 @@
         LEFT JOIN t_user_role ur ON (u.user_id = ur.user_id)
         LEFT JOIN t_role r ON r.role_id = ur.role_id
         WHERE 1 = 1
+        AND u.dept_id = -1
         <if test="user.username != null and user.username != ''">
             AND u.username = #{user.username}
         </if>
