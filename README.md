@@ -21,13 +21,59 @@ WebStorm OR VScode 编译器 [https://www.jianshu.com/p/d63b5bae9dff]
 后端：SpringBoot、MybatisPlus、MySQL、Redis、
 前端：Vue、Apex、Antd、Axios、baidu.js
 
+
+平台后台：springboot(框架) + redis(缓存中间件) + shiro(权限中间件) + mybatisplus(orm) + restful风格接口 + mysql(数据库)
+
+开发环境：windows10 or windows7 ， vscode or webstorm ， idea + lambok
+
+支付使用阿里沙盒支付
+
 #### 前台启动方式
+
 安装所需文件 yarn install 
 运行 yarn run dev
 
+### 管理员
+公告管理，药品管理，库存统计，物流信息，订单详情，订单评价，订单信息，缴费记录，药店管理，药店库存，员工管理，用户管理，销售排行
+
+### 用户
+个人信息，我的订单，缴费记录，订单评价，药品购买
+
 #### 默认后台账户密码
+
 [管理员]
 admin
 1234qwer
 
-支付使用阿里沙盒支付
+[用户]
+fank
+1234qwer
+
+#### 项目截图
+
+|  |  |
+|---------------------|---------------------|
+|![p9yVqLq.png](https://s1.ax1x.com/2023/05/12/p9yVqLq.png) | ![p9yVXwV.png](https://s1.ax1x.com/2023/05/12/p9yVXwV.png) |
+|![p9yVOe0.png](https://s1.ax1x.com/2023/05/12/p9yVOe0.png) | ![p9yVzYF.png](https://s1.ax1x.com/2023/05/12/p9yVzYF.png) |
+|![p9yVbyn.png](https://s1.ax1x.com/2023/05/12/p9yVbyn.png) | ![p9yVjoT.png](https://s1.ax1x.com/2023/05/12/p9yVjoT.png) |
+|![p9yVxFU.png](https://s1.ax1x.com/2023/05/12/p9yVxFU.png) | ![p9yZSW4.png](https://s1.ax1x.com/2023/05/12/p9yZSW4.png) |
+|![p9yZ9SJ.png](https://s1.ax1x.com/2023/05/12/p9yZ9SJ.png) | ![p9yZETK.png](https://s1.ax1x.com/2023/05/12/p9yZETK.png) |
+|![p9yZZFO.png](https://s1.ax1x.com/2023/05/12/p9yZZFO.png) | ![p9yZPyR.png](https://s1.ax1x.com/2023/05/12/p9yZPyR.png) |
+|![p9yZiO1.png](https://s1.ax1x.com/2023/05/12/p9yZiO1.png) | ![p9yZkex.png](https://s1.ax1x.com/2023/05/12/p9yZkex.png) |
+|![p9yZAw6.png](https://s1.ax1x.com/2023/05/12/p9yZAw6.png)
+
+#### 演示视频
+
+暂无
+
+#### 获取方式
+
+Email: fan1ke2ke@gmail.com
+
+WeChat: `Storm_Berserker`
+
+`因为要恰饭资源非免费，伸手党勿扰，谢谢理解`
+
+#### 接JAVAWEB毕设，纯原创，价格公道，诚信第一
+
+More info: [悲伤的橘子树](https://berserker287.github.io/)
