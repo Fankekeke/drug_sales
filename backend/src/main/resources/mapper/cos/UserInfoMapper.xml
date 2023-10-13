@@ -15,7 +15,8 @@
         ui.area,
         ui.address,
         ui.user_id,
-        ui.create_date
+        ui.create_date,
+        ui.is_member
         from
         user_info ui
         where 1 = 1

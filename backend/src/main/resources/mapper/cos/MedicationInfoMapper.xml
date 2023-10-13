@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.cos.dao.MedicationInfoMapper">
+
+    <!-- 分页获取电子处方信息 -->
+    <select id="selectMedication" resultType="java.util.LinkedHashMap">
+        select
+        mi.id,
+        mi.code,
+        mi.cause,
+        mi.user_id,
+        mi.check_issuer,
+        mi.check_agency,
+        mi.status,
+        mi.create_date,
+        mi.order_code,
+        ui.name as userName,
+        ui.mail,
+        ui.address,
+        ui.is_member
+        from
+        medication_info mi
+        left join user_info ui on (ui.id = mi.user_id)
+        where 1 = 1
+        <if test="code != null and code != ''">
+            AND mi.code LIKE CONCAT('%',#{code},'%')
+        </if>
+        <if test="checkIssuer != null and checkIssuer != ''">
+            AND mi.check_issuer LIKE CONCAT('%',#{checkIssuer},'%')
+        </if>
+        <if test="status != null">
+            AND mi.status = #{status}
+        </if>
+        order by
+        mi.create_date desc
+    </select>
+</mapper>

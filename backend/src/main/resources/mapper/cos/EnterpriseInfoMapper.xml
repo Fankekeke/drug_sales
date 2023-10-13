@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.cos.dao.EnterpriseInfoMapper">
+
+    <!-- 分页获取企业信息 -->
+    <select id="selectEnterprisePage" resultType="java.util.LinkedHashMap">
+        select
+        ei.id,
+        ei.name,
+        ei.abbreviation,
+        ei.credit_code,
+        ei.code,
+        ei.nature,
+        ei.nature_two,
+        ei.status,
+        ei.corporate_representative,
+        ei.corporate_representative_id,
+        ei.corporate_representative_phone,
+        ei.registered_capital,
+        ei.registered_capital_currency,
+        ei.establishment_date,
+        ei.business_begin_date,
+        ei.business_end_date,
+        ei.registered_address,
+        ei.business_scope,
+        ei.source,
+        ei.province,
+        ei.city,
+        ei.district,
+        ei.en_name,
+        ei.industry,
+        ei.unit_description,
+        ei.create_date,
+        ei.images
+        from
+        enterprise_info ei
+        where
+        1 = 1
+        AND ei.name IS NOT NULL
+        <if test="enterpriseInfo.name != null and enterpriseInfo.name != ''">
+            AND ei.name LIKE CONCAT('%',#{enterpriseInfo.name},'%')
+        </if>
+        <if test="enterpriseInfo.creditCode != null and enterpriseInfo.creditCode != ''">
+            AND ei.credit_code LIKE CONCAT('%',#{enterpriseInfo.creditCode},'%')
+        </if>
+        order by
+        ei.create_date desc
+    </select>
+</mapper>

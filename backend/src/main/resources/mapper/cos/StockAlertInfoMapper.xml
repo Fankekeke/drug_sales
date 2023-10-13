@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.cos.dao.StockAlertInfoMapper">
+
+    <!-- 分页获取库房预警信息 -->
+    <select id="selectStockAlertPage" resultType="java.util.LinkedHashMap">
+        select
+            sai.id,
+            sai.shop_id,
+            sai.durg_id,
+            sai.remark,
+            sai.status,
+            sai.create_date,
+            phi.name as durgName,
+            phi.address,
+            di.name,
+            di.brand,
+            di.images
+        from
+            stock_alert_info sai
+                left join pharmacy_info phi on
+                (phi.id = sai.shop_id)
+                left join drug_info di on
+                (di.id = sai.durg_id)
+        where
+            1 = 1
+        <if test="shopName != null and shopName != ''">
+            AND phi.name LIKE CONCAT('%',#{shopName},'%')
+        </if>
+        <if test="status != null">
+            AND sai.status = #{status}
+        </if>
+        order by
+        sai.create_date desc
+    </select>
+</mapper>

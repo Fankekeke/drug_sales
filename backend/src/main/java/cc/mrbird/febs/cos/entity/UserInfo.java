@@ -77,5 +77,9 @@ public class UserInfo implements Serializable {
      */
     private String createDate;
 
+    /**
+     * 是否为会员（0.否 1.是）
+     */
+    private Integer isMember;
 
 }

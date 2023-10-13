@@ -13,6 +13,7 @@
         oi.create_date,
         oi.logistics_id,
         oi.order_status,
+        oi.del_flag,
         ui.id AS userId,
         ui.name,
         ui.phone,
