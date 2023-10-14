@@ -17,7 +17,7 @@ import java.util.List;
  * @author FanK
  */
 @RestController
-@RequestMapping("/manage/medication-info")
+@RequestMapping("/cos/medication-info")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MedicationInfoController {
 

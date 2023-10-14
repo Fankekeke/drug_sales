@@ -1,6 +1,7 @@
 package cc.mrbird.febs.cos.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -55,5 +56,11 @@ public class PharmacyInventory implements Serializable {
 
     @TableField(exist = false)
     private String brand;
+
+    @TableField(exist = false)
+    private BigDecimal unitPrice;
+
+    @TableField(exist = false)
+    private String images;
 
 }

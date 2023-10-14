@@ -20,4 +20,20 @@ public interface IPurchaseInfoService extends IService<PurchaseInfo> {
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> selectPurchasePage(Page<PurchaseInfo> page, PurchaseInfo purchaseInfo);
+
+    /**
+     * 新增药品采购信息
+     *
+     * @param purchaseInfo 药品采购信息
+     * @return 结果
+     */
+    boolean purchaseAdd(PurchaseInfo purchaseInfo);
+
+    /**
+     * 采购单详情-药品物流
+     *
+     * @param id 采购ID
+     * @return 结果
+     */
+    LinkedHashMap<String, Object> detailPurchase(String id);
 }

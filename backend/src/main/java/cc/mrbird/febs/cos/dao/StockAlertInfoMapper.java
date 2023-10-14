@@ -4,6 +4,7 @@ import cc.mrbird.febs.cos.entity.StockAlertInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.LinkedHashMap;
 
@@ -19,5 +20,5 @@ public interface StockAlertInfoMapper extends BaseMapper<StockAlertInfo> {
      * @param stockAlertInfo 库房预警信息
      * @return 结果
      */
-    IPage<LinkedHashMap<String, Object>> selectStockAlertPage(Page<StockAlertInfo> page, StockAlertInfo stockAlertInfo);
+    IPage<LinkedHashMap<String, Object>> selectStockAlertPage(Page<StockAlertInfo> page, @Param("stockAlertInfo") StockAlertInfo stockAlertInfo);
 }

@@ -3,6 +3,9 @@ package cc.mrbird.febs.cos.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -20,6 +23,12 @@ public class PurchaseInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 主键ID
+     */
+    @TableId(type = IdType.AUTO)
+    private Integer id;
+
+    /**
      * 采购单号
      */
     private String code;
@@ -30,9 +39,9 @@ public class PurchaseInfo implements Serializable {
     private Integer supplierId;
 
     /**
-     * 采购金额
+     * 采购数量
      */
-    private BigDecimal amount;
+    private Integer amount;
 
     /**
      * 采购人

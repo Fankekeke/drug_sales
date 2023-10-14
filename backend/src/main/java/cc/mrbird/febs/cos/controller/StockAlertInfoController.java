@@ -17,7 +17,7 @@ import java.util.List;
  * @author FanK
  */
 @RestController
-@RequestMapping("/manage/stock-alert-info")
+@RequestMapping("/cos/stock-alert-info")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StockAlertInfoController {
 

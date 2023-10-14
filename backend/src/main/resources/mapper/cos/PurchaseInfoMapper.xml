@@ -23,14 +23,14 @@
                 (ei.id = pui.supplier_id)
         where
             1 = 1
-        <if test="code != null and code != ''">
-            AND pui.code LIKE CONCAT('%',#{code},'%')
+        <if test="purchaseInfo.code != null and purchaseInfo.code != ''">
+            AND pui.code LIKE CONCAT('%',#{purchaseInfo.code},'%')
         </if>
-        <if test="purchaser != null and purchaser != ''">
-            AND pui.purchaser LIKE CONCAT('%',#{purchaser},'%')
+        <if test="purchaseInfo.purchaser != null and purchaseInfo.purchaser != ''">
+            AND pui.purchaser LIKE CONCAT('%',#{purchaseInfo.purchaser},'%')
         </if>
-        <if test="status != null">
-            AND pui.status = #{status}
+        <if test="purchaseInfo.status != null">
+            AND pui.status = #{purchaseInfo.status}
         </if>
         order by
         pui.create_date desc

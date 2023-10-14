@@ -22,14 +22,14 @@
         medication_info mi
         left join user_info ui on (ui.id = mi.user_id)
         where 1 = 1
-        <if test="code != null and code != ''">
+        <if test="medicationInfo.code != null and medicationInfo.code != ''">
             AND mi.code LIKE CONCAT('%',#{code},'%')
         </if>
-        <if test="checkIssuer != null and checkIssuer != ''">
-            AND mi.check_issuer LIKE CONCAT('%',#{checkIssuer},'%')
+        <if test="medicationInfo.checkIssuer != null and medicationInfo.checkIssuer != ''">
+            AND mi.check_issuer LIKE CONCAT('%',#{medicationInfo.checkIssuer},'%')
         </if>
-        <if test="status != null">
-            AND mi.status = #{status}
+        <if test="medicationInfo.status != null">
+            AND mi.status = #{medicationInfo.status}
         </if>
         order by
         mi.create_date desc

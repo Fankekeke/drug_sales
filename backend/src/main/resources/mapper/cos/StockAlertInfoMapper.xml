@@ -24,11 +24,11 @@
                 (di.id = sai.durg_id)
         where
             1 = 1
-        <if test="shopName != null and shopName != ''">
-            AND phi.name LIKE CONCAT('%',#{shopName},'%')
+        <if test="stockAlertInfo.shopName != null and stockAlertInfo.shopName != ''">
+            AND phi.name LIKE CONCAT('%',#{stockAlertInfo.shopName},'%')
         </if>
-        <if test="status != null">
-            AND sai.status = #{status}
+        <if test="stockAlertInfo.status != null">
+            AND sai.status = #{stockAlertInfo.status}
         </if>
         order by
         sai.create_date desc

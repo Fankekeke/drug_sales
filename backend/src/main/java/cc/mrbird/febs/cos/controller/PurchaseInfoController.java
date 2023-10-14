@@ -17,7 +17,7 @@ import java.util.List;
  * @author FanK
  */
 @RestController
-@RequestMapping("/manage/purchase-info")
+@RequestMapping("/cos/purchase-info")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PurchaseInfoController {
 
@@ -26,13 +26,24 @@ public class PurchaseInfoController {
     /**
      * 分页获取药品采购信息
      *
-     * @param page 分页对象
+     * @param page         分页对象
      * @param purchaseInfo 药品采购信息
      * @return 结果
      */
     @GetMapping("/page")
     public R page(Page<PurchaseInfo> page, PurchaseInfo purchaseInfo) {
         return R.ok(purchaseInfoService.selectPurchasePage(page, purchaseInfo));
+    }
+
+    /**
+     * 采购单详情-药品物流
+     *
+     * @param purchaseId 采购ID
+     * @return 结果
+     */
+    @GetMapping("/detail/{purchaseId}")
+    public R detailPurchase(@PathVariable("purchaseId") String purchaseId) {
+        return R.ok(purchaseInfoService.detailPurchase(purchaseId));
     }
 
     @GetMapping("/{id}")
@@ -55,7 +66,7 @@ public class PurchaseInfoController {
     public R save(PurchaseInfo purchaseInfo) {
         purchaseInfo.setCode("PUR-" + System.currentTimeMillis());
         purchaseInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(purchaseInfoService.save(purchaseInfo));
+        return R.ok(purchaseInfoService.purchaseAdd(purchaseInfo));
     }
 
     /**
