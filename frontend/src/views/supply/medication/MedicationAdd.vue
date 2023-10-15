@@ -127,7 +127,7 @@ export default {
       this.form.validateFields((err, values) => {
         values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
-          values.publisher = this.currentUser.userId
+          values.userId = this.currentUser.userId
           this.loading = true
           this.$post('/cos/medication-info', {
             ...values

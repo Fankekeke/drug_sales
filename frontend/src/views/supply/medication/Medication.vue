@@ -146,7 +146,16 @@ export default {
       }, {
         title: '病因',
         dataIndex: 'cause'
-      },  {
+      }, {
+        title: '用户名称',
+        dataIndex: 'userName'
+      }, {
+        title: '电子邮箱',
+        dataIndex: 'mail'
+      }, {
+        title: '收获地址',
+        dataIndex: 'address'
+      }, {
         title: '出具人',
         dataIndex: 'checkIssuer',
         customRender: (text, row, index) => {

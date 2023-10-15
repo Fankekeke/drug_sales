@@ -58,6 +58,7 @@ public class MedicationInfoController {
      */
     @PostMapping
     public R save(MedicationInfo medicationInfo) {
+        medicationInfo.setCode("MED-" + System.currentTimeMillis());
         medicationInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         UserInfo userInfo = userInfoService.getOne(Wrappers.<UserInfo>lambdaQuery().eq(UserInfo::getUserId, medicationInfo.getUserId()));
         if (userInfo != null) {
