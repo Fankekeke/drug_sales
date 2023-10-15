@@ -1,5 +1,6 @@
 package cc.mrbird.febs.cos.service;
 
+import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.cos.entity.MedicationInfo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -20,4 +21,12 @@ public interface IMedicationInfoService extends IService<MedicationInfo> {
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> selectMedication(Page<MedicationInfo> page, MedicationInfo medicationInfo);
+
+    /**
+     * 新增电子处方信息
+     *
+     * @param medicationInfo 电子处方信息
+     * @return 结果
+     */
+    boolean checkMedication(MedicationInfo medicationInfo) throws FebsException;
 }

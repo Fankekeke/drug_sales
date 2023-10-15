@@ -7,10 +7,18 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="标题"
+                label="处方单号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.title"/>
+                <a-input v-model="queryParams.code"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="病因"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-input v-model="queryParams.checkIssuer"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
@@ -18,7 +26,10 @@
                 label="内容"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.content"/>
+                <a-select v-model="queryParams.status" allowClear>
+                  <a-select-option value="0">未处理</a-select-option>
+                  <a-select-option value="1">已处理</a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
           </div>
@@ -71,39 +82,39 @@
         </template>
       </a-table>
     </div>
-    <bulletin-add
-      v-if="bulletinAdd.visiable"
-      @close="handleBulletinAddClose"
-      @success="handleBulletinAddSuccess"
-      :bulletinAddVisiable="bulletinAdd.visiable">
-    </bulletin-add>
-    <bulletin-edit
-      ref="bulletinEdit"
-      @close="handleBulletinEditClose"
-      @success="handleBulletinEditSuccess"
-      :bulletinEditVisiable="bulletinEdit.visiable">
-    </bulletin-edit>
+    <medication-add
+      v-if="medicationAdd.visiable"
+      @close="handlemedicationAddClose"
+      @success="handlemedicationAddSuccess"
+      :medicationAddVisiable="medicationAdd.visiable">
+    </medication-add>
+    <medication-edit
+      ref="medicationEdit"
+      @close="handlemedicationEditClose"
+      @success="handlemedicationEditSuccess"
+      :medicationEditVisiable="medicationEdit.visiable">
+    </medication-edit>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import BulletinAdd from './MedicationAdd.vue'
-import BulletinEdit from './MedicationEdit.vue'
+import medicationAdd from './MedicationAdd.vue'
+import medicationEdit from './MedicationEdit.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
-  name: 'Bulletin',
-  components: {BulletinAdd, BulletinEdit, RangeDate},
+  name: 'medication',
+  components: {medicationAdd, medicationEdit, RangeDate},
   data () {
     return {
       advanced: false,
-      bulletinAdd: {
+      medicationAdd: {
         visiable: false
       },
-      bulletinEdit: {
+      medicationEdit: {
         visiable: false
       },
       queryParams: {},
@@ -130,15 +141,31 @@ export default {
     }),
     columns () {
       return [{
-        title: '标题',
-        dataIndex: 'title',
-        scopedSlots: { customRender: 'titleShow' },
-        width: 300
+        title: '处方单号',
+        dataIndex: 'code'
       }, {
-        title: '公告内容',
-        dataIndex: 'content',
-        scopedSlots: { customRender: 'contentShow' },
-        width: 600
+        title: '病因',
+        dataIndex: 'cause'
+      },  {
+        title: '出具人',
+        dataIndex: 'checkIssuer',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      },  {
+        title: '出具机构',
+        dataIndex: 'checkAgency',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }, {
         title: '发布时间',
         dataIndex: 'createDate',
@@ -150,26 +177,16 @@ export default {
           }
         }
       }, {
-        title: '消息类型',
-        dataIndex: 'type',
+        title: '状态',
+        dataIndex: 'status',
         customRender: (text, row, index) => {
           switch (text) {
+            case 0:
+              return <a-tag color='red'>未处理</a-tag>
             case 1:
-              return <a-tag>通知</a-tag>
-            case 2:
-              return <a-tag>公告</a-tag>
+              return <a-tag color='green'>已处理</a-tag>
             default:
               return '- -'
-          }
-        }
-      }, {
-        title: '上传人',
-        dataIndex: 'publisher',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
           }
         }
       }, {
@@ -190,26 +207,26 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.bulletinAdd.visiable = true
+      this.medicationAdd.visiable = true
     },
-    handleBulletinAddClose () {
-      this.bulletinAdd.visiable = false
+    handlemedicationAddClose () {
+      this.medicationAdd.visiable = false
     },
-    handleBulletinAddSuccess () {
-      this.bulletinAdd.visiable = false
-      this.$message.success('新增公告成功')
+    handlemedicationAddSuccess () {
+      this.medicationAdd.visiable = false
+      this.$message.success('新增处方成功')
       this.search()
     },
     edit (record) {
-      this.$refs.bulletinEdit.setFormValues(record)
-      this.bulletinEdit.visiable = true
+      this.$refs.medicationEdit.setFormValues(record)
+      this.medicationEdit.visiable = true
     },
-    handleBulletinEditClose () {
-      this.bulletinEdit.visiable = false
+    handlemedicationEditClose () {
+      this.medicationEdit.visiable = false
     },
-    handleBulletinEditSuccess () {
-      this.bulletinEdit.visiable = false
-      this.$message.success('修改公告成功')
+    handlemedicationEditSuccess () {
+      this.medicationEdit.visiable = false
+      this.$message.success('修改处方成功')
       this.search()
     },
     handleDeptChange (value) {
@@ -227,7 +244,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/bulletin-info/' + ids).then(() => {
+          that.$delete('/cos/medication-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -297,7 +314,10 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      this.$get('/cos/bulletin-info/page', {
+      if (params.status === undefined) {
+        delete params.status
+      }
+      this.$get('/cos/medication-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

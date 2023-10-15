@@ -11,7 +11,7 @@
             sai.remark,
             sai.status,
             sai.create_date,
-            phi.name as durgName,
+            phi.name as shopName,
             phi.address,
             di.name,
             di.brand,

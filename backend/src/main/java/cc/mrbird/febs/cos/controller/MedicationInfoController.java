@@ -3,8 +3,11 @@ package cc.mrbird.febs.cos.controller;
 
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.MedicationInfo;
+import cc.mrbird.febs.cos.entity.UserInfo;
 import cc.mrbird.febs.cos.service.IMedicationInfoService;
+import cc.mrbird.febs.cos.service.IUserInfoService;
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +26,12 @@ public class MedicationInfoController {
 
     private final IMedicationInfoService medicationInfoService;
 
+    private final IUserInfoService userInfoService;
+
     /**
      * 分页获取电子处方信息
      *
-     * @param page 分页对象
+     * @param page           分页对象
      * @param medicationInfo 电子处方信息
      * @return 结果
      */
@@ -54,7 +59,22 @@ public class MedicationInfoController {
     @PostMapping
     public R save(MedicationInfo medicationInfo) {
         medicationInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+        UserInfo userInfo = userInfoService.getOne(Wrappers.<UserInfo>lambdaQuery().eq(UserInfo::getUserId, medicationInfo.getUserId()));
+        if (userInfo != null) {
+            medicationInfo.setUserId(userInfo.getId());
+        }
         return R.ok(medicationInfoService.save(medicationInfo));
+    }
+
+    /**
+     * 处理电子处方
+     *
+     * @param medicationInfo 处方信息
+     * @return 结果
+     */
+    @PostMapping("/checkMedication")
+    public R checkMedication(MedicationInfo medicationInfo) {
+        return R.ok();
     }
 
     /**

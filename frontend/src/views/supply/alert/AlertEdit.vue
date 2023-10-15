@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="修改公告" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="修改库存预警" @cancel="onClose" :width="800">
     <template slot="footer">
       <a-button key="back" @click="onClose">
         取消
@@ -11,7 +11,7 @@
     <a-form :form="form" layout="vertical">
       <a-row :gutter="20">
         <a-col :span="12">
-          <a-form-item label='公告标题' v-bind="formItemLayout">
+          <a-form-item label='库存预警标题' v-bind="formItemLayout">
             <a-input v-decorator="[
             'title',
             { rules: [{ required: true, message: '请输入名称!' }] }
@@ -27,21 +27,21 @@
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='公告类型' v-bind="formItemLayout">
+          <a-form-item label='库存预警类型' v-bind="formItemLayout">
             <a-select v-decorator="[
               'type',
-              { rules: [{ required: true, message: '请输入公告类型!' }] }
+              { rules: [{ required: true, message: '请输入库存预警类型!' }] }
               ]">
               <a-select-option value="1">通知</a-select-option>
-              <a-select-option value="2">公告</a-select-option>
+              <a-select-option value="2">库存预警</a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='公告状态' v-bind="formItemLayout">
+          <a-form-item label='库存预警状态' v-bind="formItemLayout">
             <a-select v-decorator="[
               'rackUp',
-              { rules: [{ required: true, message: '请输入公告状态!' }] }
+              { rules: [{ required: true, message: '请输入库存预警状态!' }] }
               ]">
               <a-select-option value="0">下架</a-select-option>
               <a-select-option value="1">已发布</a-select-option>
@@ -49,7 +49,7 @@
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='公告内容' v-bind="formItemLayout">
+          <a-form-item label='库存预警内容' v-bind="formItemLayout">
             <a-textarea :rows="6" v-decorator="[
             'content',
              { rules: [{ required: true, message: '请输入名称!' }] }
@@ -98,9 +98,9 @@ const formItemLayout = {
   wrapperCol: { span: 24 }
 }
 export default {
-  name: 'BulletinEdit',
+  name: 'alertEdit',
   props: {
-    bulletinEditVisiable: {
+    alertEditVisiable: {
       default: false
     }
   },
@@ -110,7 +110,7 @@ export default {
     }),
     show: {
       get: function () {
-        return this.bulletinEditVisiable
+        return this.alertEditVisiable
       },
       set: function () {
       }
@@ -150,21 +150,21 @@ export default {
         this.fileList = imageList
       }
     },
-    setFormValues ({...bulletin}) {
-      this.rowId = bulletin.id
+    setFormValues ({...alert}) {
+      this.rowId = alert.id
       let fields = ['title', 'content', 'publisher', 'rackUp', 'type']
       let obj = {}
-      Object.keys(bulletin).forEach((key) => {
+      Object.keys(alert).forEach((key) => {
         if (key === 'images') {
           this.fileList = []
-          this.imagesInit(bulletin['images'])
+          this.imagesInit(alert['images'])
         }
         if (key === 'rackUp' || key === 'type') {
-          bulletin[key] = bulletin[key].toString()
+          alert[key] = alert[key].toString()
         }
         if (fields.indexOf(key) !== -1) {
           this.form.getFieldDecorator(key)
-          obj[key] = bulletin[key]
+          obj[key] = alert[key]
         }
       })
       this.form.setFieldsValue(obj)
@@ -192,7 +192,7 @@ export default {
         values.images = images.length > 0 ? images.join(',') : null
         if (!err) {
           this.loading = true
-          this.$put('/cos/bulletin-info', {
+          this.$put('/cos/stock-alert-info', {
             ...values
           }).then((r) => {
             this.reset()

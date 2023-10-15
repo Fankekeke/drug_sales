@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,6 +32,11 @@ public class MedicationInfo implements Serializable {
      * 编号
      */
     private String code;
+
+    /**
+     * 处方标题
+     */
+    private String title;
 
     /**
      * 病因
@@ -67,5 +73,14 @@ public class MedicationInfo implements Serializable {
      */
     private String orderCode;
 
+    /**
+     * 图片
+     */
+    private String images;
 
+    /**
+     * 购买药品信息
+     */
+    @TableField(exist = false)
+    private String drugString;
 }

@@ -7,18 +7,21 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="标题"
+                label="药店名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.title"/>
+                <a-input v-model="queryParams.shopName"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="内容"
+                label="状态"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.content"/>
+                <a-select v-model="queryParams.status" allowClear>
+                  <a-select-option value="0">未读</a-select-option>
+                  <a-select-option value="1">已读</a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
           </div>
@@ -31,7 +34,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
+        <a-button type="primary" ghost @click="add">库存统计</a-button>
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -67,43 +70,43 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="已 读"></a-icon>
         </template>
       </a-table>
     </div>
-    <bulletin-add
-      v-if="bulletinAdd.visiable"
-      @close="handleBulletinAddClose"
-      @success="handleBulletinAddSuccess"
-      :bulletinAddVisiable="bulletinAdd.visiable">
-    </bulletin-add>
-    <bulletin-edit
-      ref="bulletinEdit"
-      @close="handleBulletinEditClose"
-      @success="handleBulletinEditSuccess"
-      :bulletinEditVisiable="bulletinEdit.visiable">
-    </bulletin-edit>
+    <alert-add
+      v-if="alertAdd.visiable"
+      @close="handlealertAddClose"
+      @success="handlealertAddSuccess"
+      :alertAddVisiable="alertAdd.visiable">
+    </alert-add>
+    <alert-edit
+      ref="alertEdit"
+      @close="handlealertEditClose"
+      @success="handlealertEditSuccess"
+      :alertEditVisiable="alertEdit.visiable">
+    </alert-edit>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import BulletinAdd from './AlertAdd.vue'
-import BulletinEdit from './AlertEdit.vue'
+import alertAdd from './AlertAdd.vue'
+import alertEdit from './AlertEdit.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
-  name: 'Bulletin',
-  components: {BulletinAdd, BulletinEdit, RangeDate},
+  name: 'alert',
+  components: {alertAdd, alertEdit, RangeDate},
   data () {
     return {
       advanced: false,
-      bulletinAdd: {
+      alertAdd: {
         visiable: false
       },
-      bulletinEdit: {
+      alertEdit: {
         visiable: false
       },
       queryParams: {},
@@ -130,13 +133,14 @@ export default {
     }),
     columns () {
       return [{
-        title: '标题',
-        dataIndex: 'title',
-        scopedSlots: { customRender: 'titleShow' },
-        width: 300
+        title: '药店名称',
+        dataIndex: 'shopName'
       }, {
-        title: '公告内容',
-        dataIndex: 'content',
+        title: '药店地址',
+        dataIndex: 'address'
+      }, {
+        title: '预警内容',
+        dataIndex: 'remark',
         scopedSlots: { customRender: 'contentShow' },
         width: 600
       }, {
@@ -150,26 +154,34 @@ export default {
           }
         }
       }, {
-        title: '消息类型',
-        dataIndex: 'type',
-        customRender: (text, row, index) => {
-          switch (text) {
-            case 1:
-              return <a-tag>通知</a-tag>
-            case 2:
-              return <a-tag>公告</a-tag>
-            default:
-              return '- -'
-          }
+        title: '药品名称',
+        dataIndex: 'name'
+      }, {
+        title: '所属品牌',
+        dataIndex: 'brand'
+      }, {
+        title: '药品图片',
+        dataIndex: 'images',
+        customRender: (text, record, index) => {
+          if (!record.images) return <a-avatar shape="square" icon="user" />
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+            </template>
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
+          </a-popover>
         }
       }, {
-        title: '上传人',
-        dataIndex: 'publisher',
+        title: '状态',
+        dataIndex: 'status',
         customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
+          switch (text) {
+            case 0:
+              return <a-tag>未读</a-tag>
+            case 1:
+              return <a-tag>已读</a-tag>
+            default:
+              return '- -'
           }
         }
       }, {
@@ -190,26 +202,35 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.bulletinAdd.visiable = true
+      this.$get('/cos/stock-alert-info/stockAlertCheck', {
+        ...values
+      }).then((r) => {
+      })
+      this.$message.success('正在进行库存统计')
     },
-    handleBulletinAddClose () {
-      this.bulletinAdd.visiable = false
+    handlealertAddClose () {
+      this.alertAdd.visiable = false
     },
-    handleBulletinAddSuccess () {
-      this.bulletinAdd.visiable = false
-      this.$message.success('新增公告成功')
+    handlealertAddSuccess () {
+      this.alertAdd.visiable = false
+      this.$message.success('新增库存预警成功')
       this.search()
     },
     edit (record) {
-      this.$refs.bulletinEdit.setFormValues(record)
-      this.bulletinEdit.visiable = true
+      record.status = 1
+      this.$put('/cos/stock-alert-info', {
+        ...record
+      }).then((r) => {
+        this.$message.success('更新状态成功')
+        this.search()
+      })
     },
-    handleBulletinEditClose () {
-      this.bulletinEdit.visiable = false
+    handlealertEditClose () {
+      this.alertEdit.visiable = false
     },
-    handleBulletinEditSuccess () {
-      this.bulletinEdit.visiable = false
-      this.$message.success('修改公告成功')
+    handlealertEditSuccess () {
+      this.alertEdit.visiable = false
+      this.$message.success('修改库存预警成功')
       this.search()
     },
     handleDeptChange (value) {
@@ -227,7 +248,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/bulletin-info/' + ids).then(() => {
+          that.$delete('/cos/stock-alert-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -297,7 +318,10 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      this.$get('/cos/bulletin-info/page', {
+      if (params.status === undefined) {
+        delete params.status
+      }
+      this.$get('/cos/stock-alert-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

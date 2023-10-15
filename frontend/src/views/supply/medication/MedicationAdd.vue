@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="新增公告" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="处方提交" @cancel="onClose" :width="800">
     <template slot="footer">
       <a-button key="back" @click="onClose">
         取消
@@ -11,48 +11,18 @@
     <a-form :form="form" layout="vertical">
       <a-row :gutter="20">
         <a-col :span="12">
-          <a-form-item label='公告标题' v-bind="formItemLayout">
+          <a-form-item label='处方标题' v-bind="formItemLayout">
             <a-input v-decorator="[
             'title',
-            { rules: [{ required: true, message: '请输入名称!' }] }
+            { rules: [{ required: true, message: '请输入处方标题!' }] }
             ]"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label='上传人' v-bind="formItemLayout">
-            <a-input v-decorator="[
-            'publisher',
-            { rules: [{ required: true, message: '请输入上传人!' }] }
-            ]"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label='公告类型' v-bind="formItemLayout">
-            <a-select v-decorator="[
-              'type',
-              { rules: [{ required: true, message: '请输入公告类型!' }] }
-              ]">
-              <a-select-option value="1">通知</a-select-option>
-              <a-select-option value="2">公告</a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label='公告状态' v-bind="formItemLayout">
-            <a-select v-decorator="[
-              'rackUp',
-              { rules: [{ required: true, message: '请输入公告状态!' }] }
-              ]">
-              <a-select-option value="0">下架</a-select-option>
-              <a-select-option value="1">已发布</a-select-option>
-            </a-select>
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='公告内容' v-bind="formItemLayout">
+          <a-form-item label='病因' v-bind="formItemLayout">
             <a-textarea :rows="6" v-decorator="[
-            'content',
-             { rules: [{ required: true, message: '请输入名称!' }] }
+            'cause',
+             { rules: [{ required: true, message: '请输入病因!' }] }
             ]"/>
           </a-form-item>
         </a-col>
@@ -98,9 +68,9 @@ const formItemLayout = {
   wrapperCol: { span: 24 }
 }
 export default {
-  name: 'BulletinAdd',
+  name: 'medicationAdd',
   props: {
-    bulletinAddVisiable: {
+    medicationAddVisiable: {
       default: false
     }
   },
@@ -110,7 +80,7 @@ export default {
     }),
     show: {
       get: function () {
-        return this.bulletinAddVisiable
+        return this.medicationAddVisiable
       },
       set: function () {
       }
@@ -159,7 +129,7 @@ export default {
         if (!err) {
           values.publisher = this.currentUser.userId
           this.loading = true
-          this.$post('/cos/bulletin-info', {
+          this.$post('/cos/medication-info', {
             ...values
           }).then((r) => {
             this.reset()
