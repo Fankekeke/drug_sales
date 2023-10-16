@@ -88,12 +88,12 @@
       @success="handlemedicationAddSuccess"
       :medicationAddVisiable="medicationAdd.visiable">
     </medication-add>
-    <medication-edit
-      ref="medicationEdit"
-      @close="handlemedicationEditClose"
-      @success="handlemedicationEditSuccess"
-      :medicationEditVisiable="medicationEdit.visiable">
-    </medication-edit>
+    <purchase-add
+      v-if="purchaseAdd.visiable"
+      @close="handlepurchaseAddClose"
+      @success="handlepurchaseAddSuccess"
+      :purchaseAddVisiable="purchaseAdd.visiable">
+    </purchase-add>
   </a-card>
 </template>
 
@@ -101,13 +101,14 @@
 import RangeDate from '@/components/datetime/RangeDate'
 import medicationAdd from './MedicationAdd.vue'
 import medicationEdit from './MedicationEdit.vue'
+import purchaseAdd from './PurchaseAdd.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
   name: 'medication',
-  components: {medicationAdd, medicationEdit, RangeDate},
+  components: {medicationAdd, medicationEdit, purchaseAdd, RangeDate},
   data () {
     return {
       advanced: false,
@@ -115,6 +116,9 @@ export default {
         visiable: false
       },
       medicationEdit: {
+        visiable: false
+      },
+      purchaseAdd: {
         visiable: false
       },
       queryParams: {},
@@ -209,6 +213,14 @@ export default {
     this.fetch()
   },
   methods: {
+    handlepurchaseAddClose () {
+      this.purchaseAdd.visiable = false
+    },
+    handlepurchaseAddSuccess () {
+      this.purchaseAdd.visiable = false
+      this.$message.success('新增成功')
+      this.search()
+    },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
