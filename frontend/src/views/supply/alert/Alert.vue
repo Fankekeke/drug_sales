@@ -63,9 +63,9 @@
           <template>
             <a-tooltip>
               <template slot="title">
-                {{ record.content }}
+                {{ record.remark }}
               </template>
-              {{ record.content.slice(0, 30) }} ...
+              {{ record.remark.slice(0, 30) }} ...
             </a-tooltip>
           </template>
         </template>
@@ -202,9 +202,7 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.$get('/cos/stock-alert-info/stockAlertCheck', {
-        ...values
-      }).then((r) => {
+      this.$get('/cos/stock-alert-info/stockAlertCheck').then((r) => {
       })
       this.$message.success('正在进行库存统计')
     },

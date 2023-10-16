@@ -71,7 +71,7 @@ public class StockAlertInfoServiceImpl extends ServiceImpl<StockAlertInfoMapper,
         // 待更新数据
         List<StockAlertInfo> stockAlertInfoList = new ArrayList<>();
         for (PharmacyInventory inventory : inventoryList) {
-            if (inventory.getReserve() >= 10) {
+            if (inventory.getReserve() >= 15) {
                 continue;
             }
             StockAlertInfo stockAlert = new StockAlertInfo();

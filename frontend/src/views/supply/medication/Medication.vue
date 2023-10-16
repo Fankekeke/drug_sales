@@ -78,7 +78,7 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>
+          <a-icon v-if="record.status == 0" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>
         </template>
       </a-table>
     </div>
@@ -92,7 +92,8 @@
       v-if="purchaseAdd.visiable"
       @close="handlepurchaseAddClose"
       @success="handlepurchaseAddSuccess"
-      :purchaseAddVisiable="purchaseAdd.visiable">
+      :purchaseAddVisiable="purchaseAdd.visiable"
+      :purchaseData="purchaseAdd.data">
     </purchase-add>
   </a-card>
 </template>
@@ -119,7 +120,8 @@ export default {
         visiable: false
       },
       purchaseAdd: {
-        visiable: false
+        visiable: false,
+        data: null
       },
       queryParams: {},
       filteredInfo: null,
@@ -239,8 +241,8 @@ export default {
       this.search()
     },
     edit (record) {
-      this.$refs.medicationEdit.setFormValues(record)
-      this.medicationEdit.visiable = true
+      this.purchaseAdd.data = record
+      this.purchaseAdd.visiable = true
     },
     handlemedicationEditClose () {
       this.medicationEdit.visiable = false

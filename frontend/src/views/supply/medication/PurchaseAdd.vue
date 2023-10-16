@@ -9,7 +9,7 @@
     :visible="purchaseAddVisiable"
     style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
     <a-form :form="form" layout="vertical">
-      <a-row :gutter="10">
+      <a-row :gutter="10" v-if="purchaseData != null">
         <a-divider orientation="left">
           <span style="font-size: 13px">基本信息</span>
         </a-divider>
@@ -18,7 +18,7 @@
             <a-input disabled v-model="purchaseData.title"/>
           </a-form-item>
         </a-col>
-        <a-col :span="12">
+        <a-col :span="24">
           <a-form-item label='病因' v-bind="formItemLayout">
             <a-textarea :rows="6" disabled v-model="purchaseData.cause"/>
           </a-form-item>
@@ -59,7 +59,7 @@
           <a-table :columns="columns" :data-source="dataList" :pagination="false">
             <template slot="nameShow" slot-scope="text, record">
               <a-select style="width: 100%" @change="handleChange($event, record)">
-                <a-select-option v-for="(item, index) in drugList" :key="index" :value="item.id">{{ item.name }}</a-select-option>
+                <a-select-option v-for="(item, index) in drugList" :key="index" :value="item.id">{{ item.drugName }}</a-select-option>
               </a-select>
             </template>
             <template slot="brandShow" slot-scope="text, record">
@@ -208,6 +208,7 @@ export default {
       if (value) {
         this.pharmacyList.forEach(e => {
           if (e.id === value) {
+            this.getDrug(e.id)
             this.pharmacyInfo = e
           }
         })
