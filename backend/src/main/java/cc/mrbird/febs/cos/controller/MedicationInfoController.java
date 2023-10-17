@@ -1,6 +1,7 @@
 package cc.mrbird.febs.cos.controller;
 
 
+import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.MedicationInfo;
 import cc.mrbird.febs.cos.entity.UserInfo;
@@ -74,8 +75,8 @@ public class MedicationInfoController {
      * @return 结果
      */
     @PostMapping("/checkMedication")
-    public R checkMedication(MedicationInfo medicationInfo) {
-        return R.ok();
+    public R checkMedication(MedicationInfo medicationInfo) throws FebsException {
+        return R.ok(medicationInfoService.checkMedication(medicationInfo));
     }
 
     /**

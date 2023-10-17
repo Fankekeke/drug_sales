@@ -89,6 +89,7 @@ public class MedicationInfoServiceImpl extends ServiceImpl<MedicationInfoMapper,
             medicationInfo.setOrderCode(orderItem.getCode());
             medicationInfo.setStatus(1);
         });
+        this.updateById(medicationInfo);
         return orderDetailService.saveBatch(orderDetailList);
     }
 }

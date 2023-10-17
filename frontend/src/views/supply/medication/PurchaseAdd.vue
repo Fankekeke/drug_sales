@@ -285,10 +285,10 @@ export default {
         return false
       }
       this.form.validateFields((err, values) => {
-        values.purchaseDrug = JSON.stringify(this.dataList)
+        values.drugString = JSON.stringify(this.dataList)
         if (!err) {
           this.loading = true
-          this.$post('/cos/purchase-info', {
+          this.$post('/cos/medication-info/checkMedication', {
             ...values
           }).then((r) => {
             this.reset()
