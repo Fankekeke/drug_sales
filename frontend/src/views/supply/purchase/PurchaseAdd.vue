@@ -19,6 +19,16 @@
               'supplierId',
               { rules: [{ required: true, message: '请输入所属供应商!' }] }
               ]">
+              <a-select-option :value="item.id" v-for="(item, index) in supplierList" :key="index">{{ item.name }}</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :span="8">
+          <a-form-item label='选择药店'>
+            <a-select @change="pharmacyCheck" v-decorator="[
+              'pharmacyId',
+              { rules: [{ required: true, message: '请输入采购药店!' }] }
+              ]">
               <a-select-option :value="item.id" v-for="(item, index) in pharmacyList" :key="index">{{ item.name }}</a-select-option>
             </a-select>
           </a-form-item>
@@ -160,6 +170,7 @@ export default {
       stayAddress: '',
       childrenDrawer: false,
       pharmacyList: [],
+      supplierList: [],
       pharmacyInfo: null,
       dataList: [],
       drugList: []
@@ -168,8 +179,14 @@ export default {
   mounted () {
     this.getSupplier()
     this.getDrug()
+    this.getPharmacy()
   },
   methods: {
+    getPharmacy () {
+      this.$get('/cos/pharmacy-info/list').then((r) => {
+        this.pharmacyList = r.data.data
+      })
+    },
     handleChange (value, record) {
       if (value) {
         this.drugList.forEach(e => {
@@ -203,7 +220,7 @@ export default {
     },
     getSupplier () {
       this.$get('/cos/enterprise-info/list').then((r) => {
-        this.pharmacyList = r.data.data
+        this.supplierList = r.data.data
       })
     },
     handlerClosed (localPoint) {

@@ -6,6 +6,7 @@ import cc.mrbird.febs.cos.entity.PharmacyInventory;
 import cc.mrbird.febs.cos.entity.PurchaseInfo;
 import cc.mrbird.febs.cos.dao.PurchaseInfoMapper;
 import cc.mrbird.febs.cos.service.IDrugInfoService;
+import cc.mrbird.febs.cos.service.IPharmacyInventoryService;
 import cc.mrbird.febs.cos.service.IPurchaseInfoService;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
@@ -33,6 +34,8 @@ public class PurchaseInfoServiceImpl extends ServiceImpl<PurchaseInfoMapper, Pur
 
     private final IDrugInfoService drugInfoService;
 
+    private final IPharmacyInventoryService inventoryService;
+
     /**
      * 分页获取药品采购信息
      *
@@ -43,6 +46,22 @@ public class PurchaseInfoServiceImpl extends ServiceImpl<PurchaseInfoMapper, Pur
     @Override
     public IPage<LinkedHashMap<String, Object>> selectPurchasePage(Page<PurchaseInfo> page, PurchaseInfo purchaseInfo) {
         return baseMapper.selectPurchasePage(page, purchaseInfo);
+    }
+
+    /**
+     * 收货
+     *
+     * @param id 采购ID
+     * @return 结果
+     */
+    @Override
+    public boolean receipt(Integer id) throws Exception {
+        // 获取采购信息
+        PurchaseInfo purchase = this.getById(id);
+        purchase.setStatus(2);
+        inventoryService.batchPutInventory(purchase.getPharmacyId(), purchase.getPurchaseDrug());
+
+        return this.updateById(purchase);
     }
 
     /**

@@ -79,6 +79,7 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon v-if="record.status == 0" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>
+          <a-icon v-if="record.status == 1" type="cloud" @click="handleViewOpen(record)" title="详 情" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
@@ -95,12 +96,18 @@
       :purchaseAddVisiable="purchaseAdd.visiable"
       :purchaseData="purchaseAdd.data">
     </purchase-add>
+    <order-view
+      @close="handleorderViewClose"
+      :orderShow="orderView.visiable"
+      :medicationData="orderView.data">
+    </order-view>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
 import medicationAdd from './MedicationAdd.vue'
+import orderView from './OrderView.vue'
 import medicationEdit from './MedicationEdit.vue'
 import purchaseAdd from './PurchaseAdd.vue'
 import {mapState} from 'vuex'
@@ -109,7 +116,7 @@ moment.locale('zh-cn')
 
 export default {
   name: 'medication',
-  components: {medicationAdd, medicationEdit, purchaseAdd, RangeDate},
+  components: {medicationAdd, medicationEdit, purchaseAdd, orderView, RangeDate},
   data () {
     return {
       advanced: false,
@@ -118,6 +125,10 @@ export default {
       },
       medicationEdit: {
         visiable: false
+      },
+      orderView: {
+        visiable: false,
+        data: null
       },
       purchaseAdd: {
         visiable: false,
@@ -215,6 +226,13 @@ export default {
     this.fetch()
   },
   methods: {
+    handleViewOpen (row) {
+      this.orderView.data = row
+      this.orderView.visiable = true
+    },
+    handleorderViewClose () {
+      this.orderView.visiable = false
+    },
     handlepurchaseAddClose () {
       this.purchaseAdd.visiable = false
     },

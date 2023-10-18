@@ -22,6 +22,14 @@ public interface IPurchaseInfoService extends IService<PurchaseInfo> {
     IPage<LinkedHashMap<String, Object>> selectPurchasePage(Page<PurchaseInfo> page, PurchaseInfo purchaseInfo);
 
     /**
+     * 收货
+     *
+     * @param id 采购ID
+     * @return 结果
+     */
+    boolean receipt(Integer id) throws Exception;
+
+    /**
      * 新增药品采购信息
      *
      * @param purchaseInfo 药品采购信息

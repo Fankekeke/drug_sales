@@ -72,4 +72,9 @@ public class PurchaseInfo implements Serializable {
      * 总价格
      */
     private BigDecimal totalPrice;
+
+    /**
+     * 药店ID
+     */
+    private Integer pharmacyId;
 }

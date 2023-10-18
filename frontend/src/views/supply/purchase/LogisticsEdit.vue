@@ -7,6 +7,9 @@
       <a-button key="submit" type="primary" :loading="loading" @click="handleSubmit">
         修改
       </a-button>
+      <a-button key="submit1" @click="receipt">
+        收货
+      </a-button>
     </template>
     <div style="font-size: 13px;font-family: SimHei">
       <a-row style="padding-left: 24px;padding-right: 24px;">
@@ -124,6 +127,11 @@ export default {
     onClose () {
       this.reset()
       this.$emit('close')
+    },
+    receipt () {
+      this.$get(`/cos/purchase-info/receipt/${this.rowId}`).then((r) => {
+        this.$emit('success')
+      })
     },
     handleSubmit () {
       if (!this.remark) {

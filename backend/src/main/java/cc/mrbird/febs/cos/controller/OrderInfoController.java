@@ -130,6 +130,17 @@ public class OrderInfoController {
     }
 
     /**
+     * 获取详情信息
+     *
+     * @param code code
+     * @return 结果
+     */
+    @GetMapping("/detail/{code}")
+    public R detail(@PathVariable("code") String code) {
+        return R.ok(orderInfoService.getOne(Wrappers.<OrderInfo>lambdaQuery().eq(OrderInfo::getCode, code)));
+    }
+
+    /**
      * 获取信息列表
      *
      * @return 结果

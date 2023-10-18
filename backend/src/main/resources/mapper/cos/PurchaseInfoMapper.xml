@@ -14,13 +14,18 @@
             pui.status,
             pui.logistics,
             pui.total_price,
+            pui.pharmacy_id,
             ei.name,
             ei.credit_code,
-            ei.industry
+            ei.industry,
+            pi2.name as pharmacyName,
+            pi2.code as pharmacyCode,
+            pi2.images
         from
             purchase_info pui
                 left join enterprise_info ei on
                 (ei.id = pui.supplier_id)
+        left join pharmacy_info pi2 on (pi2.id = pui.pharmacy_id)
         where
             1 = 1
         <if test="purchaseInfo.code != null and purchaseInfo.code != ''">

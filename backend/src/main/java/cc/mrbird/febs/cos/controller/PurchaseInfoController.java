@@ -36,6 +36,17 @@ public class PurchaseInfoController {
     }
 
     /**
+     * 收货
+     *
+     * @param id 采购ID
+     * @return 结果
+     */
+    @GetMapping("/receipt/{id}")
+    public R receipt(@PathVariable("id") Integer id) throws Exception {
+        return R.ok(purchaseInfoService.receipt(id));
+    }
+
+    /**
      * 采购单详情-药品物流
      *
      * @param purchaseId 采购ID
