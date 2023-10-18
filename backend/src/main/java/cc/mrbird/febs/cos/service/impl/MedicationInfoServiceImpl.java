@@ -1,16 +1,19 @@
 package cc.mrbird.febs.cos.service.impl;
 
 import cc.mrbird.febs.common.exception.FebsException;
+import cc.mrbird.febs.cos.dao.UserInfoMapper;
 import cc.mrbird.febs.cos.entity.MedicationInfo;
 import cc.mrbird.febs.cos.dao.MedicationInfoMapper;
 import cc.mrbird.febs.cos.entity.OrderDetail;
 import cc.mrbird.febs.cos.entity.OrderInfo;
+import cc.mrbird.febs.cos.entity.UserInfo;
 import cc.mrbird.febs.cos.entity.vo.OrderDetailVo;
 import cc.mrbird.febs.cos.entity.vo.OrderSubVo;
 import cc.mrbird.febs.cos.service.IMedicationInfoService;
 import cc.mrbird.febs.cos.service.IOrderDetailService;
 import cc.mrbird.febs.cos.service.IOrderInfoService;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -35,6 +38,8 @@ public class MedicationInfoServiceImpl extends ServiceImpl<MedicationInfoMapper,
     private final IOrderInfoService orderInfoService;
 
     private final IOrderDetailService orderDetailService;
+
+    private final UserInfoMapper userInfoMapper;
 
     /**
      * 分页获取电子处方信息
@@ -63,6 +68,8 @@ public class MedicationInfoServiceImpl extends ServiceImpl<MedicationInfoMapper,
         Map<Integer, List<OrderSubVo>> orderSubMap = orderSubVos.stream().collect(Collectors.groupingBy(OrderSubVo::getPharmacyId));
         // 添加的订单详情
         List<OrderDetail> orderDetailList = new ArrayList<>();
+        // 用户信息
+        UserInfo userInfo = userInfoMapper.selectById(medicationInfo.getUserId());
 
         orderSubMap.forEach((key, value) -> {
             OrderInfo orderItem = new OrderInfo();
@@ -84,7 +91,12 @@ public class MedicationInfoServiceImpl extends ServiceImpl<MedicationInfoMapper,
                 totalCost = totalCost.add(orderDetail.getAllPrice());
                 orderDetailList.add(orderDetail);
             }
-            orderItem.setTotalCost(totalCost);
+            // 如果用户为会员 打折
+            if (userInfo != null && userInfo.getIsMember() == 1) {
+                orderItem.setTotalCost(NumberUtil.mul(totalCost, 0.8));
+            } else {
+                orderItem.setTotalCost(totalCost);
+            }
             orderInfoService.updateById(orderItem);
             medicationInfo.setOrderCode(orderItem.getCode());
             medicationInfo.setStatus(1);
