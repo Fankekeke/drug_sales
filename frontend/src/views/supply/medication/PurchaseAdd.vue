@@ -80,7 +80,7 @@
               <span>{{ record.dosageForm }}</span>
             </template>
             <template slot="reserveShow" slot-scope="text, record">
-              <a-input-number v-model="record.reserve" :min="1" :step="1"/>
+              <a-input-number v-model="record.total" :min="1" :step="1"/>
             </template>
             <template slot="priceShow" slot-scope="text, record">
               <span>{{ record.unitPrice }}元</span>
@@ -148,7 +148,7 @@ export default {
         scopedSlots: {customRender: 'nameShow'}
       }, {
         title: '数量',
-        dataIndex: 'reserve',
+        dataIndex: 'total',
         scopedSlots: {customRender: 'reserveShow'}
       }, {
         title: '所属品牌',
@@ -199,6 +199,7 @@ export default {
             record.dosageForm = e.dosageForm
             record.unitPrice = e.unitPrice
             record.drugId = e.id
+            record.pharmacyId = e.pharmacyId
             console.log(record)
           }
         })
@@ -215,7 +216,7 @@ export default {
       }
     },
     dataAdd () {
-      this.dataList.push({drugId: null, reserve: 1, brand: '', classification: '', dosageForm: '', unitPrice: ''})
+      this.dataList.push({drugId: null, total: 1, brand: '', classification: '', dosageForm: '', unitPrice: ''})
     },
     getDrug (pharmacyId) {
       this.$get(`/cos/pharmacy-inventory/detail/pharmacy/${pharmacyId}`).then((r) => {
@@ -288,6 +289,8 @@ export default {
         values.drugString = JSON.stringify(this.dataList)
         if (!err) {
           this.loading = true
+          values.id = this.purchaseData.id
+          values.userId = this.purchaseData.userId
           this.$post('/cos/medication-info/checkMedication', {
             ...values
           }).then((r) => {
