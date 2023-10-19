@@ -5,11 +5,13 @@ import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.UserInfo;
 import cc.mrbird.febs.cos.service.IUserInfoService;
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Wrapper;
 import java.util.Date;
 import java.util.List;
 
@@ -44,6 +46,11 @@ public class UserInfoController {
     @GetMapping("/detail/{id}")
     public R detail(@PathVariable("id") Integer id) {
         return R.ok(userInfoService.detail(id));
+    }
+
+    @GetMapping("/audit")
+    public R audit(@RequestParam("id") Integer id, @RequestParam("status") Integer status) {
+        return R.ok(userInfoService.update(Wrappers.<UserInfo>lambdaUpdate().set(UserInfo::getIsMember, status).eq(UserInfo::getId, id)));
     }
 
     /**

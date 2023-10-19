@@ -92,7 +92,7 @@ public class MedicationInfoServiceImpl extends ServiceImpl<MedicationInfoMapper,
                 orderDetailList.add(orderDetail);
             }
             // 如果用户为会员 打折
-            if (userInfo != null && userInfo.getIsMember() == 1) {
+            if (userInfo != null && userInfo.getIsMember() != null && userInfo.getIsMember() == 1) {
                 orderItem.setTotalCost(NumberUtil.mul(totalCost, 0.8));
             } else {
                 orderItem.setTotalCost(totalCost);

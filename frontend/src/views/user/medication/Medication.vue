@@ -7,15 +7,7 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="客户名称"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.name"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="客户编号"
+                label="处方单号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.code"/>
@@ -23,10 +15,21 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="联系方式"
+                label="病因"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.phone"/>
+                <a-input v-model="queryParams.checkIssuer"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item
+                label="内容"
+                :labelCol="{span: 5}"
+                :wrapperCol="{span: 18, offset: 1}">
+                <a-select v-model="queryParams.status" allowClear>
+                  <a-select-option value="0">未处理</a-select-option>
+                  <a-select-option value="1">已处理</a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
           </div>
@@ -39,6 +42,7 @@
     </div>
     <div>
       <div class="operator">
+        <a-button type="primary" ghost @click="add">添加处方</a-button>
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -52,6 +56,8 @@
                @change="handleTableChange">
         <template slot="titleShow" slot-scope="text, record">
           <template>
+            <a-badge status="processing" v-if="record.rackUp === 1"/>
+            <a-badge status="error" v-if="record.rackUp === 0"/>
             <a-tooltip>
               <template slot="title">
                 {{ record.title }}
@@ -60,32 +66,71 @@
             </a-tooltip>
           </template>
         </template>
+        <template slot="contentShow" slot-scope="text, record">
+          <template>
+            <a-tooltip>
+              <template slot="title">
+                {{ record.content }}
+              </template>
+              {{ record.content.slice(0, 30) }} ...
+            </a-tooltip>
+          </template>
+        </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon v-if="record.isMember == 1" type="caret-down" @click="audit(record.id, 0)" title="取 消" style="margin-right: 10px"></a-icon>
-          <a-icon v-if="record.isMember == null || record.isMember == 0" type="caret-up" @click="audit(record.id, 1)" title="设 置" style="margin-right: 10px"></a-icon>
+          <a-icon v-if="record.status == 1" type="cloud" @click="handleViewOpen(record)" title="详 情" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
+    <medication-add
+      v-if="medicationAdd.visiable"
+      @close="handlemedicationAddClose"
+      @success="handlemedicationAddSuccess"
+      :medicationAddVisiable="medicationAdd.visiable">
+    </medication-add>
+    <purchase-add
+      v-if="purchaseAdd.visiable"
+      @close="handlepurchaseAddClose"
+      @success="handlepurchaseAddSuccess"
+      :purchaseAddVisiable="purchaseAdd.visiable"
+      :purchaseData="purchaseAdd.data">
+    </purchase-add>
+    <order-view
+      @close="handleorderViewClose"
+      :orderShow="orderView.visiable"
+      :medicationData="orderView.data">
+    </order-view>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
+import medicationAdd from './MedicationAdd.vue'
+import orderView from './OrderView.vue'
+import medicationEdit from './MedicationEdit.vue'
+import purchaseAdd from './PurchaseAdd.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
-  name: 'user',
-  components: {RangeDate},
+  name: 'medication',
+  components: {medicationAdd, medicationEdit, purchaseAdd, orderView, RangeDate},
   data () {
     return {
       advanced: false,
-      userAdd: {
+      medicationAdd: {
         visiable: false
       },
-      userEdit: {
+      medicationEdit: {
         visiable: false
+      },
+      orderView: {
+        visiable: false,
+        data: null
+      },
+      purchaseAdd: {
+        visiable: false,
+        data: null
       },
       queryParams: {},
       filteredInfo: null,
@@ -111,44 +156,61 @@ export default {
     }),
     columns () {
       return [{
-        title: '客户名称',
-        dataIndex: 'name'
+        title: '处方单号',
+        dataIndex: 'code'
       }, {
-        title: '会员',
-        dataIndex: 'isMember',
-        customRender: (text, row, index) => {
-          switch (text) {
-            case 1:
-              return <a-tag color="green">是</a-tag>
-            case 0:
-              return <a-tag color="red">否</a-tag>
-            default:
-              return '- -'
-          }
-        }
+        title: '病因',
+        dataIndex: 'cause'
       }, {
-        title: '联系方式',
-        dataIndex: 'phone'
+        title: '用户名称',
+        dataIndex: 'userName'
+      }, {
+        title: '电子邮箱',
+        dataIndex: 'mail'
       }, {
         title: '收获地址',
         dataIndex: 'address'
       }, {
-        title: '省份',
-        dataIndex: 'province'
+        title: '出具人',
+        dataIndex: 'checkIssuer',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
+      },  {
+        title: '出具机构',
+        dataIndex: 'checkAgency',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        }
       }, {
-        title: '城市',
-        dataIndex: 'city'
-      }, {
-        title: '区',
-        dataIndex: 'area'
-      }, {
-        title: '注册时间',
+        title: '发布时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
           } else {
             return '- -'
+          }
+        }
+      }, {
+        title: '状态',
+        dataIndex: 'status',
+        customRender: (text, row, index) => {
+          switch (text) {
+            case 0:
+              return <a-tag color='red'>未处理</a-tag>
+            case 1:
+              return <a-tag color='green'>已处理</a-tag>
+            default:
+              return '- -'
           }
         }
       }, {
@@ -162,17 +224,20 @@ export default {
     this.fetch()
   },
   methods: {
-    audit (id, status) {
-      this.$get('/cos/user-info/audit', {id, status}).then((r) => {
-        this.$message.success('修改成功')
-        this.search()
-      })
+    handleViewOpen (row) {
+      this.orderView.data = row
+      this.orderView.visiable = true
     },
-    editStatus (row, status) {
-      this.$post('/cos/user-info/account/status', { staffId: row.id, status }).then((r) => {
-        this.$message.success('修改成功')
-        this.fetch()
-      })
+    handleorderViewClose () {
+      this.orderView.visiable = false
+    },
+    handlepurchaseAddClose () {
+      this.purchaseAdd.visiable = false
+    },
+    handlepurchaseAddSuccess () {
+      this.purchaseAdd.visiable = false
+      this.$message.success('新增成功')
+      this.search()
     },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
@@ -181,26 +246,26 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.userAdd.visiable = true
+      this.medicationAdd.visiable = true
     },
-    handleuserAddClose () {
-      this.userAdd.visiable = false
+    handlemedicationAddClose () {
+      this.medicationAdd.visiable = false
     },
-    handleuserAddSuccess () {
-      this.userAdd.visiable = false
-      this.$message.success('新增产品成功')
+    handlemedicationAddSuccess () {
+      this.medicationAdd.visiable = false
+      this.$message.success('新增处方成功')
       this.search()
     },
     edit (record) {
-      this.$refs.userEdit.setFormValues(record)
-      this.userEdit.visiable = true
+      this.purchaseAdd.data = record
+      this.purchaseAdd.visiable = true
     },
-    handleuserEditClose () {
-      this.userEdit.visiable = false
+    handlemedicationEditClose () {
+      this.medicationEdit.visiable = false
     },
-    handleuserEditSuccess () {
-      this.userEdit.visiable = false
-      this.$message.success('修改产品成功')
+    handlemedicationEditSuccess () {
+      this.medicationEdit.visiable = false
+      this.$message.success('修改处方成功')
       this.search()
     },
     handleDeptChange (value) {
@@ -218,7 +283,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/user-info/' + ids).then(() => {
+          that.$delete('/cos/medication-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -288,10 +353,11 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      if (params.type === undefined) {
-        delete params.type
+      if (params.status === undefined) {
+        delete params.status
       }
-      this.$get('/cos/user-info/page', {
+      params.userId = this.currentUser.userId
+      this.$get('/cos/medication-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data
