@@ -206,4 +206,27 @@
           AND ui.user_id = #{userId}
           AND li.current_logistics = 1
     </select>
+
+    <!-- 根据时间获取订单信息 -->
+    <select id="selectOrderByCheckMonth" resultType="cc.mrbird.febs.cos.entity.OrderInfo">
+        select
+        oi.id,
+        oi.code,
+        oi.pharmacy_id,
+        oi.total_cost,
+        oi.user_id,
+        oi.create_date,
+        oi.logistics_id,
+        oi.order_status,
+        ui.name,
+        ui.phone,
+        ui.address AS userAddress
+        from
+        order_info oi
+        left join user_info ui on
+        (ui.id = oi.user_id)
+        where
+        DATE_FORMAT( oi.create_date, '%Y' ) = #{year}
+        and DATE_FORMAT( oi.create_date, '%m' ) = #{month}
+    </select>
 </mapper>

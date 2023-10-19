@@ -1,5 +1,7 @@
 package cc.mrbird.febs.cos.service.impl;
 
+import cc.mrbird.febs.common.exception.FebsException;
+import cc.mrbird.febs.cos.dao.OrderDetailMapper;
 import cc.mrbird.febs.cos.dao.OrderEvaluateMapper;
 import cc.mrbird.febs.cos.dao.OrderInfoMapper;
 import cc.mrbird.febs.cos.entity.*;
@@ -7,6 +9,8 @@ import cc.mrbird.febs.cos.dao.PharmacyInfoMapper;
 import cc.mrbird.febs.cos.entity.vo.EvaluateRankVo;
 import cc.mrbird.febs.cos.service.*;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -37,6 +41,8 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
     private final IDrugInfoService drugInfoService;
 
     private final OrderInfoMapper orderInfoMapper;
+
+    private final OrderDetailMapper orderDetailMapper;
 
     private final PharmacyInfoMapper pharmacyInfoMapper;
 
@@ -339,6 +345,75 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
         result.put("orderPriceWithinDays", orderInfoMapper.selectOrderPriceWithinDays(null));
         // 订单销售药品类别统计
         result.put("orderDrugType", orderInfoMapper.selectOrderDrugType());
+        return result;
+    }
+
+    /**
+     * 根据月份获取药品统计情况
+     *
+     * @param date 日期
+     * @return 结果
+     */
+    @Override
+    public LinkedHashMap<String, Object> selectStatisticsByMonth(String date) throws FebsException {
+        if (StrUtil.isEmpty(date)) {
+            throw new FebsException("参数不能为空");
+        }
+
+        int year = DateUtil.year(DateUtil.parseDate(date));
+        int month = DateUtil.month(DateUtil.parseDate(date)) + 1;
+
+        // 返回数据
+        LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>() {
+            {
+                put("num", Collections.emptyList());
+                put("price", Collections.emptyList());
+            }
+        };
+
+        // 获取订单详情
+        List<OrderInfo> orderList = orderInfoMapper.selectOrderByCheckMonth(year, month);
+        if (CollectionUtil.isEmpty(orderList)) {
+            return result;
+        }
+
+        List<Map<String, Object>> numMap = new ArrayList<>();
+        List<Map<String, Object>> priceMap = new ArrayList<>();
+
+        List<Integer> orderIds = orderList.stream().map(OrderInfo::getId).collect(Collectors.toList());
+        List<OrderDetail> detailList = orderDetailMapper.selectList(Wrappers.<OrderDetail>lambdaQuery().eq(OrderDetail::getOrderId, orderIds));
+        // 按药品ID分组
+        Map<Integer, List<OrderDetail>> drugDetailMap = detailList.stream().collect(Collectors.groupingBy(OrderDetail::getDrugId));
+
+        // 药品信息
+        List<DrugInfo> drugInfoList = (List<DrugInfo>) drugInfoService.listByIds(drugDetailMap.keySet());
+        Map<Integer, String> drugMap = drugInfoList.stream().collect(Collectors.toMap(DrugInfo::getId, DrugInfo::getName));
+
+        drugDetailMap.forEach((key, value) -> {
+            String drugName = drugMap.get(key);
+            Map<String, Object> numItem = new HashMap<String, Object>() {
+                {
+                    put("name", drugName);
+                }
+            };
+            Map<String, Object> priceItem = new HashMap<String, Object>() {
+                {
+                    put("name", drugName);
+                }
+            };
+            // 本月药品销售数量统计
+            int num = value.stream().map(OrderDetail::getQuantity).reduce(0, Integer::sum);
+            numItem.put("value", num);
+
+            // 本月药品销售金额统计
+            BigDecimal price = value.stream().map(OrderDetail::getAllPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+            priceItem.put("value", price);
+            numMap.add(numItem);
+            priceMap.add(priceItem);
+        });
+
+        result.put("num", numMap);
+        result.put("price", priceMap);
         return result;
     }
 }

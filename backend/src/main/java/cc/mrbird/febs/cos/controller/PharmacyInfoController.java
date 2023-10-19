@@ -1,6 +1,7 @@
 package cc.mrbird.febs.cos.controller;
 
 
+import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.PharmacyInfo;
 import cc.mrbird.febs.cos.service.IPharmacyInfoService;
@@ -81,6 +82,17 @@ public class PharmacyInfoController {
     @GetMapping("/home/data")
     public R selectHomeData() {
         return R.ok(pharmacyInfoService.homeData());
+    }
+
+    /**
+     * 根据月份获取药品统计情况
+     *
+     * @param date 日期
+     * @return 结果
+     */
+    @GetMapping("/selectStatisticsByMonth")
+    public R selectStatisticsByMonth(@RequestParam("date") String date) throws FebsException {
+        return R.ok(pharmacyInfoService.selectStatisticsByMonth(date));
     }
 
     /**

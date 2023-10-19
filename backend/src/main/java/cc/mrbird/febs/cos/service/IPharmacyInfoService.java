@@ -1,5 +1,6 @@
 package cc.mrbird.febs.cos.service;
 
+import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.cos.entity.PharmacyInfo;
 import cc.mrbird.febs.cos.entity.PharmacyOrderRank;
 import cc.mrbird.febs.cos.entity.vo.EvaluateRankVo;
@@ -84,5 +85,13 @@ public interface IPharmacyInfoService extends IService<PharmacyInfo> {
      * @return 结果
      */
     LinkedHashMap<String, Object> homeData();
+
+    /**
+     * 根据月份获取药品统计情况
+     *
+     * @param date 日期
+     * @return 结果
+     */
+    LinkedHashMap<String, Object> selectStatisticsByMonth(String date) throws FebsException;
 
 }

@@ -73,4 +73,13 @@ public interface OrderInfoMapper extends BaseMapper<OrderInfo> {
      * @return 结果
      */
     List<LinkedHashMap<String, Object>> selectOrderLogistics(@Param("userId") Integer userId);
+
+    /**
+     * 根据时间获取订单信息
+     *
+     * @param year  年度
+     * @param month 月度
+     * @return 结果
+     */
+    List<OrderInfo> selectOrderByCheckMonth(@Param("year") Integer year, @Param("month") Integer month);
 }
