@@ -381,7 +381,7 @@ public class PharmacyInfoServiceImpl extends ServiceImpl<PharmacyInfoMapper, Pha
         List<Map<String, Object>> priceMap = new ArrayList<>();
 
         List<Integer> orderIds = orderList.stream().map(OrderInfo::getId).collect(Collectors.toList());
-        List<OrderDetail> detailList = orderDetailMapper.selectList(Wrappers.<OrderDetail>lambdaQuery().eq(OrderDetail::getOrderId, orderIds));
+        List<OrderDetail> detailList = orderDetailMapper.selectList(Wrappers.<OrderDetail>lambdaQuery().in(OrderDetail::getOrderId, orderIds));
         // 按药品ID分组
         Map<Integer, List<OrderDetail>> drugDetailMap = detailList.stream().collect(Collectors.groupingBy(OrderDetail::getDrugId));
 
