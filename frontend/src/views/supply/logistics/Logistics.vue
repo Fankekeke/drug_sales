@@ -42,7 +42,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">药品采购</a-button>
+<!--        <a-button type="primary" ghost @click="add">药品采购</a-button>-->
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -79,16 +79,10 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon type="file-search" @click="orderViewOpen(record)" title="详 情"></a-icon>
-<!--          <a-icon v-if="record.status == 1" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="物流添加" style="margin-left: 15px"></a-icon>-->
+          <a-icon v-if="record.status == 1" type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="物流添加" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
-    <purchase-add
-      v-if="purchaseAdd.visiable"
-      @close="handlepurchaseAddClose"
-      @success="handlepurchaseAddSuccess"
-      :purchaseAddVisiable="purchaseAdd.visiable">
-    </purchase-add>
     <purchase-view
       @close="handleViewClose"
       :purchaseShow="purchaseView.visiable"
@@ -105,7 +99,6 @@
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import purchaseAdd from './PurchaseAdd.vue'
 import purchaseView from './PurchaseView.vue'
 import logisticsEdit from './LogisticsEdit'
 import {mapState} from 'vuex'
@@ -114,7 +107,7 @@ moment.locale('zh-cn')
 
 export default {
   name: 'purchase',
-  components: {purchaseAdd, purchaseView, logisticsEdit, RangeDate},
+  components: {purchaseView, logisticsEdit, RangeDate},
   data () {
     return {
       advanced: false,
@@ -158,7 +151,7 @@ export default {
         title: '采购单号',
         dataIndex: 'code'
       }, {
-        title: '药店名称',
+        title: '采购药店',
         dataIndex: 'pharmacyName'
       }, {
         title: '图片',
@@ -213,27 +206,7 @@ export default {
           }
         }
       }, {
-        title: '统一社会信用代码',
-        dataIndex: 'creditCode',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '所属行业',
-        dataIndex: 'industry',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '创建时间',
+        title: '采购时间',
         dataIndex: 'createDate',
         customRender: (text, row, index) => {
           if (text !== null) {
