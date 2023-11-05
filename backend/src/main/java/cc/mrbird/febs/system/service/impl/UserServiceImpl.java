@@ -233,6 +233,38 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userManager.loadUserRedisCache(user);
     }
 
+    /**
+     * 添加用户
+     *
+     * @param username 用户名
+     * @param password 密码
+     */
+    @Override
+    public void registNewUser(String username, String password, UserInfo userInfo) throws Exception {
+
+        User user = new User();
+        user.setPassword(MD5Util.encrypt(username, password));
+        user.setUsername(username);
+        user.setCreateTime(new Date());
+        user.setStatus(User.STATUS_VALID);
+        user.setSsex(User.SEX_UNKNOW);
+        user.setAvatar(User.DEFAULT_AVATAR);
+        user.setDescription("注册用户");
+        this.save(user);
+        userInfo.setUserId(user.getUserId());
+        userInfoService.save(userInfo);
+
+        UserRole ur = new UserRole();
+        ur.setUserId(user.getUserId());
+        ur.setRoleId(75L); // 注册用户角色 ID
+        this.userRoleMapper.insert(ur);
+
+        // 创建用户默认的个性化配置
+        userConfigService.initDefaultUserConfig(String.valueOf(user.getUserId()));
+        // 将用户相关信息保存到 Redis中
+        userManager.loadUserRedisCache(user);
+    }
+
     @Override
     @Transactional
     public void resetPassword(String[] usernames) throws Exception {

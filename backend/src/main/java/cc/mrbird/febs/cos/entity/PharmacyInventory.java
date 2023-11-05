@@ -48,6 +48,21 @@ public class PharmacyInventory implements Serializable {
      */
     private Integer shelfStatus;
 
+    /**
+     * 保质期-开始
+     */
+    private String startDate;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * 保质期-结束
+     */
+    private String endDate;
+
     @TableField(exist = false)
     private String pharmacyName;
 

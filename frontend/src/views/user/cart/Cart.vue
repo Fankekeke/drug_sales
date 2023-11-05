@@ -15,7 +15,7 @@
               <img :src="'http://127.0.0.1:9527/imagesWeb/'+item" style="width: 100%;height: 250px">
             </div>
           </a-carousel>
-          <a-card-meta :title="item.drugName" :description="item.pharmacyName.slice(0, 25)+'...'" style="margin-top: 10px"></a-card-meta>
+          <a-card-meta :title="item.drugName + ' 【'+ item.reserve +'件】'" :description="item.pharmacyName.slice(0, 25)+'...'" style="margin-top: 10px"></a-card-meta>
           <div style="font-size: 12px;font-family: SimHei;margin-top: 8px">
             <span>{{ item.brand }}</span> |
             <span  style="margin-left: 2px">{{ item.dosageForm }}</span> |

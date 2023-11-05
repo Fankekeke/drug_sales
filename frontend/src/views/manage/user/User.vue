@@ -39,6 +39,7 @@
     </div>
     <div>
       <div class="operator">
+        <a-button type="primary" ghost @click="add">新增</a-button>
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -61,23 +62,45 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
+          <a-icon type="cloud" @click="handleUserViewOpen(record)" title="详 情" style="margin-right: 10px"></a-icon>
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-right: 10px"></a-icon>
           <a-icon v-if="record.isMember == 1" type="caret-down" @click="audit(record.id, 0)" title="取 消" style="margin-right: 10px"></a-icon>
           <a-icon v-if="record.isMember == null || record.isMember == 0" type="caret-up" @click="audit(record.id, 1)" title="设 置" style="margin-right: 10px"></a-icon>
         </template>
       </a-table>
     </div>
+    <user-add
+      v-if="userAdd.visiable"
+      @close="handleuserAddClose"
+      @success="handleuserAddSuccess"
+      :userAddVisiable="userAdd.visiable">
+    </user-add>
+    <user-edit
+      ref="userEdit"
+      @close="handleuserEditClose"
+      @success="handleuserEditSuccess"
+      :userEditVisiable="userEdit.visiable">
+    </user-edit>
+    <user-view
+      @close="handleUserViewClose"
+      :userShow="userView.visiable"
+      :userData="userView.data">
+    </user-view>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
+import userAdd from './UserAdd.vue'
+import userEdit from './UserEdit.vue'
+import userView from './UserView.vue'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
   name: 'user',
-  components: {RangeDate},
+  components: {RangeDate, userAdd, userEdit, userView},
   data () {
     return {
       advanced: false,
@@ -86,6 +109,10 @@ export default {
       },
       userEdit: {
         visiable: false
+      },
+      userView: {
+        visiable: false,
+        data: null
       },
       queryParams: {},
       filteredInfo: null,
@@ -162,6 +189,13 @@ export default {
     this.fetch()
   },
   methods: {
+    handleUserViewOpen (row) {
+      this.userView.data = row
+      this.userView.visiable = true
+    },
+    handleUserViewClose () {
+      this.userView.visiable = false
+    },
     audit (id, status) {
       this.$get('/cos/user-info/audit', {id, status}).then((r) => {
         this.$message.success('修改成功')
@@ -188,7 +222,7 @@ export default {
     },
     handleuserAddSuccess () {
       this.userAdd.visiable = false
-      this.$message.success('新增产品成功')
+      this.$message.success('新增用户成功')
       this.search()
     },
     edit (record) {

@@ -4,7 +4,9 @@ package cc.mrbird.febs.cos.controller;
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.UserInfo;
 import cc.mrbird.febs.cos.service.IUserInfoService;
+import cc.mrbird.febs.system.service.UserService;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class UserInfoController {
 
     private final IUserInfoService userInfoService;
 
+    private final UserService userService;
     /**
      * 分页获取用户信息
      *
@@ -70,10 +73,13 @@ public class UserInfoController {
      * @return 结果
      */
     @PostMapping
-    public R save(UserInfo userInfo) {
-        userInfo.setCode("UR-" + System.currentTimeMillis());
+    public R save(UserInfo userInfo) throws Exception {
+        String id = StrUtil.toString(System.currentTimeMillis());
+        userInfo.setCode("UR-" + id);
         userInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(userInfoService.save(userInfo));
+
+        userService.registNewUser(id, "1234qwer", userInfo);
+        return R.ok();
     }
 
     /**

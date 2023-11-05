@@ -52,6 +52,17 @@ public class MedicationInfoController {
     }
 
     /**
+     * 根据用户获取电子处方
+     *
+     * @param userId 用户ID
+     * @return 结果
+     */
+    @GetMapping("/list/byUser/{userId}")
+    public R listByUserId(@PathVariable("userId") Integer userId) {
+        return R.ok(medicationInfoService.list(Wrappers.<MedicationInfo>lambdaQuery().eq(MedicationInfo::getUserId, userId)));
+    }
+
+    /**
      * 新增电子处方信息
      *
      * @param medicationInfo 电子处方信息

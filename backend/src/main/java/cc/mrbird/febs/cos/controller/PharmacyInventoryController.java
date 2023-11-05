@@ -5,11 +5,16 @@ import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.PharmacyInventory;
 import cc.mrbird.febs.cos.entity.vo.InventoryVo;
 import cc.mrbird.febs.cos.service.IPharmacyInventoryService;
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,6 +36,19 @@ public class PharmacyInventoryController {
     @GetMapping("/drug/list")
     public R selectPharmacyDrugList(@RequestParam(value = "key", required = false) String key) {
         return R.ok(pharmacyInventoryService.selectPharmacyDrugList(key));
+    }
+
+    /**
+     * 药品上下架
+     *
+     * @param id     库存ID
+     * @param status 状态
+     * @return 结果
+     */
+    @GetMapping("/audit")
+    public R audit(Integer id, Integer status, @RequestParam(value = "remark", required = false) String remark) {
+        return R.ok(pharmacyInventoryService.update(Wrappers.<PharmacyInventory>lambdaUpdate().set(PharmacyInventory::getShelfStatus, status)
+                .set(StrUtil.isNotEmpty(remark), PharmacyInventory::getRemark, remark).eq(PharmacyInventory::getId, id)));
     }
 
     /**
@@ -121,6 +139,19 @@ public class PharmacyInventoryController {
     @PostMapping
     public R save(PharmacyInventory pharmacyInventory) {
         return R.ok(pharmacyInventoryService.save(pharmacyInventory));
+    }
+
+    /**
+     * 修改保质期时间
+     *
+     * @param pharmacyInventory xx
+     * @return 结果
+     */
+    @PutMapping("/date/put")
+    public R updateDate(PharmacyInventory pharmacyInventory) {
+        // 判断结束日期是否小于今天
+        pharmacyInventoryService.updateById(pharmacyInventory);
+        return R.ok(DateUtil.between(new Date(), DateUtil.parseDate(pharmacyInventory.getEndDate()), DateUnit.DAY, false));
     }
 
     /**
