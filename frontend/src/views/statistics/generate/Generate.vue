@@ -23,8 +23,6 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
-        <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -59,36 +57,22 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>
+          <a-icon type="bar-chart" @click="edit(record)" title="生成"></a-icon>
         </template>
       </a-table>
     </div>
-    <report-add
-      v-if="reportAdd.visiable"
-      @close="handlereportAddClose"
-      @success="handlereportAddSuccess"
-      :reportAddVisiable="reportAdd.visiable">
-    </report-add>
-    <report-edit
-      ref="reportEdit"
-      @close="handlereportEditClose"
-      @success="handlereportEditSuccess"
-      :reportEditVisiable="reportEdit.visiable">
-    </report-edit>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import reportAdd from './ReportAdd.vue'
-import reportEdit from './ReportEdit.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
   name: 'report',
-  components: {reportAdd, reportEdit, RangeDate},
+  components: {RangeDate},
   data () {
     return {
       advanced: false,

@@ -2,6 +2,9 @@ package cc.mrbird.febs.cos.entity;
 
 import java.time.LocalDate;
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -17,6 +20,12 @@ import lombok.experimental.Accessors;
 public class ReportInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 主键ID
+     */
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     /**
      * 编号
@@ -46,17 +55,17 @@ public class ReportInfo implements Serializable {
     /**
      * 开始时间
      */
-    private LocalDate startDate;
+    private String startDate;
 
     /**
      * 结束时间
      */
-    private LocalDate endDate;
+    private String endDate;
 
     /**
      * 报表生成时间
      */
-    private LocalDate createDate;
+    private String createDate;
 
     /**
      * 备注信息

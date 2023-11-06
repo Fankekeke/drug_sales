@@ -2,4 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.cos.dao.ReportInfoMapper">
 
+    <!-- 分页获取员工信息 -->
+    <select id="selectReportPage" resultType="java.util.LinkedHashMap">
+        SELECT
+            ri.*,
+            di.`name` AS drugName,
+            pi.`name` AS pharmacyName,
+            ui.`name` AS userName
+        FROM
+            report_info ri
+                LEFT JOIN drug_info di ON ( di.id = ri.drug_id )
+                LEFT JOIN pharmacy_info pi ON ( pi.id = ri.pharmacy_id )
+                LEFT JOIN user_info ui ON ( ui.id = ri.user_id )
+        WHERE
+            1 = 1
+        <if test="reportInfo.code != null and reportInfo.code != ''">
+            AND ri.code LIKE CONCAT('%',#{reportInfo.code},'%')
+        </if>
+        ORDER BY
+            ri.create_date DESC
+    </select>
 </mapper>

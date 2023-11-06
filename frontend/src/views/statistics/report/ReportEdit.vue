@@ -19,63 +19,47 @@
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='上传人' v-bind="formItemLayout">
-            <a-input v-decorator="[
-            'publisher',
-            { rules: [{ required: true, message: '请输入上传人!' }] }
-            ]"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label='报表类型' v-bind="formItemLayout">
-            <a-select v-decorator="[
-              'type',
-              { rules: [{ required: true, message: '请输入报表类型!' }] }
+          <a-form-item label='药店'>
+            <a-select @change="pharmacyCheck" v-decorator="[
+              'pharmacyId',
               ]">
-              <a-select-option value="1">通知</a-select-option>
-              <a-select-option value="2">报表</a-select-option>
+              <a-select-option :value="item.id" v-for="(item, index) in pharmacyList" :key="index">{{
+                  item.name
+                }}
+              </a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='报表状态' v-bind="formItemLayout">
-            <a-select v-decorator="[
-              'rackUp',
-              { rules: [{ required: true, message: '请输入报表状态!' }] }
+          <a-form-item label='药品'>
+            <a-select style="width: 100%" v-decorator="[
+              'drugId',
               ]">
-              <a-select-option value="0">下架</a-select-option>
-              <a-select-option value="1">已发布</a-select-option>
+              <a-select-option v-for="(item, index) in drugList" :key="index" :value="item.drugId">{{
+                  item.drugName
+                }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='用户'>
+            <a-select style="width: 100%" v-decorator="[
+              'userId',
+              ]">
+              <a-select-option v-for="(item, index) in userList" :key="index" :value="item.drugId">{{
+                  item.name
+                }}
+              </a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='报表内容' v-bind="formItemLayout">
+          <a-form-item label='备注' v-bind="formItemLayout">
             <a-textarea :rows="6" v-decorator="[
-            'content',
-             { rules: [{ required: true, message: '请输入名称!' }] }
+            'remark',
+             { rules: [{ required: true, message: '请输入内容!' }] }
             ]"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="24">
-          <a-form-item label='图册' v-bind="formItemLayout">
-            <a-upload
-              name="avatar"
-              action="http://127.0.0.1:9527/file/fileUpload/"
-              list-type="picture-card"
-              :file-list="fileList"
-              @preview="handlePreview"
-              @change="picHandleChange"
-            >
-              <div v-if="fileList.length < 8">
-                <a-icon type="plus" />
-                <div class="ant-upload-text">
-                  Upload
-                </div>
-              </div>
-            </a-upload>
-            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-              <img alt="example" style="width: 100%" :src="previewImage" />
-            </a-modal>
           </a-form-item>
         </a-col>
       </a-row>
@@ -124,10 +108,43 @@ export default {
       loading: false,
       fileList: [],
       previewVisible: false,
-      previewImage: ''
+      previewImage: '',
+      pharmacyInfo: null,
+      drugList: [],
+      pharmacyList: [],
+      userList: []
     }
   },
+  mounted () {
+    this.getUser()
+    this.getPharmacy()
+  },
   methods: {
+    pharmacyCheck (value) {
+      if (value) {
+        this.pharmacyList.forEach(e => {
+          if (e.id === value) {
+            this.getDrug(e.id)
+            this.pharmacyInfo = e
+          }
+        })
+      }
+    },
+    getDrug (pharmacyId) {
+      this.$get(`/cos/pharmacy-inventory/detail/pharmacy/${pharmacyId}`).then((r) => {
+        this.drugList = r.data.data
+      })
+    },
+    getPharmacy () {
+      this.$get('/cos/pharmacy-info/list').then((r) => {
+        this.pharmacyList = r.data.data
+      })
+    },
+    getUser () {
+      this.$get('/cos/user-info/list').then((r) => {
+        this.userList = r.data.data
+      })
+    },
     handleCancel () {
       this.previewVisible = false
     },
@@ -152,15 +169,18 @@ export default {
     },
     setFormValues ({...report}) {
       this.rowId = report.id
-      let fields = ['title', 'content', 'publisher', 'rackUp', 'type']
+      let fields = ['title', 'remark', 'pharmacyId', 'userId', 'drugId']
       let obj = {}
       Object.keys(report).forEach((key) => {
         if (key === 'images') {
           this.fileList = []
           this.imagesInit(report['images'])
         }
-        if (key === 'rackUp' || key === 'type') {
-          report[key] = report[key].toString()
+        if (key === 'drugId' && report[key] != null) {
+          this.getDrug(report['pharmacyId'])
+          setTimeout(() => {
+            report[key] = report[key].toString()
+          }, 500)
         }
         if (fields.indexOf(key) !== -1) {
           this.form.getFieldDecorator(key)
