@@ -31,7 +31,7 @@
     </div>
     <div>
       <div class="operator">
-<!--        <a-button type="primary" ghost @click="add">添加库存</a-button>-->
+        <a-button type="primary" ghost @click="add">添加库存</a-button>
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -197,30 +197,6 @@ export default {
               return '- -'
           }
         }
-      }, {
-        title: '保质期',
-        dataIndex: 'startDate',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return row.startDate + '~' + row.endDate
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '备注',
-        dataIndex: 'remark',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '操作',
-        dataIndex: 'operation',
-        scopedSlots: {customRender: 'operation'}
       }]
     }
   },
