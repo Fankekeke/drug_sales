@@ -110,6 +110,7 @@ public class EnterpriseInfoController {
     @PostMapping
     public R save(EnterpriseInfo enterpriseInfo) {
         enterpriseInfo.setCode("EP-" + System.currentTimeMillis());
+        enterpriseInfo.setName(StrUtil.cleanBlank(enterpriseInfo.getName()));
         enterpriseInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(enterpriseInfoService.save(enterpriseInfo));
     }

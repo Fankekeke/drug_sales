@@ -6,6 +6,7 @@ import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.PharmacyInfo;
 import cc.mrbird.febs.cos.service.IPharmacyInfoService;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,6 +147,7 @@ public class PharmacyInfoController {
     @PostMapping
     public R save(PharmacyInfo pharmacyInfo) {
         pharmacyInfo.setCode("PM-" + System.currentTimeMillis());
+        pharmacyInfo.setName(StrUtil.cleanBlank(pharmacyInfo.getName()));
         pharmacyInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(pharmacyInfoService.save(pharmacyInfo));
     }

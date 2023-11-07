@@ -77,7 +77,7 @@ public class UserInfoController {
         String id = StrUtil.toString(System.currentTimeMillis());
         userInfo.setCode("UR-" + id);
         userInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
-
+        userInfo.setName(StrUtil.cleanBlank(userInfo.getName()));
         userService.registNewUser(id, "1234qwer", userInfo);
         return R.ok();
     }

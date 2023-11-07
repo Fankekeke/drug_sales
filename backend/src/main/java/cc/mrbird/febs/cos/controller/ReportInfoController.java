@@ -6,6 +6,7 @@ import cc.mrbird.febs.cos.entity.ReportInfo;
 import cc.mrbird.febs.cos.service.IReportInfoService;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.ExcelWriter;
@@ -89,6 +90,7 @@ public class ReportInfoController {
     @PostMapping
     public R save(ReportInfo reportInfo) {
         reportInfo.setCode("STF-" + System.currentTimeMillis());
+        reportInfo.setTitle(StrUtil.cleanBlank(reportInfo.getTitle()));
         reportInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(reportInfoService.save(reportInfo));
     }

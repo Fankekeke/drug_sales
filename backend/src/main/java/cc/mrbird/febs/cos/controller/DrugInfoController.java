@@ -6,6 +6,7 @@ import cc.mrbird.febs.cos.entity.DrugInfo;
 import cc.mrbird.febs.cos.service.IDrugInfoService;
 import cc.mrbird.febs.cos.service.IPharmacyInfoService;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,7 @@ public class DrugInfoController {
     @PostMapping
     public R save(DrugInfo drugInfo) {
         drugInfo.setCode("DG-" + System.currentTimeMillis());
+        drugInfo.setName(StrUtil.cleanBlank(drugInfo.getName()));
         drugInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(drugInfoService.save(drugInfo));
     }

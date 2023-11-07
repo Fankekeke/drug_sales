@@ -5,6 +5,7 @@ import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.StaffInfo;
 import cc.mrbird.febs.cos.service.IStaffInfoService;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
@@ -76,6 +77,7 @@ public class StaffInfoController {
     @PostMapping
     public R save(StaffInfo staffInfo) {
         staffInfo.setCode("STF-" + System.currentTimeMillis());
+        staffInfo.setName(StrUtil.cleanBlank(staffInfo.getName()));
         staffInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(staffInfoService.save(staffInfo));
     }
