@@ -5,13 +5,29 @@ import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.ReportInfo;
 import cc.mrbird.febs.cos.service.IReportInfoService;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.EasyExcelFactory;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.enums.WriteDirectionEnum;
+import com.alibaba.excel.write.metadata.WriteSheet;
+import com.alibaba.excel.write.metadata.fill.FillConfig;
+import com.alibaba.excel.write.metadata.fill.FillWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -34,6 +50,13 @@ public class ReportInfoController {
     @GetMapping("/page")
     public R page(Page<ReportInfo> page, ReportInfo reportInfo) {
         return R.ok(reportInfoService.selectReportPage(page, reportInfo));
+    }
+
+    @PostMapping("/excel/fill")
+    public List<LinkedHashMap<String, Object>> fillTemplate(Integer id) throws IOException {
+        // 查询数据：
+        ReportInfo reportInfo = reportInfoService.getById(id);
+        return reportInfoService.selectOrderList(reportInfo);
     }
 
     /**

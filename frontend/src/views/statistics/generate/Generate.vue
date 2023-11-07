@@ -67,6 +67,7 @@
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
 import {mapState} from 'vuex'
+import { newSpread, floatForm, floatReset, saveExcel } from '@/utils/spreadJS'
 import moment from 'moment'
 moment.locale('zh-cn')
 
@@ -141,7 +142,7 @@ export default {
             return '- -'
           }
         }
-      },{
+      }, {
         title: '用户名称',
         dataIndex: 'userName',
         customRender: (text, row, index) => {
@@ -210,8 +211,18 @@ export default {
       this.search()
     },
     edit (record) {
-      this.$refs.reportEdit.setFormValues(record)
-      this.reportEdit.visiable = true
+      this.$message.loading('正在生成', 0)
+      this.$post('/cos/report-info/excel/fill', { id: record.id }).then((r) => {
+        let newData = []
+        r.data.forEach((item, index) => {
+          newData.push([item.code, item.name !== null ? item.name : '- -', item.phone !== null ? item.phone : '- -', item.userAddress !== null ? item.userAddress : '- -', item.pharmacyName !== null ? item.pharmacyName : '- -', item.drugName !== null ? item.drugName : '- -', item.quantity !== null ? item.quantity : '- -', item.unitPrice !== null ? item.unitPrice : '- -', item.createDate !== null ? item.createDate : '- -'])
+        })
+        let spread = newSpread('purchasePlan')
+        spread = floatForm(spread, 'purchasePlan', newData)
+        saveExcel(spread, '报表统计.xlsx')
+        floatReset(spread, 'purchasePlan', newData.length)
+        this.$message.destroy()
+      })
     },
     handlereportEditClose () {
       this.reportEdit.visiable = false
