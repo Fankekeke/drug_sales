@@ -47,7 +47,7 @@
             <a-select style="width: 100%" v-decorator="[
               'userId',
               ]">
-              <a-select-option v-for="(item, index) in userList" :key="index" :value="item.drugId">{{
+              <a-select-option v-for="(item, index) in userList" :key="index" :value="item.id">{{
                   item.name
                 }}
               </a-select-option>
