@@ -33,6 +33,12 @@ WebStorm OR VScode 编译器 [https://www.jianshu.com/p/d63b5bae9dff]
 安装所需文件 yarn install 
 运行 yarn run dev
 
+#### 后端启动方式
+
+1.首先启动redis，进入redis目录终端。输入redis-server回车
+2.导入sql文件，修改数据库与redis连接配置
+3.idea中启动后端项目
+
 ### 管理员
 公告管理，药品管理，库存统计，物流信息，订单详情，订单评价，订单信息，缴费记录，药店管理，药店库存，员工管理，用户管理，销售排行，库存预警，电子处方管理，供应商管理，药品采购->供应商，药品订单物品，销售统计
 
