@@ -31,7 +31,6 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -179,7 +178,7 @@ export default {
             case 1:
               return <a-tag color="green">在职</a-tag>
             case 2:
-              return <a-tag color="red">离职</a-tag>
+              return <a-tag color="red">离职 {row.resignDate}</a-tag>
             default:
               return '- -'
           }

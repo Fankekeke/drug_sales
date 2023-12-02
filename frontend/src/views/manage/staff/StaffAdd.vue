@@ -40,18 +40,29 @@
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='在职状态' v-bind="formItemLayout">
+          <a-form-item label='职位' v-bind="formItemLayout">
             <a-radio-group button-style="solid" v-decorator="[
-              'status',
-              { rules: [{ required: true, message: '请输入在职状态!' }] }
+              'position',
+              { rules: [{ required: true, message: '请输入职位!' }] }
               ]">
               <a-radio-button value="1">
-                在职
+                店长
               </a-radio-button>
               <a-radio-button value="2">
-                离职
+                药师
+              </a-radio-button>
+              <a-radio-button value="3">
+                普通员工
               </a-radio-button>
             </a-radio-group>
+          </a-form-item>
+        </a-col>
+        <a-col :span="8">
+          <a-form-item label="薪资">
+            <a-input-number style="width: 100%" v-decorator="[
+              'salary', { rules: [{ required: true, message: '请填写薪资!' }] }
+              ]"
+            />
           </a-form-item>
         </a-col>
         <a-col :span="12">
@@ -179,6 +190,7 @@ export default {
         })
         if (!err) {
           values.images = images.length > 0 ? images.join(',') : null
+          values.status = 1
           this.loading = true
           this.$post('/cos/staff-info', {
             ...values

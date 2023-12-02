@@ -90,6 +90,9 @@ public class StaffInfoController {
      */
     @PutMapping
     public R edit(StaffInfo staffInfo) {
+        if (staffInfo.getStatus() == 2) {
+            staffInfo.setResignDate(DateUtil.formatDateTime(new Date()));
+        }
         return R.ok(staffInfoService.updateById(staffInfo));
     }
 
