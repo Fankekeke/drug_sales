@@ -1,5 +1,6 @@
 package cc.mrbird.febs.cos.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 
@@ -77,4 +78,18 @@ public class StaffInfo implements Serializable {
      */
     private Integer isAdmin;
 
+    /**
+     * 离职时间
+     */
+    private String resignDate;
+
+    /**
+     * 工资
+     */
+    private BigDecimal salary;
+
+    /**
+     * 职位（1.店长 2.药师 3.普通员工）
+     */
+    private String position;
 }
