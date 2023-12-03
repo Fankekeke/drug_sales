@@ -11,36 +11,29 @@
         <a-col :span="8"><b>员工姓名：</b>
           <a-popover>
             <template slot="content">
-              <a-avatar v-if="staffInfo.avatar !== null" shape="square" :size="132" icon="user" :src="'http://127.0.0.1:9527/imagesWeb/' + staffInfo.avatar" />
+              <a-avatar v-if="staffInfo.images !== null" shape="square" :size="132" icon="user" :src="'http://127.0.0.1:9527/imagesWeb/' + staffInfo.images" />
               <a-avatar v-else shape="square" :size="132" icon="user" />
             </template>
-            <a>{{ staffInfo.staffName !== null ? staffInfo.staffName : '- -' }}</a>
+            <a>{{ staffInfo.name !== null ? staffInfo.name : '- -' }}</a>
           </a-popover>
         </a-col>
-        <a-col :span="8"><b>联系方式：</b>
-          <a-tooltip>
-            <template slot="title">
-              {{ staffInfo.email }}
-            </template>
-            {{ staffInfo.email.slice(0, 8) }} ...
-          </a-tooltip>
+        <a-col :span="8"><b>员工编号：</b>
+          {{ staffInfo.code }}
         </a-col>
         <a-col :span="8"><b>性别：</b>
-          <span v-if="staffInfo.staffSex === 1">男</span>
-          <span v-if="staffInfo.staffSex === 2">女</span>
+          <span v-if="staffInfo.sex == 1">男</span>
+          <span v-if="staffInfo.sex == 2">女</span>
         </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col :span="8"><b>员工职务：</b>
-          <span v-if="staffInfo.staffType === 1">售货员</span>
-          <span v-if="staffInfo.staffType === 2">理货员</span>
-          <span v-if="staffInfo.staffType === 3">收银员</span>
-          <span v-if="staffInfo.staffType === 4">分拣员</span>
-          <span v-if="staffInfo.staffType === 5">杂工</span>
+          <span v-if="staffInfo.position === '1'">店长</span>
+          <span v-if="staffInfo.position === '2'">药师</span>
+          <span v-if="staffInfo.position === '3'">普通员工</span>
         </a-col>
-        <a-col :span="8"><b>出生日期：</b>
-          {{ staffInfo.birthDate }}
+        <a-col :span="8"><b>入职日期：</b>
+          {{ staffInfo.createDate }}
         </a-col>
       </a-row>
       <br/>
@@ -153,7 +146,7 @@ export default {
   },
   methods: {
     getStaffInfo (staffCode) {
-      this.$get(`/cos/staff-info/${staffCode}`).then((r) => {
+      this.$get(`/cos/staff-info/code/${staffCode}`).then((r) => {
         this.staffInfo = r.data.data
       })
     },

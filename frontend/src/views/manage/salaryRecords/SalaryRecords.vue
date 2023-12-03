@@ -177,31 +177,27 @@ export default {
         dataIndex: 'staffName'
       }, {
         title: '照片',
-        dataIndex: 'image',
+        dataIndex: 'images',
         customRender: (text, record, index) => {
-          if (!record.avatar) return <a-avatar shape="square" icon="user" />
+          if (!record.images) return <a-avatar shape="square" icon="user" />
           return <a-popover>
             <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.avatar } />
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images } />
             </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.avatar } />
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images } />
           </a-popover>
         }
       }, {
-        title: '员工类型',
-        dataIndex: 'staffType',
+        title: '职位',
+        dataIndex: 'position',
         customRender: (text, row, index) => {
           switch (text) {
-            case 1:
-              return <a-tag>售货员</a-tag>
-            case 2:
-              return <a-tag>理货员</a-tag>
-            case 3:
-              return <a-tag>收银员</a-tag>
-            case 4:
-              return <a-tag>分拣员</a-tag>
-            case 5:
-              return <a-tag>杂工</a-tag>
+            case '1':
+              return <a-tag>管理</a-tag>
+            case '2':
+              return <a-tag>药师</a-tag>
+            case '3':
+              return <a-tag>普通员工</a-tag>
             default:
               return '- -'
           }

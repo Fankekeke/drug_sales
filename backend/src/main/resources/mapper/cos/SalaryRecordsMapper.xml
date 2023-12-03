@@ -22,9 +22,9 @@
         sr.payroll,
         sr.create_date AS createDate,
         sr.remark,
-        si.staff_name AS staffName,
-        si.avatar,
-        si.staff_type AS staffType
+        si.name AS staffName,
+        si.images,
+        si.position
         FROM salary_records sr
         LEFT JOIN staff_info si ON si.code = sr.staff_code
         WHERE 1 = 1

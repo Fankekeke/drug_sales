@@ -133,27 +133,16 @@ export default {
           }
         }
       }, {
-        title: '性别',
-        dataIndex: 'sex',
+        title: '职位',
+        dataIndex: 'position',
         customRender: (text, row, index) => {
           switch (text) {
-            case 1:
-              return <a-tag>男</a-tag>
-            case 2:
-              return <a-tag>女</a-tag>
-            default:
-              return '- -'
-          }
-        }
-      }, {
-        title: '状态',
-        dataIndex: 'status',
-        customRender: (text, row, index) => {
-          switch (text) {
-            case 1:
-              return <a-tag color="blue">在职</a-tag>
-            case 2:
-              return <a-tag color="pink">离职</a-tag>
+            case '1':
+              return <a-tag>管理</a-tag>
+            case '2':
+              return <a-tag>药师</a-tag>
+            case '3':
+              return <a-tag>普通员工</a-tag>
             default:
               return '- -'
           }
@@ -184,7 +173,7 @@ export default {
           }
         }
       }, {
-        title: '是否为店长',
+        title: '是否为管理',
         dataIndex: 'status',
         customRender: (text, row, index) => {
           switch (text) {

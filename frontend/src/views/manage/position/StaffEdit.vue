@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="修改员工" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="调整职位" @cancel="onClose" :width="800">
     <template slot="footer">
       <a-button key="back" @click="onClose">
         取消
@@ -152,7 +152,7 @@ export default {
     },
     setFormValues ({...staff}) {
       this.rowId = staff.id
-      let fields = ['name', 'status', 'sex', 'responsible', 'pharmacyId', 'isAdmin']
+      let fields = ['name', 'status', 'sex', 'responsible', 'pharmacyId', 'isAdmin', 'position']
       let obj = {}
       Object.keys(staff).forEach((key) => {
         if (key === 'sex' || key === 'status' || key === 'isAdmin') {

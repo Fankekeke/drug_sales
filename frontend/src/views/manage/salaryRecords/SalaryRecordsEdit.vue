@@ -13,46 +13,39 @@
         <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">选择员工</span></a-col>
         <a-col :span="10">
           <a-form-item v-bind="formItemLayout" v-if="staffData != null">
-            <a-input v-model="staffData.staffName" disabled/>
+            <a-input v-model="staffData.name" disabled/>
           </a-form-item>
         </a-col>
       </a-row>
-      <a-row v-if="staffData != null">
+      <a-row style="padding-left: 24px;padding-right: 24px;" v-if="staffData != null">
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">员工信息</span></a-col>
         <a-col :span="8"><b>员工姓名：</b>
           <a-popover>
             <template slot="content">
-              <a-avatar v-if="staffData.avatar !== null" shape="square" :size="132" icon="user" :src="'http://127.0.0.1:9527/imagesWeb/' + staffData.avatar" />
+              <a-avatar v-if="staffData.images !== null" shape="square" :size="132" icon="user" :src="'http://127.0.0.1:9527/imagesWeb/' + staffData.images" />
               <a-avatar v-else shape="square" :size="132" icon="user" />
             </template>
-            <a>{{ staffData.staffName !== null ? staffData.staffName : '- -' }}</a>
+            <a>{{ staffData.name !== null ? staffData.name : '- -' }}</a>
           </a-popover>
         </a-col>
-        <a-col :span="8"><b>联系方式：</b>
-          <a-tooltip>
-            <template slot="title">
-              {{ staffData.email }}
-            </template>
-            {{ staffData.email.slice(0, 8) }} ...
-          </a-tooltip>
+        <a-col :span="8"><b>员工编号：</b>
+          {{ staffData.code }}
         </a-col>
         <a-col :span="8"><b>性别：</b>
-          <span v-if="staffData.staffSex === 1">男</span>
-          <span v-if="staffData.staffSex === 2">女</span>
+          <span v-if="staffData.sex == 1">男</span>
+          <span v-if="staffData.sex == 2">女</span>
         </a-col>
       </a-row>
       <br/>
-      <a-row v-if="staffData != null">
+      <a-row style="padding-left: 24px;padding-right: 24px;" v-if="staffData != null">
         <a-col :span="8"><b>员工职务：</b>
-          <span v-if="staffData.staffType === 1">售货员</span>
-          <span v-if="staffData.staffType === 2">理货员</span>
-          <span v-if="staffData.staffType === 3">收银员</span>
-          <span v-if="staffData.staffType === 4">分拣员</span>
-          <span v-if="staffData.staffType === 5">杂工</span>
+          <span v-if="staffData.position === '1'">店长</span>
+          <span v-if="staffData.position === '2'">药师</span>
+          <span v-if="staffData.position === '3'">普通员工</span>
         </a-col>
-        <a-col :span="8"><b>出生日期：</b>
-          {{ staffData.birthDate }}
+        <a-col :span="8"><b>入职日期：</b>
+          {{ staffData.createDate }}
         </a-col>
-        <a-col :span="24"></a-col>
       </a-row>
       <br/>
       <a-row :gutter="20">
@@ -189,7 +182,7 @@ export default {
   },
   methods: {
     getStaffInfo (staffCode) {
-      this.$get(`/cos/staff-info/${staffCode}`).then((r) => {
+      this.$get(`/cos/staff-info/code/${staffCode}`).then((r) => {
         this.staffData = r.data.data
       })
     },

@@ -172,20 +172,7 @@ export default {
           </a-popover>
         }
       }, {
-        title: '状态',
-        dataIndex: 'status',
-        customRender: (text, row, index) => {
-          switch (text) {
-            case 1:
-              return <a-tag color="green">在职</a-tag>
-            case 2:
-              return <a-tag color="red">离职</a-tag>
-            default:
-              return '- -'
-          }
-        }
-      }, {
-        title: '是否为店长',
+        title: '是否为管理',
         dataIndex: 'status',
         customRender: (text, row, index) => {
           switch (text) {

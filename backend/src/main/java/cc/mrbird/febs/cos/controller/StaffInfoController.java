@@ -49,6 +49,17 @@ public class StaffInfoController {
     }
 
     /**
+     * 获取详情信息
+     *
+     * @param code code
+     * @return 结果
+     */
+    @GetMapping("/code/{code}")
+    public R detail(@PathVariable("code") String code) {
+        return R.ok(staffInfoService.getOne(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getCode, code)));
+    }
+
+    /**
      * 根据药店获取员工信息
      * @param pharmacyId 药店ID
      * @return 结果
@@ -65,7 +76,7 @@ public class StaffInfoController {
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(staffInfoService.list());
+        return R.ok(staffInfoService.list(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getStatus, 1)));
     }
 
     /**
@@ -90,7 +101,7 @@ public class StaffInfoController {
      */
     @PutMapping
     public R edit(StaffInfo staffInfo) {
-        if (staffInfo.getStatus() == 2) {
+        if (staffInfo.getStatus() != null && staffInfo.getStatus() == 2) {
             staffInfo.setResignDate(DateUtil.formatDateTime(new Date()));
         }
         return R.ok(staffInfoService.updateById(staffInfo));

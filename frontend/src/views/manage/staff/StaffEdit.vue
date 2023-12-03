@@ -46,7 +46,7 @@
 <!--              { rules: [{ required: true, message: '请输入职位!' }] }-->
 <!--              ]">-->
 <!--              <a-radio-button value="1">-->
-<!--                店长-->
+<!--                管理-->
 <!--              </a-radio-button>-->
 <!--              <a-radio-button value="2">-->
 <!--                药师-->
@@ -66,10 +66,10 @@
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='是否为店主' v-bind="formItemLayout">
+          <a-form-item label='是否为管理' v-bind="formItemLayout">
             <a-radio-group button-style="solid" v-decorator="[
               'isAdmin',
-              { rules: [{ required: true, message: '请输入是否为店主!' }] }
+              { rules: [{ required: true, message: '请输入是否为管理!' }] }
               ]">
               <a-radio-button value="1">
                 是
@@ -201,7 +201,7 @@ export default {
     },
     setFormValues ({...staff}) {
       this.rowId = staff.id
-      let fields = ['name', 'status', 'sex', 'responsible', 'pharmacyId', 'isAdmin']
+      let fields = ['name', 'status', 'sex', 'responsible', 'pharmacyId', 'isAdmin', 'salary']
       let obj = {}
       Object.keys(staff).forEach((key) => {
         if (key === 'sex' || key === 'status' || key === 'isAdmin') {

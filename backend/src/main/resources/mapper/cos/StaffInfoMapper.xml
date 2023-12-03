@@ -16,6 +16,9 @@
         si.user_id,
         si.pharmacy_id,
         si.is_admin,
+        si.salary,
+        si.resign_date,
+        si.position,
         pi.name AS pharmacyName
         from
         staff_info si

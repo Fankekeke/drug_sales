@@ -46,7 +46,7 @@
               { rules: [{ required: true, message: '请输入职位!' }] }
               ]">
               <a-radio-button value="1">
-                店长
+                管理
               </a-radio-button>
               <a-radio-button value="2">
                 药师

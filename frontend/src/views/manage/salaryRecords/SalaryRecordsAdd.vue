@@ -14,20 +14,18 @@
         <a-col :span="10">
           <a-form-item v-bind="formItemLayout">
             <a-select style="width: 100%" v-model="staffCode" @change="staffChange" option-label-prop="label">
-              <a-select-option v-for="(item, index) in staffList" :key="index" :value="item.staffCode" :label="item.staffName">
+              <a-select-option v-for="(item, index) in staffList" :key="index" :value="item.code" :label="item.name">
                 <a-row>
                   <a-col :span="4">
-                    <a-avatar style="margin-right: 20px" shape="square" :size="40" icon="user" :src="'http://127.0.0.1:9527/imagesWeb/' + item.avatar" />
+                    <a-avatar style="margin-right: 20px" shape="square" :size="40" icon="user" :src="'http://127.0.0.1:9527/imagesWeb/' + item.images" />
                   </a-col>
                   <a-col :span="20">
                     <a-row>
-                      <a-col><span>{{item.staffName}}</span></a-col>
+                      <a-col><span>{{item.name}}</span></a-col>
                       <a-col style="font-size: 10px">
-                        <span v-if="item.staffType === 1">售货员</span>
-                        <span v-if="item.staffType === 2">理货员</span>
-                        <span v-if="item.staffType === 3">收银员</span>
-                        <span v-if="item.staffType === 4">分拣员</span>
-                        <span v-if="item.staffType === 5">杂工</span>
+                        <span v-if="item.position === '1'">店长</span>
+                        <span v-if="item.position === '2'">药师</span>
+                        <span v-if="item.position === '3'">普通员工</span>
                       </a-col>
                     </a-row>
                   </a-col>
@@ -37,42 +35,36 @@
           </a-form-item>
         </a-col>
       </a-row>
-      <a-row v-if="staffData != null">
+      <br/>
+      <a-row style="padding-left: 24px;padding-right: 24px;" v-if="staffData != null">
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">员工信息</span></a-col>
         <a-col :span="8"><b>员工姓名：</b>
           <a-popover>
             <template slot="content">
-              <a-avatar v-if="staffData.avatar !== null" shape="square" :size="132" icon="user" :src="'http://127.0.0.1:9527/imagesWeb/' + staffData.avatar" />
+              <a-avatar v-if="staffData.images !== null" shape="square" :size="132" icon="user" :src="'http://127.0.0.1:9527/imagesWeb/' + staffData.images" />
               <a-avatar v-else shape="square" :size="132" icon="user" />
             </template>
-            <a>{{ staffData.staffName !== null ? staffData.staffName : '- -' }}</a>
+            <a>{{ staffData.name !== null ? staffData.name : '- -' }}</a>
           </a-popover>
         </a-col>
-        <a-col :span="8"><b>联系方式：</b>
-          <a-tooltip>
-            <template slot="title">
-              {{ staffData.email }}
-            </template>
-            {{ staffData.email.slice(0, 8) }} ...
-          </a-tooltip>
+        <a-col :span="8"><b>员工编号：</b>
+          {{ staffData.code }}
         </a-col>
         <a-col :span="8"><b>性别：</b>
-          <span v-if="staffData.staffSex === 1">男</span>
-          <span v-if="staffData.staffSex === 2">女</span>
+          <span v-if="staffData.sex == 1">男</span>
+          <span v-if="staffData.sex == 2">女</span>
         </a-col>
       </a-row>
       <br/>
-      <a-row v-if="staffData != null">
+      <a-row style="padding-left: 24px;padding-right: 24px;" v-if="staffData != null">
         <a-col :span="8"><b>员工职务：</b>
-          <span v-if="staffData.staffType === 1">售货员</span>
-          <span v-if="staffData.staffType === 2">理货员</span>
-          <span v-if="staffData.staffType === 3">收银员</span>
-          <span v-if="staffData.staffType === 4">分拣员</span>
-          <span v-if="staffData.staffType === 5">杂工</span>
+          <span v-if="staffData.position === '1'">店长</span>
+          <span v-if="staffData.position === '2'">药师</span>
+          <span v-if="staffData.position === '3'">普通员工</span>
         </a-col>
-        <a-col :span="8"><b>出生日期：</b>
-          {{ staffData.birthDate }}
+        <a-col :span="8"><b>入职日期：</b>
+          {{ staffData.createDate }}
         </a-col>
-        <a-col :span="24"></a-col>
       </a-row>
       <br/>
       <a-row :gutter="20">
@@ -203,7 +195,7 @@ export default {
   watch: {
     staffData: function (val) {
       if (val) {
-        this.getGainByStaffCode(this.staffData.staffCode)
+        // this.getGainByStaffCode(this.staffData.code)
       }
     }
   },
@@ -228,15 +220,15 @@ export default {
   methods: {
     staffChange (value) {
       this.staffList.forEach(item => {
-        if (item.staffCode === value) {
+        if (item.code === value) {
           this.staffData = item
+          this.form.setFieldsValue({'basicWage': this.staffData.salary})
         }
       })
     },
     getGainByStaffCode (staffCode) {
       this.$get(`/cos/salary-gain/gain/${staffCode}`).then((r) => {
         this.gain = r.data.data
-        this.form.setFieldsValue({'basicWage': this.gain})
       })
     },
     getStaffList () {
