@@ -29,7 +29,44 @@
         LEFT JOIN staff_info si ON si.code = sr.staff_code
         WHERE 1 = 1
         <if test="salaryRecords.staffName != null and salaryRecords.staffName != ''">
-            and si.staff_name LIKE CONCAT('%',#{salaryRecords.staffName},'%')
+            and si.name LIKE CONCAT('%',#{salaryRecords.staffName},'%')
+        </if>
+        <if test="salaryRecords.year != null and salaryRecords.year != ''">
+            and sr.year = #{salaryRecords.year}
+        </if>
+        <if test="salaryRecords.month != null and salaryRecords.month != ''">
+            and sr.month = #{salaryRecords.month}
+        </if>
+        ORDER BY sr.year DESC, sr.month DESC, sr.payroll DESC
+    </select>
+
+    <select id="export" resultType="java.util.LinkedHashMap">
+        SELECT sr.id,
+        sr.staff_code AS staffCode,
+        sr.year,
+        sr.month,
+        sr.income,
+        sr.basic_wage AS basicWage,
+        sr.post_allowance AS postAllowance,
+        sr.performance_bonus AS performanceBonus,
+        sr.overtime_pay AS overtimePay,
+        sr.holiday_costs AS holidayCosts,
+        sr.pension,
+        sr.unemployment,
+        sr.medical_insurance AS medicalInsurance,
+        sr.tax,
+        sr.housing_fund AS housingFund,
+        sr.payroll,
+        sr.create_date AS createDate,
+        sr.remark,
+        si.name AS staffName,
+        si.images,
+        si.position
+        FROM salary_records sr
+        LEFT JOIN staff_info si ON si.code = sr.staff_code
+        WHERE 1 = 1
+        <if test="salaryRecords.staffName != null and salaryRecords.staffName != ''">
+            and si.name LIKE CONCAT('%',#{salaryRecords.staffName},'%')
         </if>
         <if test="salaryRecords.year != null and salaryRecords.year != ''">
             and sr.year = #{salaryRecords.year}

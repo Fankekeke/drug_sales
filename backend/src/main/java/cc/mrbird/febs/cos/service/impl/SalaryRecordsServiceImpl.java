@@ -50,6 +50,17 @@ public class SalaryRecordsServiceImpl extends ServiceImpl<SalaryRecordsMapper, S
     }
 
     /**
+     * 查询导出员工薪资发放记录
+     *
+     * @param salaryRecords 员工薪资发放记录
+     * @return 结果
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> export(SalaryRecords salaryRecords) {
+        return baseMapper.export(salaryRecords);
+    }
+
+    /**
      * 导出员工薪资发放记录
      *
      * @param year  年度
@@ -137,6 +148,8 @@ public class SalaryRecordsServiceImpl extends ServiceImpl<SalaryRecordsMapper, S
      */
     @Override
     public boolean saveSalaryRecords(SalaryRecords salaryRecords) throws Exception {
+        salaryRecords.setYear(StrUtil.toString(DateUtil.year(new Date())));
+        salaryRecords.setMonth(StrUtil.toString(DateUtil.month(new Date()) + 1));
         // 校验是否本月度是否发放
         int count = this.count(Wrappers.<SalaryRecords>lambdaQuery().eq(SalaryRecords::getStaffCode, salaryRecords.getStaffCode()).eq(SalaryRecords::getYear, salaryRecords.getYear()).eq(SalaryRecords::getMonth, salaryRecords.getMonth()));
         if (count > 0) {
@@ -147,8 +160,6 @@ public class SalaryRecordsServiceImpl extends ServiceImpl<SalaryRecordsMapper, S
         // 实发工资
         BigDecimal sum = salaryRecords.getBasicWage().add(salaryRecords.getPostAllowance()).add(salaryRecords.getPerformanceBonus()).add(salaryRecords.getOvertimePay()).add(salaryRecords.getHolidayCosts()).add(salaryRecords.getPension()).add(salaryRecords.getUnemployment()).add(salaryRecords.getMedicalInsurance()).add(salaryRecords.getTax()).add(salaryRecords.getHousingFund());
         salaryRecords.setPayroll(sum);
-        salaryRecords.setYear(StrUtil.toString(DateUtil.year(new Date())));
-        salaryRecords.setMonth(StrUtil.toString(DateUtil.month(new Date())));
         salaryRecords.setCreateDate(DateUtil.formatDateTime(new Date()));
         return this.save(salaryRecords);
     }

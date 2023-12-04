@@ -65,6 +65,7 @@ const saveExcel = (spread, fileName) => {
 const fileNameData = {
   claimForm: 'claimForm.json',
   purchasePlan: 'purchasePlan.json',
+  staff: 'staff.json',
   inboundOrder: 'inboundOrder.json',
   outboundOrder: 'outboundOrder.json'
 }
@@ -73,6 +74,7 @@ const fileNameData = {
 const startRowData = {
   claimForm: 4,
   purchasePlan: 2,
+  staff: 2,
   inboundOrder: 8,
   outboundOrder: 8
 }

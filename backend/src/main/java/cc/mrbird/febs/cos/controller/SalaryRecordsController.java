@@ -3,6 +3,7 @@ package cc.mrbird.febs.cos.controller;
 
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.SalaryRecords;
+import cc.mrbird.febs.cos.entity.StaffInfo;
 import cc.mrbird.febs.cos.service.ISalaryRecordsService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,17 @@ public class SalaryRecordsController {
     }
 
     /**
+     * 查询导出员工薪资发放记录
+     *
+     * @param salaryRecords 员工薪资发放记录
+     * @return 结果
+     */
+    @GetMapping("/export")
+    public R export(SalaryRecords salaryRecords) {
+        return R.ok(salaryRecordsService.export(salaryRecords));
+    }
+
+    /**
      * 导出员工薪资发放记录
      *
      * @param year  年度
@@ -42,7 +54,7 @@ public class SalaryRecordsController {
      * @return 结果
      * @throws Exception 异常
      */
-    @GetMapping("/export")
+    @GetMapping("/export1")
     public R export(String year, String month) throws Exception {
         return R.ok(salaryRecordsService.export(year, month));
     }
@@ -50,7 +62,7 @@ public class SalaryRecordsController {
     /**
      * 导出员工薪资发放
      *
-     * @param id  xx
+     * @param id xx
      * @return 结果
      * @throws Exception 异常
      */

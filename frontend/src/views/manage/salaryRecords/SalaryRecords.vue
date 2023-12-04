@@ -56,6 +56,7 @@
           <span style="float: right; margin-top: 3px;">
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
+            <a-button style="margin-left: 8px" @click="exportCheck">导出</a-button>
           </span>
         </a-row>
       </a-form>
@@ -129,6 +130,7 @@ import salaryRecordsEdit from './SalaryRecordsEdit'
 import {mapState} from 'vuex'
 import moment from 'moment'
 import salaryRecordsView from './SalaryRecordsView'
+import { newSpread, floatForm, floatReset, saveExcel } from '@/utils/spreadJS'
 moment.locale('zh-cn')
 
 export default {
@@ -233,6 +235,20 @@ export default {
     this.fetch()
   },
   methods: {
+    exportCheck () {
+      this.$message.loading('正在生成', 0)
+      this.$get('/cos/salary-records/export', { ...this.queryParams }).then((r) => {
+        let newData = []
+        r.data.data.forEach((item, index) => {
+          newData.push([item.staffCode, item.staffName !== null ? item.staffName : '- -', item.year !== null ? item.year : '- -', item.month !== null ? item.month : '- -', item.basicWage !== null ? item.basicWage : '- -', item.postAllowance !== null ? item.postAllowance : '- -', item.performanceBonus !== null ? item.performanceBonus : '- -', item.overtimePay !== null ? item.overtimePay : '- -', item.holidayCosts !== null ? item.holidayCosts : '- -', item.pension !== null ? item.pension : '- -', item.unemployment !== null ? item.unemployment : '- -', item.medicalInsurance !== null ? item.medicalInsurance : '- -', item.tax !== null ? item.tax : '- -', item.housingFund !== null ? item.housingFund : '- -', item.payroll !== null ? item.payroll : '- -'])
+        })
+        let spread = newSpread('staff')
+        spread = floatForm(spread, 'staff', newData)
+        saveExcel(spread, '工资报表.xlsx')
+        floatReset(spread, 'staff', newData.length)
+        this.$message.destroy()
+      })
+    },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
@@ -354,11 +370,11 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      if (params.salaryRecordsType === undefined) {
-        delete params.salaryRecordsType
+      if (params.year === undefined) {
+        delete params.year
       }
-      if (params.salaryRecordsStatus === undefined) {
-        delete params.salaryRecordsStatus
+      if (params.month === undefined) {
+        delete params.month
       }
       this.$get('/cos/salary-records/page', {
         ...params

@@ -24,6 +24,14 @@ public interface SalaryRecordsMapper extends BaseMapper<SalaryRecords> {
     IPage<LinkedHashMap<String, Object>> selectSalaryRecordsPage(Page<SalaryRecords> page, @Param("salaryRecords") SalaryRecords salaryRecords);
 
     /**
+     * 查询导出员工薪资发放记录
+     *
+     * @param salaryRecords 员工薪资发放记录
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> export(@Param("salaryRecords") SalaryRecords salaryRecords);
+
+    /**
      * 根据员工编号获取薪资发放记录
      *
      * @param staffCode 员工编号

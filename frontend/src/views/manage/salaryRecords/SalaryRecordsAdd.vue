@@ -220,7 +220,7 @@ export default {
   methods: {
     selectPerformance (staffCode) {
       this.$get(`/cos/order-info/performance`, {staffCode}).then((r) => {
-        this.form.setFieldsValue({'performanceBonus': r.data.after})
+        this.form.setFieldsValue({'performanceBonus': r.data.data.after})
       })
     },
     staffChange (value) {

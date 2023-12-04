@@ -23,6 +23,14 @@ public interface ISalaryRecordsService extends IService<SalaryRecords> {
     IPage<LinkedHashMap<String, Object>> selectSalaryRecordsPage(Page<SalaryRecords> page, SalaryRecords salaryRecords);
 
     /**
+     * 查询导出员工薪资发放记录
+     *
+     * @param salaryRecords 员工薪资发放记录
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> export(SalaryRecords salaryRecords);
+
+    /**
      * 导出员工薪资发放记录
      *
      * @param year  年度
