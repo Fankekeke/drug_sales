@@ -60,6 +60,19 @@ public class OrderInfoController {
     }
 
     /**
+     * 根据用户月份获取绩效
+     *
+     * @param staffCode 员工编号
+     * @param year      年份
+     * @param month     月份
+     * @return 结果
+     */
+    @GetMapping("/performance")
+    public R selectPerformanceByStaffCodeMonth(@RequestParam("staffCode") String staffCode, @RequestParam(value = "year", required = false) String year, @RequestParam(value = "month", required = false) String month) {
+        return R.ok(orderInfoService.selectPerformanceByStaffCodeMonth(staffCode, year, month));
+    }
+
+    /**
      * 添加订单
      *
      * @param orderInfoVo 订单信息

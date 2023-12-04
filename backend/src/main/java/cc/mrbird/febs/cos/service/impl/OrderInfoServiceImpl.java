@@ -12,6 +12,7 @@ import cc.mrbird.febs.cos.entity.vo.OrderSubVo;
 import cc.mrbird.febs.cos.service.*;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -103,6 +104,43 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
         // 重新更新订单信息
 
+        return result;
+    }
+
+    /**
+     * 根据用户月份获取绩效
+     *
+     * @param staffCode 员工编号
+     * @param year      年份
+     * @param month     月份
+     * @return 结果
+     */
+    @Override
+    public LinkedHashMap<String, BigDecimal> selectPerformanceByStaffCodeMonth(String staffCode, String year, String month) {
+        // 返回数据
+        LinkedHashMap<String, BigDecimal> result = new LinkedHashMap<String, BigDecimal>() {
+            {
+                put("before", BigDecimal.ZERO);
+                put("after", BigDecimal.ZERO);
+            }
+        };
+        if (StrUtil.isEmpty(year)) {
+            year = StrUtil.toString(DateUtil.year(new Date()));
+        }
+        if (StrUtil.isEmpty(month)) {
+            month = StrUtil.toString(DateUtil.month(new Date()) + 1);
+        }
+        if (StrUtil.isEmpty(staffCode)) {
+            return result;
+        }
+
+        List<InventoryStatistics> inventoryList = baseMapper.selectPerformanceByStaffCodeMonth(staffCode, year, month);
+        if (CollectionUtil.isEmpty(inventoryList)) {
+            return result;
+        }
+        BigDecimal totalPrice = inventoryList.stream().map(e -> NumberUtil.mul(e.getUnitPrice(), e.getQuantity())).reduce(BigDecimal.ZERO, BigDecimal::add);
+        result.put("before", NumberUtil.round(totalPrice, 2));
+        result.put("after", NumberUtil.mul(totalPrice, new BigDecimal("0.2")));
         return result;
     }
 

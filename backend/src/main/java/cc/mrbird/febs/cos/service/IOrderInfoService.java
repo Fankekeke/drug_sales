@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -33,6 +34,16 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      * @return 结果
      */
     boolean orderAdd(OrderInfoVo orderInfoVo, boolean flag);
+
+    /**
+     * 根据用户月份获取绩效
+     *
+     * @param staffCode 员工编号
+     * @param year      年份
+     * @param month     月份
+     * @return 结果
+     */
+    LinkedHashMap<String, BigDecimal> selectPerformanceByStaffCodeMonth(String staffCode, String year, String month);
 
     /**
      * 订单付款

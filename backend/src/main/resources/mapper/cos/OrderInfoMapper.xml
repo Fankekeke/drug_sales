@@ -49,6 +49,35 @@
         oi.create_date desc
     </select>
 
+    <!-- 根据用户月份获取绩效 -->
+    <select id="selectPerformanceByStaffCodeMonth" resultType="cc.mrbird.febs.cos.entity.InventoryStatistics">
+        select
+        ls.id,
+        ls.pharmacy_id,
+        ls.drug_id,
+        ls.quantity,
+        ls.storage_type,
+        ls.create_date,
+        ls.custodian,
+        di.name AS drugName,
+        di.brand,
+        di.unit_price,
+        di.images
+        from
+        inventory_statistics ls
+        left join drug_info di on
+        (di.id = ls.drug_id)
+        where
+        1 = 1
+        and ls.custodian = #{staffCode}
+        <if test="year != null and year != ''">
+            AND DATE_FORMAT( ls.create_date, '%Y' ) = #{year}
+        </if>
+        <if test="month != null and month != ''">
+            AND DATE_FORMAT( ls.create_date, '%m' ) = #{month}
+        </if>
+    </select>
+
     <!-- 查询总收益 -->
     <select id="selectOrderPrice" resultType="java.math.BigDecimal">
         SELECT IFNULL(SUM(oi.total_cost), 0) FROM order_info oi

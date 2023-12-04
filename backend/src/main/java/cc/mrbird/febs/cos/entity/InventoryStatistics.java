@@ -1,5 +1,6 @@
 package cc.mrbird.febs.cos.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 
@@ -63,5 +64,8 @@ public class InventoryStatistics implements Serializable {
 
     @TableField(exist = false)
     private String pharmacyName;
+
+    @TableField(exist = false)
+    private BigDecimal unitPrice;
 
 }

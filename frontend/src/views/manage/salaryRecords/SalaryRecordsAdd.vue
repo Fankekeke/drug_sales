@@ -85,7 +85,7 @@
           </a-form-item>
         </a-col>
         <a-col :span="8">
-          <a-form-item label="绩效奖金">
+          <a-form-item label="绩效奖金【本月销售金额20%】">
             <a-input-number style="width: 100%" v-decorator="[
               'performanceBonus', { rules: [{ required: true, message: '请填写绩效奖金!' }] }
               ]"
@@ -218,10 +218,16 @@ export default {
     }
   },
   methods: {
+    selectPerformance (staffCode) {
+      this.$get(`/cos/order-info/performance`, {staffCode}).then((r) => {
+        this.form.setFieldsValue({'performanceBonus': r.data.after})
+      })
+    },
     staffChange (value) {
       this.staffList.forEach(item => {
         if (item.code === value) {
           this.staffData = item
+          this.selectPerformance(item.code)
           this.form.setFieldsValue({'basicWage': this.staffData.salary})
         }
       })

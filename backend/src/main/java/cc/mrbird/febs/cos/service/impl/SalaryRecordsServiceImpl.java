@@ -140,7 +140,7 @@ public class SalaryRecordsServiceImpl extends ServiceImpl<SalaryRecordsMapper, S
         // 校验是否本月度是否发放
         int count = this.count(Wrappers.<SalaryRecords>lambdaQuery().eq(SalaryRecords::getStaffCode, salaryRecords.getStaffCode()).eq(SalaryRecords::getYear, salaryRecords.getYear()).eq(SalaryRecords::getMonth, salaryRecords.getMonth()));
         if (count > 0) {
-            throw new FebsException("本季度对该员工已发放工资！");
+            throw new FebsException("本月度对该员工已发放工资！");
         }
         // 员工信息
         StaffInfo staffInfo = staffInfoService.getOne(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getCode, salaryRecords.getStaffCode()));

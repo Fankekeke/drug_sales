@@ -1,6 +1,8 @@
 package cc.mrbird.febs.cos.dao;
 
+import cc.mrbird.febs.cos.entity.InventoryStatistics;
 import cc.mrbird.febs.cos.entity.OrderInfo;
+import cc.mrbird.febs.cos.entity.PharmacyInventory;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -23,6 +25,16 @@ public interface OrderInfoMapper extends BaseMapper<OrderInfo> {
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> selectOrderPage(Page<OrderInfo> page, @Param("orderInfo") OrderInfo orderInfo);
+
+    /**
+     * 根据用户月份获取绩效
+     *
+     * @param staffCode 员工编号
+     * @param year      年份
+     * @param month     月份
+     * @return 结果
+     */
+    List<InventoryStatistics> selectPerformanceByStaffCodeMonth(@Param("staffCode") String staffCode, @Param("year") String year, @Param("month") String month);
 
     /**
      * 查询总收益

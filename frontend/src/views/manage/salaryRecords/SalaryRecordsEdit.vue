@@ -181,6 +181,11 @@ export default {
     }
   },
   methods: {
+    selectPerformance (staffCode, year, month) {
+      this.$get(`/cos/order-info/performance`, {staffCode, year, month}).then((r) => {
+        this.form.setFieldsValue({'performanceBonus': r.data.after})
+      })
+    },
     getStaffInfo (staffCode) {
       this.$get(`/cos/staff-info/code/${staffCode}`).then((r) => {
         this.staffData = r.data.data
@@ -192,6 +197,7 @@ export default {
     setFormValues ({...salaryRecords}) {
       this.rowId = salaryRecords.id
       this.getStaffInfo(salaryRecords.staffCode)
+      this.selectPerformance(salaryRecords.staffCode, salaryRecords.year, salaryRecords.month)
       let fields = ['basicWage', 'postAllowance', 'performanceBonus', 'overtimePay', 'holidayCosts', 'pension', 'unemployment', 'medicalInsurance', 'tax', 'housingFund', 'payroll', 'remark']
       let obj = {}
       Object.keys(salaryRecords).forEach((key) => {
