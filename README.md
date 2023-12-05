@@ -6,7 +6,7 @@ JAVA 环境
 
 Node.js环境 [https://nodejs.org/en/] 选择14.17
 
-Yarn 打开cmd， 输入npm install -g yarn !!!必须安装完毕nodejs
+Yarn 打开cmd， 输入npm install -g yarn !!!必须安装完毕nodejs 
 
 Mysql 数据库 [https://blog.csdn.net/qq_40303031/article/details/88935262] 一定要把账户和密码记住
 
