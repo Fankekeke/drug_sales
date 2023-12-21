@@ -1,4 +1,4 @@
-### 基于SpringBoot的药品销售系统
+### 基于SpringBoot + Vue的药品销售系统
 
 #### 安装环境
 
